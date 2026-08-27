@@ -6,6 +6,7 @@ on:
     paths:
       - "aula-02-hadoop/**"
       - ".github/workflows/ci-aula-02.yml"
+      - "aula-02-hadoop/tests/test_*.py"
 
 permissions:
   contents: read
