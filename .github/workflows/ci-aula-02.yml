@@ -2,7 +2,7 @@ name: "Correcao - Aula 02 (Hadoop & MapReduce)"
 
 on:
   pull_request:
-    branches: [main]
+    branches: [master]
     paths:
       - "aula-02-hadoop/**"
       - ".github/workflows/ci-aula-02.yml"
