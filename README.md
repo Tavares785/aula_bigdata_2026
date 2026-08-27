@@ -83,4 +83,56 @@ A consolidação do conhecimento. Vocês atuarão como Engenheiros e Cientistas 
 
 ---
 
+---
+
+## 🐳 Como fazer os labs (TF - Trabalho de Casa)
+
+Cada aula técnica (2 a 10) tem um **lab prático** com correção automática.
+Cada lab vem com um **ambiente Docker** completo — você **não precisa
+instalar Python, Java nem Spark** na sua máquina.
+
+### Pré-requisitos
+
+- [Docker](https://docs.docker.com/get-docker/) instalado
+- [Git](https://git-scm.com/) instalado
+- Conta no GitHub
+
+### Fluxo de entrega
+
+1. **Fork** este repositório (botão "Fork" no GitHub)
+2. **Clone** o seu fork:
+   ```bash
+   git clone https://github.com/SEU-USUARIO/labs-big-data.git
+   cd labs-big-data
+   ```
+3. **Crie uma branch** para o lab:
+   ```bash
+   git checkout -b aula-XX-SEURA
+   ```
+4. **Complete os TODOs** nos arquivos `src/` da aula
+5. **Teste localmente com Docker**:
+   ```bash
+   cd aula-XX-nome
+   docker build -t lab-aula-XX .
+   docker run --rm lab-aula-XX
+   ```
+6. **Commit e push**:
+   ```bash
+   git add .
+   git commit -m "Aula XX: implementação do lab"
+   git push origin aula-XX-SEURA
+   ```
+7. **Abra uma Pull Request** para a branch `main` do repositório original
+8. O **GitHub Actions** roda automaticamente a correção dentro do mesmo
+   container Docker — aguarde ✅ ou ❌ na PR
+
+> **Dica:** Para desenvolvimento iterativo sem rebuildar a imagem:
+> ```bash
+> docker run --rm -v $(pwd)/src:/lab/src lab-aula-XX
+> ```
+
+Veja instruções detalhadas em [`Help.md`](./Help.md) e no README de cada lab.
+
+---
+
 💡 *O mundo movimenta quintilhões de bytes por dia. Preparem-se para dominar essa infraestrutura!*

@@ -1,0 +1,43 @@
+name: "Correcao - Aula 04 (Modelos e Implementacoes NoSQL)"
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "aula-04-nosql/**"
+      - ".github/workflows/ci-aula-04.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  corrigir-lab:
+    name: Rodar testes automaticos do lab
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do codigo da PR
+        uses: actions/checkout@v4
+
+      - name: Build da imagem Docker do lab
+        working-directory: aula-04-nosql
+        run: docker build -t lab-aula-04 .
+
+      - name: Rodar testes (correcao automatica)
+        working-directory: aula-04-nosql
+        run: |
+          set -o pipefail
+          docker run --rm lab-aula-04 pytest -v --tb=short | tee test_output.txt
+
+      - name: Publicar resumo da correcao
+        if: always()
+        shell: bash
+        working-directory: aula-04-nosql
+        run: |
+          {
+            echo "## Resultado da correcao automatica - Aula 04 (NoSQL)"
+            echo ""
+            echo '```'
+            cat test_output.txt 2>/dev/null || echo "Nenhum output de teste disponivel"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"

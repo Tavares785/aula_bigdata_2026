@@ -1,0 +1,55 @@
+name: "Correcao - Aula 12 (Ingestao e Pre-processamento)"
+
+# Projeto livre por grupo -- o CI verifica apenas se as funcoes de
+# pipeline foram implementadas (nao NotImplementedError/pass/vazias) e
+# se o checkpoint PROGRESS.md foi preenchido. Nao executa o pipeline
+# contra dados reais (depende de recursos externos por grupo).
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "aula-12-ingestao-preprocessamento/**"
+      - ".github/workflows/ci-aula-12.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  corrigir-lab:
+    name: Verificar estrutura do pipeline e progresso
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: aula-12-ingestao-preprocessamento
+
+    steps:
+      - name: Checkout do codigo da PR
+        uses: actions/checkout@v4
+
+      - name: Configurar Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+          cache: "pip"
+          cache-dependency-path: aula-12-ingestao-preprocessamento/requirements.txt
+
+      - name: Instalar dependencias
+        run: pip install -r requirements.txt
+
+      - name: Verificar estrutura da entrega
+        shell: bash
+        run: |
+          set -o pipefail
+          pytest -v --tb=short | tee test_output.txt
+
+      - name: Publicar resumo da verificacao
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "## Resultado da verificacao - Aula 12 (Ingestao e Pre-processamento)"
+            echo ""
+            echo '```'
+            cat test_output.txt
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"

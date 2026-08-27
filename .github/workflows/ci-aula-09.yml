@@ -1,0 +1,43 @@
+name: "Correcao - Aula 09 (Data Warehousing e Data Lakes)"
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "aula-09-data-warehousing/**"
+      - ".github/workflows/ci-aula-09.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  corrigir-lab:
+    name: Rodar testes automaticos do lab
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do codigo da PR
+        uses: actions/checkout@v4
+
+      - name: Build da imagem Docker do lab
+        working-directory: aula-09-data-warehousing
+        run: docker build -t lab-aula-09 .
+
+      - name: Rodar testes (correcao automatica)
+        working-directory: aula-09-data-warehousing
+        run: |
+          set -o pipefail
+          docker run --rm lab-aula-09 pytest -v --tb=short | tee test_output.txt
+
+      - name: Publicar resumo da correcao
+        if: always()
+        shell: bash
+        working-directory: aula-09-data-warehousing
+        run: |
+          {
+            echo "## Resultado da correcao automatica - Aula 09 (Data Warehousing)"
+            echo ""
+            echo '```'
+            cat test_output.txt 2>/dev/null || echo "Nenhum output de teste disponivel"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"

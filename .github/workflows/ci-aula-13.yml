@@ -1,0 +1,54 @@
+name: "Correcao - Aula 13 (Analise e Construcao de Modelos)"
+
+# Projeto livre por grupo -- mesmo padrao da Aula 12: o CI verifica
+# apenas se as funcoes de analise foram implementadas e se o checkpoint
+# PROGRESS.md foi preenchido.
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "aula-13-analise-modelos/**"
+      - ".github/workflows/ci-aula-13.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  corrigir-lab:
+    name: Verificar estrutura da analise e progresso
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: aula-13-analise-modelos
+
+    steps:
+      - name: Checkout do codigo da PR
+        uses: actions/checkout@v4
+
+      - name: Configurar Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+          cache: "pip"
+          cache-dependency-path: aula-13-analise-modelos/requirements.txt
+
+      - name: Instalar dependencias
+        run: pip install -r requirements.txt
+
+      - name: Verificar estrutura da entrega
+        shell: bash
+        run: |
+          set -o pipefail
+          pytest -v --tb=short | tee test_output.txt
+
+      - name: Publicar resumo da verificacao
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "## Resultado da verificacao - Aula 13 (Analise e Modelos)"
+            echo ""
+            echo '```'
+            cat test_output.txt
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
