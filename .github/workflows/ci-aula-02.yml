@@ -2,11 +2,13 @@ name: "Correcao - Aula 02 (Hadoop & MapReduce)"
 
 on:
   pull_request:
-    branches: [master]
+    types: [ opened, synchronize, reopened ]
+    branches: [ "master" ]
     paths:
       - "aula-02-hadoop/**"
       - ".github/workflows/ci-aula-02.yml"
       - "aula-02-hadoop/tests/test_*.py"
+    
 
 permissions:
   contents: read
