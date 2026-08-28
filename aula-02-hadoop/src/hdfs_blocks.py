@@ -27,43 +27,44 @@ def calculate_num_blocks(file_size_mb: float, block_size_mb: int = 128) -> int:
 
     Exemplos:
         calculate_num_blocks(256, block_size_mb=128) -> 2
-        calculate_num_blocks(300, block_size_mb=128) -> 3  (2 blocos cheios + 1 parcial)
-        calculate_num_blocks(1,   block_size_mb=128) -> 1
+        calculate_num_blocks(300, block_size_mb=128) -> 3
+        calculate_num_blocks(1, block_size_mb=128) -> 1
     """
-    raise NotImplementedError("TODO 1: implemente calculate_num_blocks")
+    return math.ceil(file_size_mb / block_size_mb)
 
 
-def calculate_total_storage_with_replication(file_size_mb: float, replication_factor: int = 3) -> float:
+def calculate_total_storage_with_replication(
+    file_size_mb: float, replication_factor: int = 3
+) -> float:
     """
     TODO 2:
     Calcule o espaço TOTAL em disco (em MB) realmente ocupado no cluster
     para armazenar um arquivo de `file_size_mb` MB, considerando o fator
-    de replicação (por padrão, o Hadoop replica cada bloco 3 vezes, para
-    tolerância a falhas).
+    de replicação.
 
     Exemplo:
         calculate_total_storage_with_replication(100) -> 300
         calculate_total_storage_with_replication(100, replication_factor=1) -> 100
     """
-    raise NotImplementedError("TODO 2: implemente calculate_total_storage_with_replication")
+    return file_size_mb * replication_factor
 
 
 def simulate_block_distribution(num_blocks: int, num_datanodes: int) -> dict:
     """
     TODO 3:
     Simule a distribuição round-robin (sem replicação, apenas para
-    simplificar o exercício) de `num_blocks` blocos -- numerados de 1 até
-    num_blocks -- entre `num_datanodes` DataNodes, nomeados
-    "datanode-1", "datanode-2", etc.
+    simplificar o exercício) de `num_blocks` blocos entre os DataNodes.
 
     Retorne um dicionário no formato:
         {nome_do_datanode: [lista_de_ids_de_blocos_naquele_node]}
-
-    Exemplo com 6 blocos e 3 datanodes:
-        {
-          "datanode-1": [1, 4],
-          "datanode-2": [2, 5],
-          "datanode-3": [3, 6],
-        }
     """
-    raise NotImplementedError("TODO 3: implemente simulate_block_distribution")
+    distribution = {
+        f"datanode-{i}": []
+        for i in range(1, num_datanodes + 1)
+    }
+
+    for block_id in range(1, num_blocks + 1):
+        datanode = (block_id - 1) % num_datanodes + 1
+        distribution[f"datanode-{datanode}"].append(block_id)
+
+    return distribution
