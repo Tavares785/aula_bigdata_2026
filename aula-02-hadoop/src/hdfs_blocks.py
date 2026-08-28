@@ -30,7 +30,7 @@ def calculate_num_blocks(file_size_mb: float, block_size_mb: int = 128) -> int:
         calculate_num_blocks(300, block_size_mb=128) -> 3  (2 blocos cheios + 1 parcial)
         calculate_num_blocks(1,   block_size_mb=128) -> 1
     """
-    raise NotImplementedError("TODO 1: implemente calculate_num_blocks")
+    return math.ceil(file_size_mb / block_size_mb)
 
 
 def calculate_total_storage_with_replication(file_size_mb: float, replication_factor: int = 3) -> float:
@@ -45,7 +45,7 @@ def calculate_total_storage_with_replication(file_size_mb: float, replication_fa
         calculate_total_storage_with_replication(100) -> 300
         calculate_total_storage_with_replication(100, replication_factor=1) -> 100
     """
-    raise NotImplementedError("TODO 2: implemente calculate_total_storage_with_replication")
+    return file_size_mb * replication_factor
 
 
 def simulate_block_distribution(num_blocks: int, num_datanodes: int) -> dict:
@@ -66,4 +66,14 @@ def simulate_block_distribution(num_blocks: int, num_datanodes: int) -> dict:
           "datanode-3": [3, 6],
         }
     """
-    raise NotImplementedError("TODO 3: implemente simulate_block_distribution")
+    # Inicializa o dicionário com listas vazias para cada datanode
+    distribution = {f"datanode-{i + 1}": [] for i in range(num_datanodes)}
+
+    # Distribui os blocos em round-robin: bloco 1 vai para datanode-1,
+    # bloco 2 para datanode-2, ..., bloco N+1 volta para datanode-1, etc.
+    for block_id in range(1, num_blocks + 1):
+        node_index = (block_id - 1) % num_datanodes
+        node_name = f"datanode-{node_index + 1}"
+        distribution[node_name].append(block_id)
+
+    return distribution
