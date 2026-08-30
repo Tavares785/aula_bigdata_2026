@@ -38,9 +38,8 @@ class MRWordFrequencyCount(MRJob):
     def mapper(self, _, line):
         """
         A função `mapper` é chamada uma vez PARA CADA LINHA do arquivo de
-        entrada (imagine isso rodando em paralelo em dezenas de máquinas
-        de um cluster, cada uma processando um pedaço diferente do
-        arquivo/bloco HDFS).
+        entrada (imagine isso rodando em paralelo em dezenas de máquinas, cada
+        uma processando um pedaço diferente do arquivo/bloco HDFS).
 
         TODO 1:
         Para cada palavra encontrada na linha `line`:
@@ -56,7 +55,9 @@ class MRWordFrequencyCount(MRJob):
             emitido: ("gato", 1), ("correu", 1), ("atrás", 1), ("rato", 1)
             (observe que "o" e "do" são stopwords e foram descartadas)
         """
-        raise NotImplementedError("TODO 1: implemente o mapper")
+        for word in WORD_RE.findall(line.lower()):
+            if word not in STOPWORDS:
+                yield word, 1
 
     def combiner(self, word, counts):
         """
@@ -72,14 +73,14 @@ class MRWordFrequencyCount(MRJob):
         """
         A função `reducer` recebe TODOS os valores emitidos para uma
         mesma chave (palavra) -- vindos de todos os mappers/combiners do
-        cluster -- já agrupados e ordenados pelo "shuffle & sort" do
-        Hadoop, e deve produzir o resultado final agregado.
+        cluster -- já agrupados e ordenados pelo "shuffle & sort" do Hadoop, e deve
+        produzir o resultado final agregado.
 
         TODO 2:
         Some todos os valores em `counts` (que é um iterável de números)
         e emita o par (word, total) usando `yield`.
         """
-        raise NotImplementedError("TODO 2: implemente o reducer")
+        yield word, sum(counts)
 
 
 if __name__ == "__main__":
