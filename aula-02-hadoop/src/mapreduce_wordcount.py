@@ -56,7 +56,10 @@ class MRWordFrequencyCount(MRJob):
             emitido: ("gato", 1), ("correu", 1), ("atrás", 1), ("rato", 1)
             (observe que "o" e "do" são stopwords e foram descartadas)
         """
-        raise NotImplementedError("TODO 1: implemente o mapper")
+        for word in WORD_RE.findall(line.lower()):
+            if word in STOPWORDS:
+                continue
+            yield word, 1
 
     def combiner(self, word, counts):
         """
@@ -79,7 +82,7 @@ class MRWordFrequencyCount(MRJob):
         Some todos os valores em `counts` (que é um iterável de números)
         e emita o par (word, total) usando `yield`.
         """
-        raise NotImplementedError("TODO 2: implemente o reducer")
+        yield word, sum(counts)
 
 
 if __name__ == "__main__":
