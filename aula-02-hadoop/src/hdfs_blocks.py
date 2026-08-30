@@ -30,7 +30,9 @@ def calculate_num_blocks(file_size_mb: float, block_size_mb: int = 128) -> int:
         calculate_num_blocks(300, block_size_mb=128) -> 3  (2 blocos cheios + 1 parcial)
         calculate_num_blocks(1,   block_size_mb=128) -> 1
     """
-    raise NotImplementedError("TODO 1: implemente calculate_num_blocks")
+    if file_size_mb <= 0:
+        return 0
+    return int(math.ceil(file_size_mb / block_size_mb))
 
 
 def calculate_total_storage_with_replication(file_size_mb: float, replication_factor: int = 3) -> float:
@@ -45,7 +47,9 @@ def calculate_total_storage_with_replication(file_size_mb: float, replication_fa
         calculate_total_storage_with_replication(100) -> 300
         calculate_total_storage_with_replication(100, replication_factor=1) -> 100
     """
-    raise NotImplementedError("TODO 2: implemente calculate_total_storage_with_replication")
+    if file_size_mb <= 0:
+        return 0.0
+    return float(file_size_mb * replication_factor)
 
 
 def simulate_block_distribution(num_blocks: int, num_datanodes: int) -> dict:
@@ -66,4 +70,11 @@ def simulate_block_distribution(num_blocks: int, num_datanodes: int) -> dict:
           "datanode-3": [3, 6],
         }
     """
-    raise NotImplementedError("TODO 3: implemente simulate_block_distribution")
+    if num_blocks <= 0:
+        return {f"datanode-{i}": [] for i in range(1, num_datanodes + 1)}
+
+    distribution = {f"datanode-{i}": [] for i in range(1, num_datanodes + 1)}
+    for block_id in range(1, num_blocks + 1):
+        datanode_index = ((block_id - 1) % num_datanodes) + 1
+        distribution[f"datanode-{datanode_index}"].append(block_id)
+    return distribution
