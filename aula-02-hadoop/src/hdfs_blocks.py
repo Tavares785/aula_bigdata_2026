@@ -30,7 +30,10 @@ def calculate_num_blocks(file_size_mb: float, block_size_mb: int = 128) -> int:
         calculate_num_blocks(300, block_size_mb=128) -> 3  (2 blocos cheios + 1 parcial)
         calculate_num_blocks(1,   block_size_mb=128) -> 1
     """
-    raise NotImplementedError("TODO 1: implemente calculate_num_blocks")
+    # math.ceil e o que traduz a regra do HDFS: o ultimo bloco pode ficar
+    # parcialmente ocupado, mas ainda ocupa um bloco inteiro de metadado no
+    # NameNode. Divisao inteira (//) truncaria e perderia esse ultimo pedaco.
+    return math.ceil(file_size_mb / block_size_mb)
 
 
 def calculate_total_storage_with_replication(file_size_mb: float, replication_factor: int = 3) -> float:
@@ -45,7 +48,10 @@ def calculate_total_storage_with_replication(file_size_mb: float, replication_fa
         calculate_total_storage_with_replication(100) -> 300
         calculate_total_storage_with_replication(100, replication_factor=1) -> 100
     """
-    raise NotImplementedError("TODO 2: implemente calculate_total_storage_with_replication")
+    # O calculo e sobre o TAMANHO do arquivo, nao sobre o numero de blocos.
+    # Multiplicar blocos x replicacao x tamanho_do_bloco daria um valor maior,
+    # porque contaria o espaco vago do ultimo bloco como se estivesse cheio.
+    return file_size_mb * replication_factor
 
 
 def simulate_block_distribution(num_blocks: int, num_datanodes: int) -> dict:
@@ -66,4 +72,21 @@ def simulate_block_distribution(num_blocks: int, num_datanodes: int) -> dict:
           "datanode-3": [3, 6],
         }
     """
-    raise NotImplementedError("TODO 3: implemente simulate_block_distribution")
+    # Todos os DataNodes entram no dicionario desde o inicio, mesmo os que
+    # nao receberem bloco nenhum (caso num_blocks < num_datanodes). Um node
+    # existe no cluster independente de ter dados - omiti-lo faria parecer
+    # que ele esta fora do ar.
+    distribuicao = {
+        f"datanode-{i}": [] for i in range(1, num_datanodes + 1)
+    }
+
+    # Round-robin: o bloco 1 vai para o datanode-1, o 2 para o datanode-2, e
+    # assim por diante, voltando ao primeiro quando a lista acaba. O -1 e o
+    # +1 convertem entre a numeracao dos blocos (comeca em 1) e o resto da
+    # divisao (comeca em 0).
+    for block_id in range(1, num_blocks + 1):
+        indice_node = (block_id - 1) % num_datanodes + 1
+
+        distribuicao[f"datanode-{indice_node}"].append(block_id)
+
+    return distribuicao

@@ -56,7 +56,19 @@ class MRWordFrequencyCount(MRJob):
             emitido: ("gato", 1), ("correu", 1), ("atrás", 1), ("rato", 1)
             (observe que "o" e "do" são stopwords e foram descartadas)
         """
-        raise NotImplementedError("TODO 1: implemente o mapper")
+        # lower() antes do findall garante que "Dado", "DADO" e "daDO" virem
+        # a mesma chave - sem isso o shuffle trataria cada grafia como uma
+        # palavra diferente e a contagem sairia fragmentada.
+        for word in WORD_RE.findall(line.lower()):
+            # Filtrar aqui, no mapper, e nao no reducer: cada par descartado
+            # agora e um par a menos trafegando pela rede no shuffle, que e a
+            # fase mais cara de um job MapReduce.
+            if word in STOPWORDS:
+                continue
+
+            # yield em vez de return: o mapper emite N pares por linha, e o
+            # framework consome o gerador ate o fim.
+            yield word, 1
 
     def combiner(self, word, counts):
         """
@@ -79,7 +91,10 @@ class MRWordFrequencyCount(MRJob):
         Some todos os valores em `counts` (que é um iterável de números)
         e emita o par (word, total) usando `yield`.
         """
-        raise NotImplementedError("TODO 2: implemente o reducer")
+        # counts e um ITERAVEL, nao uma lista: o Hadoop entrega os valores em
+        # streaming para nao carregar na memoria todas as ocorrencias de uma
+        # palavra. sum() consome de uma passada so, sem materializar nada.
+        yield word, sum(counts)
 
 
 if __name__ == "__main__":
