@@ -15,7 +15,7 @@ ENV JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
 
 # Copiar e instalar dependencias Python
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --default-timeout=1000 --no-cache-dir -r requirements.txt
 
 # Copiar codigo do lab
 COPY . .
