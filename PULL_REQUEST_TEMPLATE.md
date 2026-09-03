@@ -18,7 +18,7 @@ Marque qual lab esta PR contém (apenas um por PR):
 
 ## Nome completo
 
-<!-- Seu nome, para o professor identificar a entrega -->
+<!-- Seu nome e RA, para o professor identificar a entrega -->
 
 ## Checklist antes de enviar
 
