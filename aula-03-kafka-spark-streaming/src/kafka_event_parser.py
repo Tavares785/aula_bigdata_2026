@@ -26,38 +26,36 @@ REQUIRED_FIELDS = {"event_id", "event_time", "category", "amount"}
 
 
 def parse_kafka_message(raw_value):
-    """
-    TODO 1:
-    Receba `raw_value` (uma string, o "value" de uma mensagem Kafka) e:
-      1. Tente fazer o parse como JSON (`json.loads`)
-      2. Se nao for um JSON valido, levante `ValueError("Mensagem nao e
-         um JSON valido")`
-      3. Se o JSON parseado nao for um objeto/dicionario, levante
-         `ValueError("Mensagem JSON deve representar um objeto")`
-      4. Se faltar algum campo de REQUIRED_FIELDS, levante
-         `ValueError(f"Campos obrigatorios ausentes: {sorted(faltantes)}")`
-      5. Caso contrario, retorne o dicionario parseado.
-    """
-    raise NotImplementedError("TODO 1: implemente parse_kafka_message")
+    try:
+        event = json.loads(raw_value)
+    except (json.JSONDecodeError, TypeError):
+        raise ValueError("Mensagem nao e um JSON valido")
+
+    if not isinstance(event, dict):
+        raise ValueError("Mensagem JSON deve representar um objeto")
+
+    faltantes = REQUIRED_FIELDS - event.keys()
+
+    if faltantes:
+        raise ValueError(f"Campos obrigatorios ausentes: {sorted(faltantes)}")
+
+    return event
 
 
 def is_valid_event(event):
-    """
-    TODO 2:
-    Receba um dicionario `event` (ja parseado) e retorne True se, e
-    somente se:
-      - todos os campos de REQUIRED_FIELDS estao presentes, E
-      - "amount" e um numero (int ou float), E
-      - "amount" e maior ou igual a zero
-    Caso contrario, retorne False (NAO levante excecao aqui).
-    """
-    raise NotImplementedError("TODO 2: implemente is_valid_event")
+    if not REQUIRED_FIELDS.issubset(event):
+        return False
+
+    amount = event["amount"]
+
+    if not isinstance(amount, (int, float)):
+        return False
+
+    if amount < 0:
+        return False
+
+    return True
 
 
 def filter_valid_events(events):
-    """
-    TODO 3:
-    Receba uma lista de dicionarios `events` e retorne apenas os que
-    passam em `is_valid_event`.
-    """
-    raise NotImplementedError("TODO 3: implemente filter_valid_events")
+    return [event for event in events if is_valid_event(event)]

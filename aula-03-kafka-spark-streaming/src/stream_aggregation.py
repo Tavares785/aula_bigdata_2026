@@ -20,33 +20,40 @@ from pyspark.sql import functions as F
 
 
 def windowed_event_counts(events_df, window_duration="10 seconds"):
-    """
-    TODO 1:
-    Receba `events_df`, um DataFrame com colunas ("event_time",
-    "category", "amount"), e retorne um DataFrame com a CONTAGEM de
-    eventos por JANELA DE TEMPO de tamanho `window_duration` e por
-    "category". O resultado deve ter as colunas:
-        window_start, window_end, category, count
-    ordenado por window_start e depois por category.
+    result = (
+        events_df
+        .groupBy(
+            F.window(F.col("event_time"), window_duration),
+            F.col("category")
+        )
+        .count()
+        .select(
+            F.col("window.start").alias("window_start"),
+            F.col("window.end").alias("window_end"),
+            F.col("category"),
+            F.col("count")
+        )
+        .orderBy("window_start", "category")
+    )
 
-    Dica:
-        events_df.groupBy(F.window(F.col("event_time"), window_duration), F.col("category"))
-                  .count()
-        Depois, extraia "window.start" e "window.end" com `.select(...)`
-        (a coluna gerada por F.window se chama "window" e e um struct
-        com campos "start" e "end").
-    """
-    raise NotImplementedError("TODO 1: implemente windowed_event_counts")
+    return result
 
 
 def windowed_revenue_sum(events_df, window_duration="10 seconds"):
-    """
-    TODO 2:
-    Receba `events_df` (mesmo formato do TODO 1) e retorne um DataFrame
-    com a SOMA de "amount" por JANELA DE TEMPO de tamanho
-    `window_duration` (sem separar por categoria desta vez). O resultado
-    deve ter as colunas:
-        window_start, window_end, total_amount
-    ordenado por window_start.
-    """
-    raise NotImplementedError("TODO 2: implemente windowed_revenue_sum")
+    result = (
+        events_df
+        .groupBy(
+            F.window(F.col("event_time"), window_duration)
+        )
+        .agg(
+            F.sum("amount").alias("total_amount")
+        )
+        .select(
+            F.col("window.start").alias("window_start"),
+            F.col("window.end").alias("window_end"),
+            F.col("total_amount")
+        )
+        .orderBy("window_start")
+    )
+
+    return result
