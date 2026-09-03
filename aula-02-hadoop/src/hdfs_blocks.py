@@ -16,7 +16,6 @@ import math
 
 def calculate_num_blocks(file_size_mb: float, block_size_mb: int = 128) -> int:
     """
-    TODO 1:
     Calcule quantos blocos HDFS são necessários para armazenar um arquivo
     de `file_size_mb` megabytes, usando blocos de `block_size_mb` MB cada.
 
@@ -30,12 +29,11 @@ def calculate_num_blocks(file_size_mb: float, block_size_mb: int = 128) -> int:
         calculate_num_blocks(300, block_size_mb=128) -> 3  (2 blocos cheios + 1 parcial)
         calculate_num_blocks(1,   block_size_mb=128) -> 1
     """
-    raise NotImplementedError("TODO 1: implemente calculate_num_blocks")
+    return math.ceil(file_size_mb / block_size_mb)
 
 
 def calculate_total_storage_with_replication(file_size_mb: float, replication_factor: int = 3) -> float:
     """
-    TODO 2:
     Calcule o espaço TOTAL em disco (em MB) realmente ocupado no cluster
     para armazenar um arquivo de `file_size_mb` MB, considerando o fator
     de replicação (por padrão, o Hadoop replica cada bloco 3 vezes, para
@@ -45,12 +43,11 @@ def calculate_total_storage_with_replication(file_size_mb: float, replication_fa
         calculate_total_storage_with_replication(100) -> 300
         calculate_total_storage_with_replication(100, replication_factor=1) -> 100
     """
-    raise NotImplementedError("TODO 2: implemente calculate_total_storage_with_replication")
+    return file_size_mb * replication_factor
 
 
 def simulate_block_distribution(num_blocks: int, num_datanodes: int) -> dict:
     """
-    TODO 3:
     Simule a distribuição round-robin (sem replicação, apenas para
     simplificar o exercício) de `num_blocks` blocos -- numerados de 1 até
     num_blocks -- entre `num_datanodes` DataNodes, nomeados
@@ -66,4 +63,13 @@ def simulate_block_distribution(num_blocks: int, num_datanodes: int) -> dict:
           "datanode-3": [3, 6],
         }
     """
-    raise NotImplementedError("TODO 3: implemente simulate_block_distribution")
+    # Cria o dicionário com cada datanode e uma lista vazia
+    distribution = {f"datanode-{i+1}": [] for i in range(num_datanodes)}
+
+    for block_id in range(1, num_blocks + 1):
+        # Descobre qual datanode recebe este bloco (round-robin)
+        node_index = (block_id - 1) % num_datanodes
+        node_name = f"datanode-{node_index + 1}"
+        distribution[node_name].append(block_id)
+
+    return distribution
