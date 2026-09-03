@@ -36,7 +36,27 @@ def windowed_event_counts(events_df, window_duration="10 seconds"):
         (a coluna gerada por F.window se chama "window" e e um struct
         com campos "start" e "end").
     """
-    raise NotImplementedError("TODO 1: implemente windowed_event_counts")
+    return (
+        events_df
+        # F.window gera uma coluna struct chamada "window", com os campos
+        # start e end. Agrupar por ela e por category responde "quantos
+        # eventos de cada categoria em cada fatia de tempo".
+        .groupBy(
+            F.window(F.col("event_time"), window_duration),
+            F.col("category"),
+        )
+        .count()
+        # O struct e achatado em duas colunas: manter "window" aninhado
+        # obrigaria quem consome o resultado a conhecer a estrutura
+        # interna do Spark.
+        .select(
+            F.col("window.start").alias("window_start"),
+            F.col("window.end").alias("window_end"),
+            F.col("category"),
+            F.col("count"),
+        )
+        .orderBy("window_start", "category")
+    )
 
 
 def windowed_revenue_sum(events_df, window_duration="10 seconds"):
@@ -49,4 +69,18 @@ def windowed_revenue_sum(events_df, window_duration="10 seconds"):
         window_start, window_end, total_amount
     ordenado por window_start.
     """
-    raise NotImplementedError("TODO 2: implemente windowed_revenue_sum")
+    return (
+        events_df
+        # Sem category no groupBy: aqui a pergunta e a receita total da
+        # janela, independente do tipo de evento.
+        .groupBy(F.window(F.col("event_time"), window_duration))
+        # agg + alias em vez de .sum("amount"): o nome automatico sairia
+        # como "sum(amount)", que nao e o contrato pedido.
+        .agg(F.sum("amount").alias("total_amount"))
+        .select(
+            F.col("window.start").alias("window_start"),
+            F.col("window.end").alias("window_end"),
+            F.col("total_amount"),
+        )
+        .orderBy("window_start")
+    )
