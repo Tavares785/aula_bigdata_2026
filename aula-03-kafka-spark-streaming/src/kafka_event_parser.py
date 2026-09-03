@@ -38,7 +38,29 @@ def parse_kafka_message(raw_value):
          `ValueError(f"Campos obrigatorios ausentes: {sorted(faltantes)}")`
       5. Caso contrario, retorne o dicionario parseado.
     """
-    raise NotImplementedError("TODO 1: implemente parse_kafka_message")
+    try:
+        parsed = json.loads(raw_value)
+    except (json.JSONDecodeError, TypeError):
+        # TypeError cobre o caso de raw_value nao ser str/bytes -- um
+        # Consumer real recebe bytes do broker, e um None vindo de uma
+        # mensagem vazia (tombstone) chegaria aqui.
+        raise ValueError("Mensagem nao e um JSON valido")
+
+    # JSON valido nao significa objeto: "[1, 2, 3]" e 42 tambem parseiam.
+    # Como o pipeline acessa campos por chave, qualquer coisa que nao seja
+    # dicionario quebraria mais adiante, longe da causa.
+    if not isinstance(parsed, dict):
+        raise ValueError("Mensagem JSON deve representar um objeto")
+
+    faltantes = REQUIRED_FIELDS - parsed.keys()
+
+    if faltantes:
+        # sorted() para a mensagem ser deterministica: a ordem de um set
+        # varia entre execucoes, e um erro que muda de texto atrapalha
+        # log e teste.
+        raise ValueError(f"Campos obrigatorios ausentes: {sorted(faltantes)}")
+
+    return parsed
 
 
 def is_valid_event(event):
@@ -51,7 +73,18 @@ def is_valid_event(event):
       - "amount" e maior ou igual a zero
     Caso contrario, retorne False (NAO levante excecao aqui).
     """
-    raise NotImplementedError("TODO 2: implemente is_valid_event")
+    if not REQUIRED_FIELDS.issubset(event.keys()):
+        return False
+
+    amount = event["amount"]
+
+    # bool e subclasse de int em Python: isinstance(True, int) e True.
+    # Sem excluir bool, um evento com amount=True passaria como numero
+    # valido e viraria 1 na soma da receita.
+    if isinstance(amount, bool) or not isinstance(amount, (int, float)):
+        return False
+
+    return amount >= 0
 
 
 def filter_valid_events(events):
@@ -60,4 +93,4 @@ def filter_valid_events(events):
     Receba uma lista de dicionarios `events` e retorne apenas os que
     passam em `is_valid_event`.
     """
-    raise NotImplementedError("TODO 3: implemente filter_valid_events")
+    return [event for event in events if is_valid_event(event)]
