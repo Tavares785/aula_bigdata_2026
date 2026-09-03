@@ -2,7 +2,7 @@ name: "Correcao - Aula 07 (Machine Learning com Big Data)"
 
 on:
   pull_request:
-    branches: [main]
+    branches: [master]
     paths:
       - "aula-07-machine-learning/**"
       - ".github/workflows/ci-aula-07.yml"

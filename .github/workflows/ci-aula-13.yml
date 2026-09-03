@@ -5,7 +5,7 @@ name: "Correcao - Aula 13 (Analise e Construcao de Modelos)"
 # PROGRESS.md foi preenchido.
 on:
   pull_request:
-    branches: [main]
+    branches: [master]
     paths:
       - "aula-13-analise-modelos/**"
       - ".github/workflows/ci-aula-13.yml"

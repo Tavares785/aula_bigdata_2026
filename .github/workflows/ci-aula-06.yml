@@ -2,7 +2,7 @@ name: "Correcao - Aula 06 (Spark SQL e DataFrames)"
 
 on:
   pull_request:
-    branches: [main]
+    branches: [master]
     paths:
       - "aula-06-spark-sql-dataframes/**"
       - ".github/workflows/ci-aula-06.yml"

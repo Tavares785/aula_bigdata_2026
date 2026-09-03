@@ -2,7 +2,7 @@ name: "Correcao - Aula 04 (Modelos e Implementacoes NoSQL)"
 
 on:
   pull_request:
-    branches: [main]
+    branches: [master]
     paths:
       - "aula-04-nosql/**"
       - ".github/workflows/ci-aula-04.yml"

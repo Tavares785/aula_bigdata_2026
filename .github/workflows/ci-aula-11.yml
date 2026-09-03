@@ -6,7 +6,7 @@ name: "Correcao - Aula 11 (Definicao e Planejamento do Projeto)"
 # template, com conteudo minimo).
 on:
   pull_request:
-    branches: [main]
+    branches: [master]
     paths:
       - "aula-11-planejamento-projeto/**"
       - ".github/workflows/ci-aula-11.yml"

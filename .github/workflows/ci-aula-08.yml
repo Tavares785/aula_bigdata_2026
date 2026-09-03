@@ -2,7 +2,7 @@ name: "Correcao - Aula 08 (NLP com Big Data)"
 
 on:
   pull_request:
-    branches: [main]
+    branches: [master]
     paths:
       - "aula-08-nlp/**"
       - ".github/workflows/ci-aula-08.yml"

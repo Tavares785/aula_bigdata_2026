@@ -2,7 +2,7 @@ name: "Correcao - Aula 03 (Kafka e Spark Streaming)"
 
 on:
   pull_request:
-    branches: [main]
+    branches: [master]
     paths:
       - "aula-03-kafka-spark-streaming/**"
       - ".github/workflows/ci-aula-03.yml"
