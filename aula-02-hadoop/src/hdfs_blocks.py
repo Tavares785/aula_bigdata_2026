@@ -11,59 +11,72 @@ Como testar localmente antes de enviar a PR:
     pip install -r requirements.txt
     pytest -v
 """
+
 import math
 
 
 def calculate_num_blocks(file_size_mb: float, block_size_mb: int = 128) -> int:
     """
-    TODO 1:
     Calcule quantos blocos HDFS são necessários para armazenar um arquivo
     de `file_size_mb` megabytes, usando blocos de `block_size_mb` MB cada.
 
-    Regra do HDFS: todo bloco (exceto possivelmente o último) tem o
-    tamanho cheio; o último bloco pode ficar parcialmente ocupado, mas
-    ainda assim conta como 1 bloco inteiro (ou seja: arredonde SEMPRE
-    para cima).
+    O último bloco pode ficar parcialmente ocupado, mas conta como 1 bloco.
+    Por isso, o resultado deve ser sempre arredondado para cima.
 
     Exemplos:
         calculate_num_blocks(256, block_size_mb=128) -> 2
-        calculate_num_blocks(300, block_size_mb=128) -> 3  (2 blocos cheios + 1 parcial)
-        calculate_num_blocks(1,   block_size_mb=128) -> 1
+        calculate_num_blocks(300, block_size_mb=128) -> 3
+        calculate_num_blocks(1, block_size_mb=128) -> 1
     """
-    raise NotImplementedError("TODO 1: implemente calculate_num_blocks")
+
+    return math.ceil(file_size_mb / block_size_mb)
 
 
-def calculate_total_storage_with_replication(file_size_mb: float, replication_factor: int = 3) -> float:
+def calculate_total_storage_with_replication(
+    file_size_mb: float,
+    replication_factor: int = 3
+) -> float:
     """
-    TODO 2:
-    Calcule o espaço TOTAL em disco (em MB) realmente ocupado no cluster
-    para armazenar um arquivo de `file_size_mb` MB, considerando o fator
-    de replicação (por padrão, o Hadoop replica cada bloco 3 vezes, para
-    tolerância a falhas).
+    Calcule o espaço TOTAL em disco, em MB, ocupado no cluster
+    considerando o fator de replicação.
 
     Exemplo:
         calculate_total_storage_with_replication(100) -> 300
         calculate_total_storage_with_replication(100, replication_factor=1) -> 100
     """
-    raise NotImplementedError("TODO 2: implemente calculate_total_storage_with_replication")
+
+    return file_size_mb * replication_factor
 
 
-def simulate_block_distribution(num_blocks: int, num_datanodes: int) -> dict:
+def simulate_block_distribution(
+    num_blocks: int,
+    num_datanodes: int
+) -> dict:
     """
-    TODO 3:
-    Simule a distribuição round-robin (sem replicação, apenas para
-    simplificar o exercício) de `num_blocks` blocos -- numerados de 1 até
-    num_blocks -- entre `num_datanodes` DataNodes, nomeados
-    "datanode-1", "datanode-2", etc.
+    Simule a distribuição round-robin dos blocos entre os DataNodes.
 
-    Retorne um dicionário no formato:
-        {nome_do_datanode: [lista_de_ids_de_blocos_naquele_node]}
+    Os blocos são numerados de 1 até num_blocks.
 
-    Exemplo com 6 blocos e 3 datanodes:
+    Exemplo com 6 blocos e 3 DataNodes:
+
         {
-          "datanode-1": [1, 4],
-          "datanode-2": [2, 5],
-          "datanode-3": [3, 6],
+            "datanode-1": [1, 4],
+            "datanode-2": [2, 5],
+            "datanode-3": [3, 6]
         }
     """
-    raise NotImplementedError("TODO 3: implemente simulate_block_distribution")
+
+    distribution = {}
+
+    # Cria os DataNodes
+    for datanode in range(1, num_datanodes + 1):
+        distribution[f"datanode-{datanode}"] = []
+
+    # Distribui os blocos em formato round-robin
+    for block_id in range(1, num_blocks + 1):
+        datanode_id = ((block_id - 1) % num_datanodes) + 1
+        datanode_name = f"datanode-{datanode_id}"
+
+        distribution[datanode_name].append(block_id)
+
+    return distribution
