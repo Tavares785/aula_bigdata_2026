@@ -2,7 +2,7 @@ name: "Correcao - Aula 09 (Data Warehousing e Data Lakes)"
 
 on:
   pull_request:
-    branches: [main]
+    branches: [master]
     paths:
       - "aula-09-data-warehousing/**"
       - ".github/workflows/ci-aula-09.yml"

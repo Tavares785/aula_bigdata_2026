@@ -6,7 +6,7 @@ name: "Correcao - Aula 14 (Visualizacao e Conclusao do Projeto)"
 # professor a partir da evidencia anexada na PR.
 on:
   pull_request:
-    branches: [main]
+    branches: [master]
     paths:
       - "aula-14-visualizacao-conclusao/**"
       - ".github/workflows/ci-aula-14.yml"

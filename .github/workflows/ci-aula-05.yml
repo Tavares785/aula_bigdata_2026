@@ -2,7 +2,7 @@ name: "Correcao - Aula 05 (Fundamentos do Spark)"
 
 on:
   pull_request:
-    branches: [main]
+    branches: [master]
     paths:
       - "aula-05-spark-fundamentos/**"
       - ".github/workflows/ci-aula-05.yml"

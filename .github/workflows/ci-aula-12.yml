@@ -6,7 +6,7 @@ name: "Correcao - Aula 12 (Ingestao e Pre-processamento)"
 # contra dados reais (depende de recursos externos por grupo).
 on:
   pull_request:
-    branches: [main]
+    branches: [master]
     paths:
       - "aula-12-ingestao-preprocessamento/**"
       - ".github/workflows/ci-aula-12.yml"

@@ -2,7 +2,7 @@ name: "Correcao - Aula 10 (Visualizacao de Dados)"
 
 on:
   pull_request:
-    branches: [main]
+    branches: [master]
     paths:
       - "aula-10-visualizacao/**"
       - ".github/workflows/ci-aula-10.yml"
