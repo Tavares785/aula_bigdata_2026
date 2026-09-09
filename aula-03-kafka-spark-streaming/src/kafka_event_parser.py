@@ -38,7 +38,19 @@ def parse_kafka_message(raw_value):
          `ValueError(f"Campos obrigatorios ausentes: {sorted(faltantes)}")`
       5. Caso contrario, retorne o dicionario parseado.
     """
-    raise NotImplementedError("TODO 1: implemente parse_kafka_message")
+    try:
+        event = json.loads(raw_value)
+    except (TypeError, json.JSONDecodeError) as error:
+        raise ValueError("Mensagem nao e um JSON valido") from error
+
+    if not isinstance(event, dict):
+        raise ValueError("Mensagem JSON deve representar um objeto")
+
+    missing_fields = REQUIRED_FIELDS - event.keys()
+    if missing_fields:
+        raise ValueError(f"Campos obrigatorios ausentes: {sorted(missing_fields)}")
+
+    return event
 
 
 def is_valid_event(event):
@@ -51,7 +63,15 @@ def is_valid_event(event):
       - "amount" e maior ou igual a zero
     Caso contrario, retorne False (NAO levante excecao aqui).
     """
-    raise NotImplementedError("TODO 2: implemente is_valid_event")
+    if not isinstance(event, dict) or not REQUIRED_FIELDS.issubset(event):
+        return False
+
+    amount = event["amount"]
+    return (
+        isinstance(amount, (int, float))
+        and not isinstance(amount, bool)
+        and amount >= 0
+    )
 
 
 def filter_valid_events(events):
@@ -60,4 +80,4 @@ def filter_valid_events(events):
     Receba uma lista de dicionarios `events` e retorne apenas os que
     passam em `is_valid_event`.
     """
-    raise NotImplementedError("TODO 3: implemente filter_valid_events")
+    return [event for event in events if is_valid_event(event)]
