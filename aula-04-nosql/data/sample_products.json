@@ -1,0 +1,6 @@
+[
+  {"product_id": "p1", "category": "eletronicos", "price": 1500.0, "stock": 10},
+  {"product_id": "p2", "category": "eletronicos", "price": 500.0, "stock": 5},
+  {"product_id": "p3", "category": "livros", "price": 40.0, "stock": 100},
+  {"product_id": "p4", "category": "livros", "price": 60.0, "stock": 50}
+]
