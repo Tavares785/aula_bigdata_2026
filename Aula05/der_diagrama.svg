@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 620" font-family="Arial, sans-serif">
+  <rect x="0" y="0" width="920" height="620" fill="#ffffff"/>
+  <text x="460" y="30" text-anchor="middle" font-size="20" font-weight="bold" fill="#1a1a1a">DER - Clinica Medica HealthTech (3FN)</text>
+
+  <!-- Connectors (drawn first, under boxes) -->
+  <line x1="260" y1="150" x2="400" y2="260" stroke="#555" stroke-width="2"/>
+  <line x1="660" y1="150" x2="520" y2="260" stroke="#555" stroke-width="2"/>
+  <line x1="660" y1="440" x2="520" y2="360" stroke="#555" stroke-width="2"/>
+
+  <text x="270" y="185" font-size="14" fill="#333">1</text>
+  <text x="388" y="245" font-size="14" fill="#333">N</text>
+  <text x="640" y="185" font-size="14" fill="#333">1</text>
+  <text x="532" y="245" font-size="14" fill="#333">N</text>
+  <text x="640" y="425" font-size="14" fill="#333">1</text>
+  <text x="532" y="365" font-size="14" fill="#333">N</text>
+
+  <!-- Paciente -->
+  <g>
+    <rect x="40" y="60" width="220" height="90" rx="6" fill="#e8f0fe" stroke="#3b5bdb" stroke-width="2"/>
+    <rect x="40" y="60" width="220" height="26" rx="6" fill="#3b5bdb"/>
+    <text x="150" y="78" text-anchor="middle" font-size="14" font-weight="bold" fill="#ffffff">Paciente</text>
+    <text x="52" y="102" font-size="12" fill="#1a1a1a" text-decoration="underline">PK cpf_paciente</text>
+    <text x="52" y="120" font-size="12" fill="#1a1a1a">nome_paciente</text>
+    <text x="52" y="138" font-size="12" fill="#1a1a1a">telefone_paciente</text>
+  </g>
+
+  <!-- Medico -->
+  <g>
+    <rect x="660" y="60" width="220" height="90" rx="6" fill="#e6fcf5" stroke="#0ca678" stroke-width="2"/>
+    <rect x="660" y="60" width="220" height="26" rx="6" fill="#0ca678"/>
+    <text x="770" y="78" text-anchor="middle" font-size="14" font-weight="bold" fill="#ffffff">Medico</text>
+    <text x="672" y="102" font-size="12" fill="#1a1a1a" text-decoration="underline">PK crm_medico</text>
+    <text x="672" y="120" font-size="12" fill="#1a1a1a">nome_medico</text>
+    <text x="672" y="138" font-size="12" fill="#1a1a1a">especialidade_medico</text>
+  </g>
+
+  <!-- Convenio -->
+  <g>
+    <rect x="660" y="440" width="220" height="80" rx="6" fill="#fff4e6" stroke="#e8590c" stroke-width="2"/>
+    <rect x="660" y="440" width="220" height="26" rx="6" fill="#e8590c"/>
+    <text x="770" y="458" text-anchor="middle" font-size="14" font-weight="bold" fill="#ffffff">Convenio</text>
+    <text x="672" y="482" font-size="12" fill="#1a1a1a" text-decoration="underline">PK id_convenio</text>
+    <text x="672" y="500" font-size="12" fill="#1a1a1a">nome_convenio</text>
+  </g>
+
+  <!-- Consulta -->
+  <g>
+    <rect x="340" y="260" width="240" height="180" rx="6" fill="#f3f0ff" stroke="#7048e8" stroke-width="2"/>
+    <rect x="340" y="260" width="240" height="26" rx="6" fill="#7048e8"/>
+    <text x="460" y="278" text-anchor="middle" font-size="14" font-weight="bold" fill="#ffffff">Consulta</text>
+    <text x="352" y="302" font-size="12" fill="#1a1a1a" text-decoration="underline">PK id_consulta</text>
+    <text x="352" y="320" font-size="12" fill="#1a1a1a">data_consulta</text>
+    <text x="352" y="338" font-size="12" fill="#1a1a1a">hora_consulta</text>
+    <text x="352" y="356" font-size="12" fill="#1a1a1a">valor_consulta</text>
+    <text x="352" y="374" font-size="12" fill="#1a1a1a">FK fk_cpf_paciente</text>
+    <text x="352" y="392" font-size="12" fill="#1a1a1a">FK fk_crm_medico</text>
+    <text x="352" y="410" font-size="12" fill="#1a1a1a">FK fk_id_convenio</text>
+  </g>
+
+  <text x="460" y="590" text-anchor="middle" font-size="12" fill="#555">Paciente (1) - (N) Consulta (N) - (1) Medico  |  Consulta (N) - (1) Convenio</text>
+</svg>
