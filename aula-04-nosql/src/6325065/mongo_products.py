@@ -27,4 +27,5 @@ def increment_stock(collection, product_id, delta):
     result = collection.update_one({"product_id": product_id}, {"$inc": {"stock": delta}})
     if result.matched_count == 0:
         return None
-    updated =
+    updated = collection.find_one({"product_id": product_id})
+    return updated["stock"]
