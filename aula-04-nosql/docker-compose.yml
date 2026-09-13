@@ -1,0 +1,19 @@
+# Sobe MongoDB e Cassandra locais para a pratica MANUAL deste lab (nao
+# usado pelo CI/CD -- a correcao automatica usa mongomock, que simula o
+# MongoDB em memoria, para ser rapida e nao depender de infraestrutura).
+#
+# Como usar:
+#   docker compose up -d
+#   # conecte com pymongo em localhost:27017 e/ou cassandra-driver em
+#   # localhost:9042
+#   docker compose down
+version: "3.8"
+services:
+  mongodb:
+    image: mongo:7
+    ports:
+      - "27017:27017"
+  cassandra:
+    image: cassandra:5
+    ports:
+      - "9042:9042"
