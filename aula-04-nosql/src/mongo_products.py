@@ -24,7 +24,8 @@ def insert_products(collection, products):
     dicionarios `products`, insira todos de uma vez (`insert_many`), e
     retorne a QUANTIDADE de documentos inseridos.
     """
-    raise NotImplementedError("TODO 1: implemente insert_products")
+    result = collection.insert_many(products)
+    return len(result.inserted_ids)
 
 
 def find_by_category(collection, category):
@@ -35,7 +36,11 @@ def find_by_category(collection, category):
     como uma lista de dicionarios, SEM o campo "_id" (use projecao para
     excluir: `{"_id": 0}`).
     """
-    raise NotImplementedError("TODO 2: implemente find_by_category")
+    cursor = collection.find(
+        {"category": category},
+        {"_id": 0},
+    ).sort("price", 1)
+    return list(cursor)
 
 
 def average_price_by_category(collection):
@@ -48,7 +53,13 @@ def average_price_by_category(collection):
     Dica: um pipeline com um unico estagio `$group` resolve:
         [{"$group": {"_id": "$category", "avg_price": {"$avg": "$price"}}}]
     """
-    raise NotImplementedError("TODO 3: implemente average_price_by_category")
+    pipeline = [
+        {"$group": {"_id": "$category", "avg_price": {"$avg": "$price"}}}
+    ]
+    return {
+        document["_id"]: document["avg_price"]
+        for document in collection.aggregate(pipeline)
+    }
 
 
 def increment_stock(collection, product_id, delta):
@@ -61,4 +72,15 @@ def increment_stock(collection, product_id, delta):
 
     Se nenhum produto com esse `product_id` existir, retorne `None`.
     """
-    raise NotImplementedError("TODO 4: implemente increment_stock")
+    result = collection.update_one(
+        {"product_id": product_id},
+        {"$inc": {"stock": delta}},
+    )
+    if result.matched_count == 0:
+        return None
+
+    product = collection.find_one(
+        {"product_id": product_id},
+        {"_id": 0, "stock": 1},
+    )
+    return product["stock"]
