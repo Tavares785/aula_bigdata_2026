@@ -3,6 +3,8 @@ Aula 04 - Modelos e Implementacoes NoSQL
 Lab: Operacoes basicas em um banco de dados orientado a documentos
 (MongoDB), usando a API real do pymongo.
 
+Aluno: David Gilmour Souza - RA 1524681
+
 Contexto
 --------
 Os testes injetam uma "collection" que implementa a MESMA interface do
