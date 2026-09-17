@@ -66,7 +66,15 @@ def word_count_rdd(sc, lines):
         word_count_rdd(sc, ["gato rato gato", "rato correu gato"])
         -> [("gato", 3), ("rato", 2), ("correu", 1)]
     """
-    raise NotImplementedError("TODO 1: implemente word_count_rdd")
+    contagens = (
+        sc.parallelize(lines)
+        .flatMap(lambda linha: linha.lower().split())
+        .map(lambda palavra: (palavra, 1))
+        .reduceByKey(lambda a, b: a + b)
+        .collect()
+    )
+    # Ordena por contagem decrescente e, em empate, por palavra crescente.
+    return sorted(contagens, key=lambda par: (-par[1], par[0]))
 
 
 def top_n_palavras(sc, lines, n):
@@ -82,7 +90,7 @@ def top_n_palavras(sc, lines, n):
         top_n_palavras(sc, ["gato rato gato", "rato correu gato"], 2)
         -> [("gato", 3), ("rato", 2)]
     """
-    raise NotImplementedError("TODO 2: implemente top_n_palavras")
+    return word_count_rdd(sc, lines)[:n]
 
 
 def main():
@@ -112,10 +120,15 @@ def main():
         print(f"{palavra},{contagem}")
 
     # Grava o resultado no S3 como texto: uma linha "palavra,contagem".
-    # Distribui a escrita entre os executors via RDD.saveAsTextFile.
-    sc.parallelize(resultado).map(
-        lambda t: f"{t[0]},{t[1]}"
-    ).saveAsTextFile(args["OUTPUT"])
+    # OBS (AWS Glue 4.0): o RDD.saveAsTextFile usa a API antiga (mapred) e falha
+    # com "ClassNotFoundException: DirectOutputCommitter" no runtime do Glue.
+    # Por isso gravamos via DataFrame (write.text), que usa o committer nativo
+    # do Glue/S3 e nao depende daquela classe legada. A logica de RDD acima
+    # (word_count_rdd) permanece a mesma; muda apenas a forma de ESCREVER.
+    linhas_saida = sc.parallelize(resultado).map(lambda t: f"{t[0]},{t[1]}")
+    spark.createDataFrame(
+        linhas_saida.map(lambda linha: (linha,)), ["value"]
+    ).write.mode("overwrite").text(args["OUTPUT"])
 
     print(f"Resultado gravado em: {args['OUTPUT']}")
 

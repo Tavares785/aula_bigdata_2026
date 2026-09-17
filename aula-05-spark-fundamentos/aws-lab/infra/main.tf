@@ -44,19 +44,19 @@ provider "aws" {
 #   - output/  : resultado do wordcount (gravado pelo job)
 #   - logs/    : logs do driver/executors do job
 # -----------------------------------------------------------------------------
-resource "aws_s3_bucket" "lab" {
+# IMPORTANTE (Learner Lab / AWS Academy):
+# O bucket NAO e criado pelo Terraform. O provider AWS 5.x, ao criar um
+# aws_s3_bucket, chama automaticamente s3:GetObjectLockConfiguration, que o SCP
+# do AWS Academy (p-2whlmd68) NEGA com "explicit deny" -> o apply falha sempre.
+#
+# Solucao: criamos o bucket FORA do Terraform, via AWS CLI (a CLI nao faz aquela
+# chamada), e aqui apenas o REFERENCIAMOS com um data source. Um data source de
+# bucket nao dispara a leitura de object lock, entao passa pelo SCP.
+#
+# Antes do 'terraform apply', crie o bucket uma unica vez:
+#   aws s3 mb s3://SEU_BUCKET --region us-east-1
+data "aws_s3_bucket" "lab" {
   bucket = var.bucket_nome
-}
-
-# -----------------------------------------------------------------------------
-# Bucket PRIVADO — bloqueia qualquer acesso público (os 4 bloqueios = true).
-# -----------------------------------------------------------------------------
-resource "aws_s3_bucket_public_access_block" "lab" {
-  bucket                  = aws_s3_bucket.lab.id
-  block_public_acls       = true
-  block_public_policy     = true
-  ignore_public_acls      = true
-  restrict_public_buckets = true
 }
 
 # -----------------------------------------------------------------------------
@@ -66,7 +66,7 @@ resource "aws_s3_bucket_public_access_block" "lab" {
 # O etag (filemd5) força o re-upload sempre que o script mudar.
 # -----------------------------------------------------------------------------
 resource "aws_s3_object" "script" {
-  bucket = aws_s3_bucket.lab.id
+  bucket = data.aws_s3_bucket.lab.id
   key    = "scripts/rdd_job.py"
   source = "${path.module}/../job/rdd_job.py"
   etag   = filemd5("${path.module}/../job/rdd_job.py")
@@ -77,7 +77,7 @@ resource "aws_s3_object" "script" {
 # É o texto que o job vai ler (arg --INPUT). O etag força re-upload ao mudar.
 # -----------------------------------------------------------------------------
 resource "aws_s3_object" "input" {
-  bucket = aws_s3_bucket.lab.id
+  bucket = data.aws_s3_bucket.lab.id
   key    = "input/sample_lines.txt"
   source = "${path.module}/../data/sample_lines.txt"
   etag   = filemd5("${path.module}/../data/sample_lines.txt")
@@ -108,16 +108,16 @@ resource "aws_glue_job" "wordcount" {
   command {
     name            = "glueetl"
     python_version  = "3"
-    script_location = "s3://${aws_s3_bucket.lab.bucket}/scripts/rdd_job.py"
+    script_location = "s3://${data.aws_s3_bucket.lab.bucket}/scripts/rdd_job.py"
   }
 
   # Argumentos passados ao script (getResolvedOptions os lê como --INPUT etc.).
   default_arguments = {
-    "--INPUT"  = "s3://${aws_s3_bucket.lab.bucket}/input/sample_lines.txt"
-    "--OUTPUT" = "s3://${aws_s3_bucket.lab.bucket}/output/wordcount"
+    "--INPUT"  = "s3://${data.aws_s3_bucket.lab.bucket}/input/sample_lines.txt"
+    "--OUTPUT" = "s3://${data.aws_s3_bucket.lab.bucket}/output/wordcount"
     # Logs contínuos do Spark/driver no CloudWatch (grupo /aws-glue/jobs/output).
     "--enable-continuous-cloudwatch-log" = "true"
     # Diretório temporário exigido pelo Glue (fica dentro do mesmo bucket).
-    "--TempDir" = "s3://${aws_s3_bucket.lab.bucket}/tmp/"
+    "--TempDir" = "s3://${data.aws_s3_bucket.lab.bucket}/tmp/"
   }
 }
