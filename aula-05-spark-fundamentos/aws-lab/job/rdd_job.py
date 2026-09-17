@@ -66,7 +66,13 @@ def word_count_rdd(sc, lines):
         word_count_rdd(sc, ["gato rato gato", "rato correu gato"])
         -> [("gato", 3), ("rato", 2), ("correu", 1)]
     """
-    raise NotImplementedError("TODO 1: implemente word_count_rdd")
+    rdd = sc.parallelize(lines)
+    contagens = (
+        rdd.flatMap(lambda line: line.lower().split())
+        .map(lambda word: (word, 1))
+        .reduceByKey(lambda a, b: a + b)
+    )
+    return sorted(contagens.collect(), key=lambda t: (-t[1], t[0]))
 
 
 def top_n_palavras(sc, lines, n):
@@ -82,7 +88,7 @@ def top_n_palavras(sc, lines, n):
         top_n_palavras(sc, ["gato rato gato", "rato correu gato"], 2)
         -> [("gato", 3), ("rato", 2)]
     """
-    raise NotImplementedError("TODO 2: implemente top_n_palavras")
+    return word_count_rdd(sc, lines)[:n]
 
 
 def main():
@@ -98,6 +104,15 @@ def main():
     spark = glue.spark_session
     job = Job(glue)
     job.init(args["JOB_NAME"], args)
+
+    # O Glue 4.0 (Hadoop 3.x) configura por padrao o committer legado
+    # "DirectOutputCommitter", que nao existe mais nesse Hadoop e quebra o
+    # RDD.saveAsTextFile com ClassNotFoundException. Forcamos o committer
+    # padrao do Hadoop antes de gravar.
+    sc._jsc.hadoopConfiguration().set(
+        "mapred.output.committer.class",
+        "org.apache.hadoop.mapred.FileOutputCommitter",
+    )
 
     # Le o texto do S3 como uma lista de linhas (strings).
     # spark.read.text(...).rdd traz cada linha; row[0] é a coluna "value".

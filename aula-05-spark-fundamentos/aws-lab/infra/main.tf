@@ -43,16 +43,45 @@ provider "aws" {
 #   - input/   : sample_lines.txt (dado de entrada)
 #   - output/  : resultado do wordcount (gravado pelo job)
 #   - logs/    : logs do driver/executors do job
+#
+# ⚠️ Por que "null_resource" + AWS CLI em vez de "resource aws_s3_bucket"?
+#   O recurso aws_s3_bucket do provider tenta LER a configuração de Object Lock
+#   logo depois de criar o bucket (s3:GetBucketObjectLockConfiguration), em
+#   toda leitura/refresh — não só na criação. No AWS Academy Learner Lab essa
+#   chamada é NEGADA por uma Service Control Policy da organização (não é uma
+#   permissão que dá pra liberar via LabRole), o que quebra o apply mesmo o
+#   bucket tendo sido criado com sucesso. Criando via AWS CLI (local-exec) e
+#   só LENDO o bucket via "data aws_s3_bucket" evitamos essa chamada (o data
+#   source não consulta Object Lock).
 # -----------------------------------------------------------------------------
-resource "aws_s3_bucket" "lab" {
-  bucket = var.bucket_nome
+resource "null_resource" "bucket" {
+  triggers = {
+    bucket_nome = var.bucket_nome
+    regiao      = var.regiao
+  }
+
+  provisioner "local-exec" {
+    command = "aws s3api create-bucket --bucket ${var.bucket_nome} --region ${var.regiao}"
+  }
+
+  # Limpa o bucket (inclusive versões/objetos) e remove ele no destroy —
+  # mantém o `terraform destroy` como a forma de limpeza do lab.
+  provisioner "local-exec" {
+    when    = destroy
+    command = "aws s3 rb s3://${self.triggers.bucket_nome} --force"
+  }
+}
+
+data "aws_s3_bucket" "lab" {
+  bucket     = var.bucket_nome
+  depends_on = [null_resource.bucket]
 }
 
 # -----------------------------------------------------------------------------
 # Bucket PRIVADO — bloqueia qualquer acesso público (os 4 bloqueios = true).
 # -----------------------------------------------------------------------------
 resource "aws_s3_bucket_public_access_block" "lab" {
-  bucket                  = aws_s3_bucket.lab.id
+  bucket                  = data.aws_s3_bucket.lab.id
   block_public_acls       = true
   block_public_policy     = true
   ignore_public_acls      = true
@@ -66,7 +95,7 @@ resource "aws_s3_bucket_public_access_block" "lab" {
 # O etag (filemd5) força o re-upload sempre que o script mudar.
 # -----------------------------------------------------------------------------
 resource "aws_s3_object" "script" {
-  bucket = aws_s3_bucket.lab.id
+  bucket = data.aws_s3_bucket.lab.id
   key    = "scripts/rdd_job.py"
   source = "${path.module}/../job/rdd_job.py"
   etag   = filemd5("${path.module}/../job/rdd_job.py")
@@ -77,7 +106,7 @@ resource "aws_s3_object" "script" {
 # É o texto que o job vai ler (arg --INPUT). O etag força re-upload ao mudar.
 # -----------------------------------------------------------------------------
 resource "aws_s3_object" "input" {
-  bucket = aws_s3_bucket.lab.id
+  bucket = data.aws_s3_bucket.lab.id
   key    = "input/sample_lines.txt"
   source = "${path.module}/../data/sample_lines.txt"
   etag   = filemd5("${path.module}/../data/sample_lines.txt")
@@ -108,16 +137,16 @@ resource "aws_glue_job" "wordcount" {
   command {
     name            = "glueetl"
     python_version  = "3"
-    script_location = "s3://${aws_s3_bucket.lab.bucket}/scripts/rdd_job.py"
+    script_location = "s3://${data.aws_s3_bucket.lab.bucket}/scripts/rdd_job.py"
   }
 
   # Argumentos passados ao script (getResolvedOptions os lê como --INPUT etc.).
   default_arguments = {
-    "--INPUT"  = "s3://${aws_s3_bucket.lab.bucket}/input/sample_lines.txt"
-    "--OUTPUT" = "s3://${aws_s3_bucket.lab.bucket}/output/wordcount"
+    "--INPUT"  = "s3://${data.aws_s3_bucket.lab.bucket}/input/sample_lines.txt"
+    "--OUTPUT" = "s3://${data.aws_s3_bucket.lab.bucket}/output/wordcount"
     # Logs contínuos do Spark/driver no CloudWatch (grupo /aws-glue/jobs/output).
     "--enable-continuous-cloudwatch-log" = "true"
     # Diretório temporário exigido pelo Glue (fica dentro do mesmo bucket).
-    "--TempDir" = "s3://${aws_s3_bucket.lab.bucket}/tmp/"
+    "--TempDir" = "s3://${data.aws_s3_bucket.lab.bucket}/tmp/"
   }
 }
