@@ -36,7 +36,21 @@ def windowed_event_counts(events_df, window_duration="10 seconds"):
         (a coluna gerada por F.window se chama "window" e e um struct
         com campos "start" e "end").
     """
-    raise NotImplementedError("TODO 1: implemente windowed_event_counts")
+    return (
+        events_df
+        .groupBy(
+            F.window(F.col("event_time"), window_duration),
+            F.col("category"),
+        )
+        .count()
+        .select(
+            F.col("window.start").alias("window_start"),
+            F.col("window.end").alias("window_end"),
+            F.col("category"),
+            F.col("count"),
+        )
+        .orderBy("window_start", "category")
+    )
 
 
 def windowed_revenue_sum(events_df, window_duration="10 seconds"):
@@ -49,4 +63,16 @@ def windowed_revenue_sum(events_df, window_duration="10 seconds"):
         window_start, window_end, total_amount
     ordenado por window_start.
     """
-    raise NotImplementedError("TODO 2: implemente windowed_revenue_sum")
+    return (
+        events_df
+        .groupBy(
+            F.window(F.col("event_time"), window_duration),
+        )
+        .agg(F.sum("amount").alias("total_amount"))
+        .select(
+            F.col("window.start").alias("window_start"),
+            F.col("window.end").alias("window_end"),
+            F.col("total_amount"),
+        )
+        .orderBy("window_start")
+    )

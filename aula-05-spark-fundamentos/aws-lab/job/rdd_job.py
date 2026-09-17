@@ -54,35 +54,34 @@ def word_count_rdd(sc, lines):
     TODO 1 (mesmo contrato da aula-05):
     Receba `sc` (SparkContext) e uma lista de strings `lines` (cada item é uma
     "linha" de texto) e retorne a contagem de palavras usando RDDs:
-      1. Crie um RDD a partir de `lines` com `sc.parallelize(lines)`.
-      2. Use `flatMap` para quebrar cada linha em palavras (separadas por
-         espaco) JA convertidas para minusculas.
-      3. Use `map` para transformar cada palavra em (palavra, 1).
-      4. Use `reduceByKey` para somar as ocorrencias de cada palavra.
-      5. Retorne uma lista de tuplas (palavra, contagem), ORDENADA por contagem
-         decrescente e, em empate, por ordem alfabetica crescente da palavra.
-
-    Exemplo:
-        word_count_rdd(sc, ["gato rato gato", "rato correu gato"])
-        -> [("gato", 3), ("rato", 2), ("correu", 1)]
     """
-    raise NotImplementedError("TODO 1: implemente word_count_rdd")
+
+    rdd = sc.parallelize(lines)
+
+    palavras = rdd.flatMap(lambda linha: linha.split(" "))
+
+    palavras_minusculas = palavras.map(lambda palavra: palavra.lower())
+
+    pares = palavras_minusculas.map(lambda palavra: (palavra, 1))
+
+    contagem = pares.reduceByKey(lambda a, b: a + b)
+
+    resultado = contagem.collect()
+
+    resultado.sort(key=lambda x: (-x[1], x[0]))
+
+    return resultado
 
 
 def top_n_palavras(sc, lines, n):
     """
     TODO 2:
-    Retorne as `n` palavras mais frequentes de `lines`, como lista de tuplas
-    (palavra, contagem), na mesma ordenacao de word_count_rdd (contagem
-    decrescente e, em empate, alfabetica crescente).
-
-    Dica: reutilize word_count_rdd(sc, lines) e pegue os `n` primeiros itens.
-
-    Exemplo:
-        top_n_palavras(sc, ["gato rato gato", "rato correu gato"], 2)
-        -> [("gato", 3), ("rato", 2)]
+    Retorne as `n` palavras mais frequentes de `lines`.
     """
-    raise NotImplementedError("TODO 2: implemente top_n_palavras")
+
+    resultado = word_count_rdd(sc, lines)
+
+    return resultado[:n]
 
 
 def main():
@@ -113,6 +112,9 @@ def main():
 
     # Grava o resultado no S3 como texto: uma linha "palavra,contagem".
     # Distribui a escrita entre os executors via RDD.saveAsTextFile.
+    hadoop_conf = sc._jsc.hadoopConfiguration()
+    hadoop_conf.set("mapreduce.outputcommitter.class", "org.apache.hadoop.mapred.FileOutputCommitter")
+    hadoop_conf.set("mapred.output.committer.class", "org.apache.hadoop.mapred.FileOutputCommitter")
     sc.parallelize(resultado).map(
         lambda t: f"{t[0]},{t[1]}"
     ).saveAsTextFile(args["OUTPUT"])
