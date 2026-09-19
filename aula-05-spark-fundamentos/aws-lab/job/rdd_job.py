@@ -66,7 +66,16 @@ def word_count_rdd(sc, lines):
         word_count_rdd(sc, ["gato rato gato", "rato correu gato"])
         -> [("gato", 3), ("rato", 2), ("correu", 1)]
     """
-    raise NotImplementedError("TODO 1: implemente word_count_rdd")
+    rdd = sc.parallelize(lines)
+    palavras = rdd.flatMap(lambda linha: linha.split())
+    palavras = palavras.map(lambda palavra: palavra.lower())
+    contagens = palavras.map(lambda palavra: (palavra, 1)).reduceByKey(
+        lambda a, b: a + b
+    )
+
+    return contagens.sortBy(
+        lambda item: (-item[1], item[0])
+    ).collect()
 
 
 def top_n_palavras(sc, lines, n):
@@ -82,7 +91,7 @@ def top_n_palavras(sc, lines, n):
         top_n_palavras(sc, ["gato rato gato", "rato correu gato"], 2)
         -> [("gato", 3), ("rato", 2)]
     """
-    raise NotImplementedError("TODO 2: implemente top_n_palavras")
+    return word_count_rdd(sc, lines)[:n]
 
 
 def main():
@@ -94,6 +103,10 @@ def main():
     # Contexto Spark/Glue: o SparkContext e o GlueContext são gerenciados pelo
     # Glue; a SparkSession vem do GlueContext. O Job registra início/fim.
     sc = SparkContext()
+    sc._jsc.hadoopConfiguration().set(
+        "mapred.output.committer.class",
+        "org.apache.hadoop.mapred.DirectFileOutputCommitter"
+    )
     glue = GlueContext(sc)
     spark = glue.spark_session
     job = Job(glue)
