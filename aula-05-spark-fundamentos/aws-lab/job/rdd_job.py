@@ -61,31 +61,31 @@ def word_count_rdd(sc, lines):
       4. Use `reduceByKey` para somar as ocorrencias de cada palavra.
       5. Retorne uma lista de tuplas (palavra, contagem), ORDENADA por contagem
          decrescente e, em empate, por ordem alfabetica crescente da palavra.
-
-    Exemplo:
-        word_count_rdd(sc, ["gato rato gato", "rato correu gato"])
-        -> [("gato", 3), ("rato", 2), ("correu", 1)]
     """
-    raise NotImplementedError("TODO 1: implemente word_count_rdd")
+    rdd = sc.parallelize(lines)
 
+    contagem = (
+        rdd.flatMap(lambda linha: linha.split())
+        .map(lambda palavra: (palavra.lower(), 1))
+        .reduceByKey(lambda a, b: a + b)
+    )
+
+    return sorted(
+        contagem.collect(),
+        key=lambda item: (-item[1], item[0])
+    )
 
 def top_n_palavras(sc, lines, n):
     """
     TODO 2:
     Retorne as `n` palavras mais frequentes de `lines`, como lista de tuplas
-    (palavra, contagem), na mesma ordenacao de word_count_rdd (contagem
-    decrescente e, em empate, alfabetica crescente).
-
-    Dica: reutilize word_count_rdd(sc, lines) e pegue os `n` primeiros itens.
-
-    Exemplo:
-        top_n_palavras(sc, ["gato rato gato", "rato correu gato"], 2)
-        -> [("gato", 3), ("rato", 2)]
+    (palavra, contagem), na mesma ordenacao de word_count_rdd.
     """
-    raise NotImplementedError("TODO 2: implemente top_n_palavras")
+    return word_count_rdd(sc, lines)[:n]
 
 
 def main():
+    # Corrige o committer de saída para compatibilidade do Glue 4.0 com RDD.saveAsTextFile.
     """Ponto de entrada executado pelo AWS Glue (glueetl / spark-submit)."""
     # Le os argumentos do Glue. JOB_NAME é injetado pelo Glue; INPUT/OUTPUT vêm
     # dos default_arguments definidos no aws_glue_job (--INPUT / --OUTPUT).
@@ -94,6 +94,7 @@ def main():
     # Contexto Spark/Glue: o SparkContext e o GlueContext são gerenciados pelo
     # Glue; a SparkSession vem do GlueContext. O Job registra início/fim.
     sc = SparkContext()
+    sc._jsc.hadoopConfiguration().set("mapred.output.committer.class", "org.apache.hadoop.mapred.DirectFileOutputCommitter")
     glue = GlueContext(sc)
     spark = glue.spark_session
     job = Job(glue)
