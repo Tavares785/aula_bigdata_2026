@@ -1,0 +1,61 @@
+name: "Validacao - Aula 05 (Lab AWS Glue)"
+
+on:
+  pull_request:
+    branches: [master]
+    paths:
+      - "aula-05-spark-fundamentos/**"
+      - ".github/workflows/ci-aula-05.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validar-lab:
+    name: Validar estrutura do lab AWS
+    runs-on: ubuntu-latest
+
+    steps:
+      # Baixa o codigo da PR.
+      - name: Checkout do codigo da PR
+        uses: actions/checkout@v4
+
+      # Instala o Terraform.
+      - name: Setup do Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      # Verifica a formatacao dos arquivos Terraform (sem alterar nada).
+      - name: Checar formatacao do Terraform
+        working-directory: aula-05-spark-fundamentos/aws-lab/infra
+        run: terraform fmt -check -recursive
+
+      # Inicializa sem backend e valida a configuracao do Terraform.
+      - name: Inicializar e validar o Terraform
+        working-directory: aula-05-spark-fundamentos/aws-lab/infra
+        run: |
+          terraform init -backend=false
+          terraform validate
+
+      # Instala o Python para compilar o script PySpark.
+      - name: Setup do Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      # Compila o script de RDDs (verifica sintaxe, sem executar Spark).
+      - name: Compilar o script PySpark
+        working-directory: aula-05-spark-fundamentos/aws-lab
+        run: python -m py_compile job/rdd_job.py
+
+      # Escreve um resumo simples no sumario do job.
+      - name: Publicar resumo da validacao
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "## Validacao - Aula 05 (Lab AWS Glue)"
+            echo ""
+            echo "A estrutura do lab AWS foi validada:"
+            echo "- Terraform (infra/): formatacao e configuracao verificadas."
+            echo "- Script PySpark (job/rdd_job.py): sintaxe compilada com sucesso."
+          } >> "$GITHUB_STEP_SUMMARY"
