@@ -17,7 +17,7 @@ crash.log
 # --- Credenciais e segredos (NUNCA versionar) ---
 .env
 .env.*
-credentials
+credentials.sh
 *.pem
 
 # --- Python ---
