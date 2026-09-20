@@ -43,13 +43,11 @@ outputs (`bucket_nome`, `glue_job_nome`, `labrole_arn`). **NÃO** mostre credenc
 
 Cole aqui a saída:
 ```text
-(cole a saída aqui)
+Não colado por motivos de segurança.
 ```
 
 Print:
-```
-![terraform apply](02-apply.png)
-```
+![alt text](terraform-apply.png)
 
 ---
 
@@ -67,9 +65,7 @@ Cole aqui a saída:
 ```
 
 Print:
-```
-![job success](03-job-success.png)
-```
+![alt text](run_job.png)
 
 ---
 
@@ -86,9 +82,7 @@ Cole aqui a saída:
 ```
 
 Print (opcional):
-```
-![resultado word count](04-resultado.png)
-```
+![alt text](ver_resultados.png)
 
 ---
 
@@ -137,18 +131,21 @@ Cole aqui a saída:
 ```
 
 Print:
-```
-![terraform destroy](06-destroy.png)
-```
+![alt text](terraform_destroy.png)
 
 ---
 
 ## Checklist de conferência
 
-- [ ] 1. Identidade AWS ativa (`aws sts get-caller-identity`)
-- [ ] 2. `terraform apply` concluído ("Apply complete!" + outputs)
-- [ ] 3. Job com estado `SUCCEEDED` (Glue) (+ `RUN_ID`)
-- [ ] 4. Resultado do word count (`./ver_resultado.sh`)
-- [ ] 5. Top palavras + interpretação (2–3 frases)
-- [ ] 6. Logs do driver (opcional / bônus)
-- [ ] 7. Limpeza com `terraform destroy` ("Destroy complete!")
+- [X] 1. Identidade AWS ativa (`aws sts get-caller-identity`)
+- [X] 2. `terraform apply` concluído ("Apply complete!" + outputs)
+- [-] 3. Job com estado `SUCCEEDED` (Glue) (+ `RUN_ID`)
+- [?] 4. Resultado do word count (`./ver_resultado.sh`)
+- [?] 5. Top palavras + interpretação (2–3 frases)
+- [?] 6. Logs do driver (opcional / bônus)
+- [X] 7. Limpeza com `terraform destroy` ("Destroy complete!")
+
+
+## Notas pessoais:
+- Dificuldades com objectLock - resolvido com um local-exec
+- Problemas com o scrips rdd_job.py - incompatibilidade com a versão 25 do java?

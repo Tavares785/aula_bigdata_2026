@@ -66,7 +66,37 @@ def word_count_rdd(sc, lines):
         word_count_rdd(sc, ["gato rato gato", "rato correu gato"])
         -> [("gato", 3), ("rato", 2), ("correu", 1)]
     """
-    raise NotImplementedError("TODO 1: implemente word_count_rdd")
+    # 1. Distribui a lista `lines` em partições do cluster (RDD = Resilient
+    #    Distributed Dataset). Cada item da lista vira um registro do RDD.
+    rdd = sc.parallelize(lines)
+
+    # 2. flatMap: para CADA linha, aplicamos uma função que retorna uma LISTA
+    #    de palavras (linha.lower().split()) e o Spark "achata" (flatten) o
+    #    resultado, juntando todas as listas numa única sequência de palavras.
+    #    Se usássemos `map` em vez de `flatMap`, o resultado seria um RDD de
+    #    listas de palavras (uma lista por linha), não de palavras soltas.
+    palavras = rdd.flatMap(lambda linha: linha.lower().split())
+
+    # 3. map: transforma cada palavra numa tupla (palavra, 1). Esse "1" é a
+    #    contagem inicial de cada ocorrência — é o padrão clássico de word
+    #    count (map-reduce): primeiro conta "1 por aparição", depois soma.
+    pares = palavras.map(lambda palavra: (palavra, 1))
+
+    # 4. reduceByKey: agrupa as tuplas pela chave (a palavra) e combina os
+    #    valores de cada grupo usando a função dada — aqui, soma (a + b).
+    #    Isso roda de forma distribuída: cada executor soma localmente as
+    #    palavras da sua partição antes de combinar os resultados parciais.
+    contagens = pares.reduceByKey(lambda a, b: a + b)
+
+    # 5. collect() traz o resultado do cluster (executors) de volta para o
+    #    driver, como uma lista Python normal. A partir daqui não é mais
+    #    processamento distribuído, é só ordenação local da lista final.
+    #    Ordenamos por: contagem decrescente (-contagem) e, em empate,
+    #    palavra em ordem alfabética crescente.
+    resultado = contagens.collect()
+    resultado_ordenado = sorted(resultado, key=lambda par: (-par[1], par[0]))
+
+    return resultado_ordenado
 
 
 def top_n_palavras(sc, lines, n):
@@ -82,7 +112,11 @@ def top_n_palavras(sc, lines, n):
         top_n_palavras(sc, ["gato rato gato", "rato correu gato"], 2)
         -> [("gato", 3), ("rato", 2)]
     """
-    raise NotImplementedError("TODO 2: implemente top_n_palavras")
+    # Reaproveita word_count_rdd: ela já devolve a lista ordenada por
+    # contagem desc / alfabética asc, então "top N" é simplesmente pegar
+    # os N primeiros itens dessa lista (fatiamento de lista Python comum).
+    resultado_completo = word_count_rdd(sc, lines)
+    return resultado_completo[:n]
 
 
 def main():
