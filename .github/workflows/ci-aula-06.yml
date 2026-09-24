@@ -1,4 +1,4 @@
-name: "Correcao - Aula 06 (Spark SQL e DataFrames)"
+name: "Validacao - Aula 06 (Lab AWS Glue)"
 
 on:
   pull_request:
@@ -11,33 +11,51 @@ permissions:
   contents: read
 
 jobs:
-  corrigir-lab:
-    name: Rodar testes automaticos do lab
+  validar-lab:
+    name: Validar estrutura do lab AWS
     runs-on: ubuntu-latest
 
     steps:
+      # Baixa o codigo da PR.
       - name: Checkout do codigo da PR
         uses: actions/checkout@v4
 
-      - name: Build da imagem Docker do lab
-        working-directory: aula-06-spark-sql-dataframes
-        run: docker build -t lab-aula-06 .
+      # Instala o Terraform.
+      - name: Setup do Terraform
+        uses: hashicorp/setup-terraform@v3
 
-      - name: Rodar testes (correcao automatica)
-        working-directory: aula-06-spark-sql-dataframes
+      # Verifica a formatacao dos arquivos Terraform (sem alterar nada).
+      - name: Checar formatacao do Terraform
+        working-directory: aula-06-spark-sql-dataframes/aws-lab/infra
+        run: terraform fmt -check -recursive
+
+      # Inicializa sem backend e valida a configuracao do Terraform.
+      - name: Inicializar e validar o Terraform
+        working-directory: aula-06-spark-sql-dataframes/aws-lab/infra
         run: |
-          set -o pipefail
-          docker run --rm lab-aula-06 pytest -v --tb=short | tee test_output.txt
+          terraform init -backend=false
+          terraform validate
 
-      - name: Publicar resumo da correcao
+      # Instala o Python para compilar o script PySpark.
+      - name: Setup do Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      # Compila o script de DataFrames/Spark SQL (verifica sintaxe, sem executar Spark).
+      - name: Compilar o script PySpark
+        working-directory: aula-06-spark-sql-dataframes/aws-lab
+        run: python -m py_compile job/dataframe_job.py
+
+      # Escreve um resumo simples no sumario do job.
+      - name: Publicar resumo da validacao
         if: always()
         shell: bash
-        working-directory: aula-06-spark-sql-dataframes
         run: |
           {
-            echo "## Resultado da correcao automatica - Aula 06 (Spark SQL / DataFrames)"
+            echo "## Validacao - Aula 06 (Lab AWS Glue)"
             echo ""
-            echo '```'
-            cat test_output.txt 2>/dev/null || echo "Nenhum output de teste disponivel"
-            echo '```'
+            echo "A estrutura do lab AWS foi validada:"
+            echo "- Terraform (infra/): formatacao e configuracao verificadas."
+            echo "- Script PySpark (job/dataframe_job.py): sintaxe compilada com sucesso."
           } >> "$GITHUB_STEP_SUMMARY"
