@@ -66,7 +66,15 @@ def word_count_rdd(sc, lines):
         word_count_rdd(sc, ["gato rato gato", "rato correu gato"])
         -> [("gato", 3), ("rato", 2), ("correu", 1)]
     """
-    raise NotImplementedError("TODO 1: implemente word_count_rdd")
+    counts = (
+        sc.parallelize(lines)
+        .flatMap(lambda line: line.lower().split())
+        .filter(lambda word: word)
+        .map(lambda word: (word, 1))
+        .reduceByKey(lambda left, right: left + right)
+        .collect()
+    )
+    return sorted(counts, key=lambda item: (-item[1], item[0]))
 
 
 def top_n_palavras(sc, lines, n):
@@ -82,7 +90,10 @@ def top_n_palavras(sc, lines, n):
         top_n_palavras(sc, ["gato rato gato", "rato correu gato"], 2)
         -> [("gato", 3), ("rato", 2)]
     """
-    raise NotImplementedError("TODO 2: implemente top_n_palavras")
+    if n <= 0:
+        return []
+
+    return word_count_rdd(sc, lines)[:n]
 
 
 def main():
