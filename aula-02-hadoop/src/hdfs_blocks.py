@@ -30,7 +30,13 @@ def calculate_num_blocks(file_size_mb: float, block_size_mb: int = 128) -> int:
         calculate_num_blocks(300, block_size_mb=128) -> 3  (2 blocos cheios + 1 parcial)
         calculate_num_blocks(1,   block_size_mb=128) -> 1
     """
-    raise NotImplementedError("TODO 1: implemente calculate_num_blocks")
+    # ESTUDO: dividimos o tamanho do arquivo pelo tamanho do bloco.
+    # Ex: 300 MB / 128 MB = 2.34375 blocos
+    # Como um bloco parcial ainda ocupa um bloco inteiro no HDFS,
+    # usamos math.ceil() para arredondar SEMPRE para cima.
+    # math.ceil(2.34375) -> 3
+    # math.ceil(2.0)     -> 2
+    return math.ceil(file_size_mb / block_size_mb)
 
 
 def calculate_total_storage_with_replication(file_size_mb: float, replication_factor: int = 3) -> float:
@@ -45,7 +51,11 @@ def calculate_total_storage_with_replication(file_size_mb: float, replication_fa
         calculate_total_storage_with_replication(100) -> 300
         calculate_total_storage_with_replication(100, replication_factor=1) -> 100
     """
-    raise NotImplementedError("TODO 2: implemente calculate_total_storage_with_replication")
+    # ESTUDO: o HDFS replica cada bloco N vezes entre DataNodes diferentes.
+    # Isso garante que, se um nó cair, os dados ainda estejam disponíveis
+    # em outros nós. O custo é que o espaço em disco é multiplicado.
+    # Ex: 100 MB com fator 3 -> 100 * 3 = 300 MB usados no cluster total.
+    return file_size_mb * replication_factor
 
 
 def simulate_block_distribution(num_blocks: int, num_datanodes: int) -> dict:
@@ -66,4 +76,26 @@ def simulate_block_distribution(num_blocks: int, num_datanodes: int) -> dict:
           "datanode-3": [3, 6],
         }
     """
-    raise NotImplementedError("TODO 3: implemente simulate_block_distribution")
+    # ESTUDO: Round-robin significa distribuir em ordem circular.
+    # Bloco 1 -> datanode-1, bloco 2 -> datanode-2, bloco 3 -> datanode-3,
+    # bloco 4 -> datanode-1 (volta ao início), e assim por diante.
+
+    # Passo 1: cria o dicionário com uma lista vazia para cada datanode.
+    # Ex: {"datanode-1": [], "datanode-2": [], "datanode-3": []}
+    distribution = {f"datanode-{i}": [] for i in range(1, num_datanodes + 1)}
+
+    # Passo 2: percorre cada bloco (numerados de 1 até num_blocks)
+    for block_id in range(1, num_blocks + 1):
+        # ESTUDO: o operador módulo (%) retorna o resto da divisão.
+        # Usamos (block_id - 1) % num_datanodes para obter um índice de 0 a N-1,
+        # e somamos 1 para obter o número do datanode (que começa em 1).
+        # Ex com 3 datanodes:
+        #   block_id=1: (1-1) % 3 = 0 -> datanode-1
+        #   block_id=2: (2-1) % 3 = 1 -> datanode-2
+        #   block_id=3: (3-1) % 3 = 2 -> datanode-3
+        #   block_id=4: (4-1) % 3 = 0 -> datanode-1  (volta!)
+        node_index = (block_id - 1) % num_datanodes + 1
+        node_name = f"datanode-{node_index}"
+        distribution[node_name].append(block_id)
+
+    return distribution

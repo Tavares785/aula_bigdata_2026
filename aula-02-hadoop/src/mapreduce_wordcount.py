@@ -56,7 +56,25 @@ class MRWordFrequencyCount(MRJob):
             emitido: ("gato", 1), ("correu", 1), ("atrás", 1), ("rato", 1)
             (observe que "o" e "do" são stopwords e foram descartadas)
         """
-        raise NotImplementedError("TODO 1: implemente o mapper")
+        # ESTUDO: WORD_RE.findall() usa a expressão regular definida acima
+        # para encontrar todas as palavras da linha. Chamamos .lower() na
+        # linha antes de passar para garantir que "Gato" e "gato" sejam
+        # tratados como a mesma palavra.
+        # Ex: "O gato correu" -> ["o", "gato", "correu"]
+        words = WORD_RE.findall(line.lower())
+
+        for word in words:
+            # ESTUDO: filtramos as stopwords — palavras sem valor analítico
+            # como artigos ("o", "a") e preposições ("de", "para").
+            # O operador `in` verifica se a palavra está no conjunto STOPWORDS.
+            if word in STOPWORDS:
+                continue  # pula para a próxima palavra sem emitir nada
+
+            # ESTUDO: `yield` é como um "return parcial" — ele emite um par
+            # (chave, valor) para o framework MapReduce sem encerrar a função.
+            # O Hadoop vai agrupar todos os (palavra, 1) pela chave (palavra)
+            # e enviar para o reducer correspondente.
+            yield word, 1
 
     def combiner(self, word, counts):
         """
@@ -79,7 +97,16 @@ class MRWordFrequencyCount(MRJob):
         Some todos os valores em `counts` (que é um iterável de números)
         e emita o par (word, total) usando `yield`.
         """
-        raise NotImplementedError("TODO 2: implemente o reducer")
+        # ESTUDO: o reducer recebe uma palavra e um iterável com todos os
+        # valores que os mappers emitiram para ela.
+        # Ex: word="gato", counts=[1, 1] (veio de dois mappers diferentes)
+        #
+        # sum(counts) soma todos esses valores de uma vez.
+        # Ex: sum([1, 1]) -> 2
+        #
+        # Assim como no mapper, usamos yield para emitir o resultado final:
+        # o par (palavra, contagem_total).
+        yield word, sum(counts)
 
 
 if __name__ == "__main__":
