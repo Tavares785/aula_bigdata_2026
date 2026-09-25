@@ -108,7 +108,7 @@ def total_revenue_by_category(orders_df):
            moveis     |  6789.00
            ...        | ...
     """
-    raise NotImplementedError("TODO 1: implemente total_revenue_by_category")
+    return (orders_df.groupBy("category").agg(F.sum("value").alias("total_revenue")).orderBy(F.col("total_revenue").desc()))
 
 
 def top_n_customers_by_spend(orders_df, customers_df, n):
@@ -131,7 +131,8 @@ def top_n_customers_by_spend(orders_df, customers_df, n):
            C009        | Isabela Nunes | 12928.10
            ...         | ...           | ...
     """
-    raise NotImplementedError("TODO 2: implemente top_n_customers_by_spend")
+    joined = join_orders_with_customers(orders_df, customers_df)
+    return (joined.groupBy("customer_id", "customer_name").agg(F.sum("value").alias("total_spend")).orderBy(F.col("total_spend").desc()).limit(n))
 
 
 def main():
