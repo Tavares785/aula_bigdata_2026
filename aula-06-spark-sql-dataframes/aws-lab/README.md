@@ -81,6 +81,14 @@ requisito** deste lab. Você não precisa editar nada disso — a infra já vem 
 - **Terraform >= 1.5** (`terraform version`).
 - Os dados do lab: `data/pedidos.csv` e `data/clientes.csv` (já incluídos nesta pasta).
 
+> **Windows:** prefira executar Terraform, AWS CLI e os scripts pelo Git Bash.
+> Se iniciar o Terraform pelo PowerShell, coloque o Git Bash antes do launcher
+> do WSL no `PATH` do terminal e confirme que `bash` aponta para Git Bash:
+> `$env:PATH = "C:\Program Files\Git\bin;$env:PATH"` e
+> `(Get-Command bash).Source`. Use as credenciais no mesmo PowerShell que
+> inicia o Terraform, para o `local-exec` herdá-las. `export` é sintaxe do Bash;
+> no PowerShell, use `$env:NOME_DA_VARIAVEL = "valor"`.
+
 ---
 
 ## Passo 1 — Credenciais temporárias do Learner Lab
@@ -142,11 +150,11 @@ Edite `infra/terraform.tfvars`:
 
 ---
 
-## Passo 3 — Completar os TODOs em `job/dataframe_job.py`
+## Passo 3 — Conferir as funções em `job/dataframe_job.py`
 
-Abra `job/dataframe_job.py` e implemente as duas funções marcadas como TODO
-(as outras duas — `filter_high_value_sales` e `join_orders_with_customers` — já
-vêm **prontas** como referência da API de DataFrames):
+As duas funções exigidas pelo lab estão implementadas no arquivo. Confira como
+usam a API de DataFrames; `filter_high_value_sales` e
+`join_orders_with_customers` servem como referências:
 
 - `total_revenue_by_category(orders_df)` — receita total por categoria: `groupBy`
   por `category`, `F.sum("value").alias("total_revenue")` e `orderBy` decrescente.
@@ -163,7 +171,7 @@ pip install pyspark==3.5.1
 python3 - <<'PY'
 import sys; sys.path.insert(0, "job")
 from pyspark.sql import SparkSession
-from dataframe_job import top_n_customers_by_spend
+from dataframe_job import total_revenue_by_category, top_n_customers_by_spend
 
 spark = SparkSession.builder.master("local[2]").appName("teste-local").getOrCreate()
 
@@ -180,6 +188,7 @@ clientes = spark.createDataFrame(
     ["customer_id", "customer_name", "customer_uf"],
 )
 
+total_revenue_by_category(pedidos).show(truncate=False)
 top_n_customers_by_spend(pedidos, clientes, 5).show(truncate=False)
 spark.stop()
 PY

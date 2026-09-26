@@ -7,6 +7,7 @@
 .terraform.lock.hcl
 *.tfstate
 *.tfstate.*
+*.tfplan
 crash.log
 
 # --- Arquivos de variaveis com valores reais (NUNCA versionar) ---

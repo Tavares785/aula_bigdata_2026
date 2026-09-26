@@ -18,7 +18,7 @@ completo (credenciais, Terraform, submissão do job e limpeza) está em
 aws-lab/
 ├── README.md                 # passo a passo completo
 ├── infra/                    # Terraform (S3 + AWS Glue Job)
-├── job/dataframe_job.py      # script PySpark de DataFrames/Spark SQL (TODOs do aluno)
+├── job/dataframe_job.py      # script PySpark completo de DataFrames/Spark SQL
 ├── scripts/                  # run_job.sh, ver_resultado.sh
 ├── evidencias/               # entrega das evidências por RA (TEMPLATE.md)
 └── data/
