@@ -30,10 +30,8 @@ Como o script recebe a SparkSession:
   SparkSession vem de glue.spark_session. As funções abaixo recebem DataFrames
   como parâmetro (a mesma API vista na aula-06).
 
-⚠️ ANTES DE SUBIR: complete os dois TODOs abaixo (total_revenue_by_category e
-   top_n_customers_by_spend). Enquanto não completar, essas funções levantam
-   NotImplementedError (mas o módulo importa/compila normalmente, pois o erro
-   só acontece em tempo de execução).
+As funções total_revenue_by_category e top_n_customers_by_spend abaixo
+implementam as duas agregações exigidas pelo laboratório.
 """
 
 import sys
@@ -91,7 +89,7 @@ def join_orders_with_customers(orders_df, customers_df):
 
 def total_revenue_by_category(orders_df):
     """
-    TODO 1 (implemente com a API de DataFrames/Spark SQL):
+    Agregação 1 (API de DataFrames/Spark SQL):
     Calcule a receita total por categoria a partir de `orders_df`
     (colunas: order_id, customer_id, category, value):
       1. Agrupe por `category` (groupBy).
@@ -108,12 +106,16 @@ def total_revenue_by_category(orders_df):
            moveis     |  6789.00
            ...        | ...
     """
-    raise NotImplementedError("TODO 1: implemente total_revenue_by_category")
+    return (
+        orders_df.groupBy("category")
+        .agg(F.sum("value").alias("total_revenue"))
+        .orderBy(F.col("total_revenue").desc())
+    )
 
 
 def top_n_customers_by_spend(orders_df, customers_df, n):
     """
-    TODO 2 (implemente com a API de DataFrames/Spark SQL):
+    Agregação 2 (API de DataFrames/Spark SQL):
     Calcule os `n` clientes que mais gastaram:
       1. Reutilize join_orders_with_customers(orders_df, customers_df) para
          obter order_id, customer_id, customer_name, value.
@@ -131,7 +133,13 @@ def top_n_customers_by_spend(orders_df, customers_df, n):
            C009        | Isabela Nunes | 12928.10
            ...         | ...           | ...
     """
-    raise NotImplementedError("TODO 2: implemente top_n_customers_by_spend")
+    joined_orders = join_orders_with_customers(orders_df, customers_df)
+    return (
+        joined_orders.groupBy("customer_id", "customer_name")
+        .agg(F.sum("value").alias("total_spend"))
+        .orderBy(F.col("total_spend").desc())
+        .limit(n)
+    )
 
 
 def main():
@@ -162,7 +170,7 @@ def main():
     # Quantos clientes retornar no TOP-N (vem como string do Glue).
     n = int(args["TOP_N"])
 
-    # Calcula o TOP-N de clientes por gasto (função do aluno — TODO 2).
+    # Calcula o TOP-N de clientes por gasto.
     resultado = top_n_customers_by_spend(pedidos, clientes, n)
 
     # Imprime no stdout do driver (aparece no log do driver no CloudWatch).
