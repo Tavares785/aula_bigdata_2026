@@ -1,0 +1,25 @@
+BUCKET   = lab-aula06-glue-6325033
+GLUE_JOB = job-aula06-topn-clientes
+ROLE_ARN = arn:aws:iam::199651393282:role/LabRole
+$ aws s3 cp /c/Users/Renan/aula_bigdata_2026/aula-06-spark-sql-dataframes/aws-lab/scripts/../job/dataframe_job.py s3://lab-aula06-glue-6325033/scripts/dataframe_job.py
+Completed 7.6 KiB/7.6 KiB (2.8 KiB/s) with 1 file(s) remainingupload: ..\job\dataframe_job.py to s3://lab-aula06-glue-6325033/scripts/dataframe_job.py
+$ aws s3 cp /c/Users/Renan/aula_bigdata_2026/aula-06-spark-sql-dataframes/aws-lab/scripts/../data/pedidos.csv s3://lab-aula06-glue-6325033/input/pedidos.csv
+Completed 1.7 KiB/1.7 KiB (2.5 KiB/s) with 1 file(s) remainingupload: ..\data\pedidos.csv to s3://lab-aula06-glue-6325033/input/pedidos.csv
+$ aws s3 cp /c/Users/Renan/aula_bigdata_2026/aula-06-spark-sql-dataframes/aws-lab/scripts/../data/clientes.csv s3://lab-aula06-glue-6325033/input/clientes.csv
+Completed 384 Bytes/384 Bytes (578 Bytes/s) with 1 file(s) remainingupload: ..\data\clientes.csv to s3://lab-aula06-glue-6325033/input/clientes.csv
+$ aws s3 rm s3://lab-aula06-glue-6325033/output/top_clientes --recursive
+delete: s3://lab-aula06-glue-6325033/output/top_clientes/part-00000-9ac921c1-43a7-4e3b-834d-ea2091f3e176-c000.csv
+$ aws glue start-job-run --job-name job-aula06-topn-clientes ...
+RUN_ID = jr_194efdd6a02a1332ce6ffd782d6ae5e6efe1505289046a895f998bc07b99ae41
+Aguardando o job terminar (estados: STARTING -> RUNNING -> SUCCEEDED/FAILED)...
+estado: RUNNING
+estado: RUNNING
+estado: RUNNING
+estado: RUNNING
+estado: RUNNING
+estado: RUNNING
+estado: RUNNING
+estado: RUNNING
+estado: SUCCEEDED
+Job concluido com SUCESSO.
+Veja o resultado com: ./ver_resultado.sh
