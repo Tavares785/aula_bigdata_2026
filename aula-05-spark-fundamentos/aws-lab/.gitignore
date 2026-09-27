@@ -19,6 +19,7 @@ crash.log
 .env.*
 credentials
 *.pem
+aws-creds.sh
 
 # --- Python ---
 __pycache__/

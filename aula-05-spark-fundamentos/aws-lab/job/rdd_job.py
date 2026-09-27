@@ -66,7 +66,14 @@ def word_count_rdd(sc, lines):
         word_count_rdd(sc, ["gato rato gato", "rato correu gato"])
         -> [("gato", 3), ("rato", 2), ("correu", 1)]
     """
-    raise NotImplementedError("TODO 1: implemente word_count_rdd")
+    return (
+        sc.parallelize(lines)
+        .flatMap(lambda linha: linha.lower().split())
+        .map(lambda palavra: (palavra, 1))
+        .reduceByKey(lambda a, b: a + b)
+        .sortBy(lambda t: (-t[1], t[0]))
+        .collect()
+    )
 
 
 def top_n_palavras(sc, lines, n):
@@ -82,7 +89,7 @@ def top_n_palavras(sc, lines, n):
         top_n_palavras(sc, ["gato rato gato", "rato correu gato"], 2)
         -> [("gato", 3), ("rato", 2)]
     """
-    raise NotImplementedError("TODO 2: implemente top_n_palavras")
+    return word_count_rdd(sc, lines)[:n]
 
 
 def main():
@@ -112,10 +119,12 @@ def main():
         print(f"{palavra},{contagem}")
 
     # Grava o resultado no S3 como texto: uma linha "palavra,contagem".
-    # Distribui a escrita entre os executors via RDD.saveAsTextFile.
-    sc.parallelize(resultado).map(
-        lambda t: f"{t[0]},{t[1]}"
-    ).saveAsTextFile(args["OUTPUT"])
+    # Usa spark.createDataFrame + write.text (compatível com Glue 4.0).
+    # O saveAsTextFile usa DirectOutputCommitter que não existe no Glue 4.0.
+    linhas_resultado = [f"{t[0]},{t[1]}" for t in resultado]
+    spark.createDataFrame(
+        [(linha,) for linha in linhas_resultado], ["value"]
+    ).write.mode("overwrite").text(args["OUTPUT"])
 
     print(f"Resultado gravado em: {args['OUTPUT']}")
 
