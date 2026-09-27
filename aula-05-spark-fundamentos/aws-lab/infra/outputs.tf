@@ -3,7 +3,7 @@
 
 output "bucket_nome" {
   description = "Nome do bucket S3 do lab (guarda script, dados de entrada, saída e logs)."
-  value       = aws_s3_bucket.lab.bucket
+  value       = var.bucket_nome
 }
 
 output "glue_job_nome" {
