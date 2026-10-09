@@ -62,7 +62,8 @@ def build_feature_vector(df):
     retorne o DataFrame resultante (com todas as colunas originais + a
     nova coluna "features").
     """
-    raise NotImplementedError("TODO 1: implemente build_feature_vector")
+    assembler = VectorAssembler(inputCols=FEATURES, outputCol="features")
+    return assembler.transform(df)
 
 
 def train_classifier(treino):
@@ -74,7 +75,8 @@ def train_classifier(treino):
     Treine APENAS o LogisticRegression e retorne o MODELO TREINADO (ou
     seja, o resultado de `.fit(treino)`, nao o estimador em si).
     """
-    raise NotImplementedError("TODO 2: implemente train_classifier")
+    lr = LogisticRegression(featuresCol="features", labelCol="label")
+    return lr.fit(treino)
 
 
 def evaluate_accuracy(previsoes):
@@ -86,7 +88,10 @@ def evaluate_accuracy(previsoes):
     comparando a coluna "prediction" com a coluna "label". Retorne a
     acuracia como um numero float entre 0 e 1.
     """
-    raise NotImplementedError("TODO 3: implemente evaluate_accuracy")
+    evaluator = MulticlassClassificationEvaluator(
+        labelCol="label", predictionCol="prediction", metricName="accuracy"
+    )
+    return float(evaluator.evaluate(previsoes))
 
 
 # ---------------------------------------------------------------------------
