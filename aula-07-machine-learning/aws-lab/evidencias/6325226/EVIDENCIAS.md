@@ -30,9 +30,7 @@ Cole aqui a saída:
 ```
 
 Print (opcional):
-```
 ![identidade AWS](01-identity.png)
-```
 
 ---
 
@@ -46,9 +44,9 @@ outputs (`bucket_nome`, `glue_job_nome`, `labrole_arn`). **NÃO** mostre credenc
 Cole aqui a saída:
 ```text
 terraform_data.bucket (local-exec): upload: ../data/churn.csv to s3://lab-aula07-glue-6325226/input/churn.csv
-terraform_data.bucket: Creation complete after 9s [id=a1cebb00-f696-7929-4990-be16da02f602]
+terraform_data.bucket: Creation complete after 7s [id=2313b203-88d3-f88f-0684-239d0bd84d06]
 aws_glue_job.ml_churn: Creating...
-aws_glue_job.ml_churn: Creation complete after 1s [id=job-aula07-ml-churn]
+aws_glue_job.ml_churn: Creation complete after 2s [id=job-aula07-ml-churn]
 
 Apply complete! Resources: 2 added, 0 changed, 0 destroyed.
 
@@ -60,9 +58,7 @@ labrole_arn = "arn:aws:iam::************:role/LabRole"
 ```
 
 Print:
-```
 ![terraform apply](02-apply.png)
-```
 
 ---
 
@@ -79,7 +75,7 @@ Cole aqui a saída:
 BUCKET   = lab-aula07-glue-6325226
 GLUE_JOB = job-aula07-ml-churn
 $ aws glue start-job-run --job-name job-aula07-ml-churn ...
-RUN_ID = jr_e7d633184a26c4932360e2e982e5f3a548536e9fccd4e00f8ad6a3c360465941
+RUN_ID = jr_013dbbc2bd0201bb492344120d9adf5afc55174663d1da009f3a4d1665e9d724
 Aguardando o job terminar (estados: STARTING -> RUNNING -> SUCCEEDED/FAILED)...
 estado: RUNNING
 ...
@@ -88,9 +84,7 @@ Job concluido com SUCESSO.
 ```
 
 Print:
-```
 ![job success](03-job-success.png)
-```
 
 ---
 
@@ -133,9 +127,7 @@ meses_ativo,gasto_mensal,chamados_suporte,atraso_pagamento,label,prediction
 ```
 
 Print (opcional):
-```
 ![resultado ML](04-resultado.png)
-```
 
 ---
 
@@ -161,9 +153,14 @@ mostrando os `print(...)` do `ml_job.py` (ex.: a seção `=== Metricas (churn) =
 (abre o CloudWatch no grupo `/aws-glue/jobs/output`).
 
 Print:
+Trecho do log (stream `jr_013dbbc2bd0201bb492344120d9adf5afc55174663d1da009f3a4d1665e9d724`):
+```text
+=== Metricas (churn) ===
+accuracy,1.0000
+areaUnderROC,1.0000
 ```
+
 ![logs do driver](05-driver-log.png)
-```
 
 ---
 
@@ -183,9 +180,7 @@ Destroy complete! Resources: 2 destroyed.
 ```
 
 Print:
-```
 ![terraform destroy](06-destroy.png)
-```
 
 ---
 
@@ -197,7 +192,7 @@ Print:
 - [x] 4. Job com estado `SUCCEEDED` (Glue) (+ `JobRunId`/`RUN_ID`)
 - [x] 5. Resultado: métricas (`accuracy`, `areaUnderROC`) + amostra de previsões
 - [x] 6. Interpretação das métricas (2–3 frases)
-- [ ] 7. Logs do driver no CloudWatch (opcional / bônus)
+- [x] 7. Logs do driver no CloudWatch (opcional / bônus)
 - [x] 8. Limpeza com `terraform destroy` ("Destroy complete!")
 
 ---
