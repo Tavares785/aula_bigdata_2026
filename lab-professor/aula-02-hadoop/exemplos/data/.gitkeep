@@ -1,0 +1,10 @@
+# Placeholder do diretorio de dados de amostra da demonstracao (aula-02-hadoop).
+#
+# Este diretorio (exemplos/data/) e montado como VOLUME nos servicos Hadoop
+# pelo docker-compose.yml, no caminho interno /demo/data (somente leitura).
+# O demo.sh usa esse conteudo para rodar `hdfs dfs -put /demo/data/... /demo`
+# e em seguida o job MapReduce real com `hadoop jar ...`.
+#
+# O conjunto de dados de amostra em si (ex.: sample_log.txt) e criado pela
+# tarefa 9.1 do spec. Este .gitkeep apenas garante que o ponto de montagem
+# exista para o compose, mesmo antes de os dados serem adicionados.

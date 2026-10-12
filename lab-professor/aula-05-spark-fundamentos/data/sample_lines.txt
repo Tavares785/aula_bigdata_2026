@@ -1,0 +1,44 @@
+a loja online abriu o dia com muitos pedidos na fila
+o cliente fez um pedido de manha e escolheu o produto favorito
+cada pedido novo entra no sistema e reserva o produto no estoque
+o cliente confirmou o pagamento do pedido pelo aplicativo
+quando o pagamento aprova o pedido segue para a separacao
+a equipe do estoque separa o produto e prepara a entrega
+o produto sai do estoque e vai para a area de entrega
+a entrega do pedido comeca assim que a nota fiscal e emitida
+o cliente recebe um aviso de que a entrega esta a caminho
+outro cliente pediu dois produtos e pagou com cartao
+o pagamento por cartao caiu rapido e liberou o pedido
+o estoque avisou que o produto estava com poucas unidades
+a compra do produto reduziu o estoque quase ao limite
+o time de estoque repos o produto antes do fim do dia
+mais um pedido chegou e o cliente pediu entrega expressa
+a entrega expressa custa mais mas agrada o cliente exigente
+o entregador buscou o pedido e saiu para a rota de entrega
+o cliente acompanhou o pedido pelo rastreio da entrega
+um pedido teve o pagamento recusado e ficou parado
+o cliente tentou o pagamento de novo e dessa vez aprovou
+o pedido voltou para a fila do estoque apos o pagamento
+o produto foi embalado com cuidado antes da entrega
+a entrega chegou ao cliente dentro do prazo combinado
+o cliente avaliou o produto e elogiou a entrega rapida
+muitos pedidos usaram pagamento via pix durante a tarde
+o pix confirma o pagamento na hora e agiliza o pedido
+o estoque central abastece as lojas com produto novo
+cada produto tem um codigo que liga o pedido ao estoque
+o cliente antigo voltou e fez um pedido grande de novo
+o pedido grande exigiu conferir o estoque com atencao
+a entrega do pedido grande foi dividida em duas partes
+o cliente aceitou receber a entrega em datas diferentes
+o pagamento do pedido grande foi parcelado pelo cliente
+o produto mais vendido saiu do estoque varias vezes
+o pedido de reposicao pediu mais produto para o estoque
+a entrega para o interior leva mais tempo que na cidade
+o cliente do interior entende o prazo maior da entrega
+um produto voltou pela troca e o cliente pediu reembolso
+o reembolso do pagamento foi feito e o cliente ficou satisfeito
+o produto devolvido retornou ao estoque apos a analise
+o fim do dia mostrou muitos pedidos entregues com sucesso
+o relatorio contou cada pedido cada cliente e cada entrega
+o gestor revisou o estoque o pagamento e o produto do dia
+a loja fechou o dia feliz com o cliente e com a entrega
