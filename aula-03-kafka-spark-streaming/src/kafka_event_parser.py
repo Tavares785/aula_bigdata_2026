@@ -25,39 +25,46 @@ import json
 REQUIRED_FIELDS = {"event_id", "event_time", "category", "amount"}
 
 
-def parse_kafka_message(raw_value):
-    """
-    TODO 1:
-    Receba `raw_value` (uma string, o "value" de uma mensagem Kafka) e:
-      1. Tente fazer o parse como JSON (`json.loads`)
-      2. Se nao for um JSON valido, levante `ValueError("Mensagem nao e
-         um JSON valido")`
-      3. Se o JSON parseado nao for um objeto/dicionario, levante
-         `ValueError("Mensagem JSON deve representar um objeto")`
-      4. Se faltar algum campo de REQUIRED_FIELDS, levante
-         `ValueError(f"Campos obrigatorios ausentes: {sorted(faltantes)}")`
-      5. Caso contrario, retorne o dicionario parseado.
-    """
-    raise NotImplementedError("TODO 1: implemente parse_kafka_message")
+def parse_kafka_message(raw_value: str) -> dict:
+  
+  
+  # 1 e 2: Tenta fazer o parse e trata JSON malformatado
+    try:
+        data = json.loads(raw_value)
+    except (json.JSONDecodeError, TypeError):
+        raise ValueError("Mensagem nao e um JSON valido")
 
+  # 3: Garante que o JSON parseado seja um objeto/dicionário (e não número, string ou lista solta)
+    if not isinstance(data, dict):
+        raise ValueError("Mensagem JSON deve representar um objeto")
 
-def is_valid_event(event):
-    """
-    TODO 2:
-    Receba um dicionario `event` (ja parseado) e retorne True se, e
-    somente se:
-      - todos os campos de REQUIRED_FIELDS estao presentes, E
-      - "amount" e um numero (int ou float), E
-      - "amount" e maior ou igual a zero
-    Caso contrario, retorne False (NAO levante excecao aqui).
-    """
-    raise NotImplementedError("TODO 2: implemente is_valid_event")
+  # 4: Valida se todos os campos obrigatórios estão presentes
+    faltantes = set(REQUIRED_FIELDS) - set(data.keys())
+    if faltantes:
+        raise ValueError(f"Campos obrigatorios ausentes: {sorted(faltantes)}")
 
+    # 5: Retorna o dicionário pronto para uso
+    return data
 
-def filter_valid_events(events):
-    """
-    TODO 3:
-    Receba uma lista de dicionarios `events` e retorne apenas os que
-    passam em `is_valid_event`.
-    """
-    raise NotImplementedError("TODO 3: implemente filter_valid_events")
+def is_valid_event(event: dict) -> bool:
+    
+    # Regra 1: Valida se todos os campos de REQUIRED_FIELDS estao presentes
+    if not all(field in event for field in REQUIRED_FIELDS):
+        return False
+
+    amount = event.get("amount")
+
+    # Regra 2: Valida se 'amount' e int ou float (evitando que bool passe como int)
+    if isinstance(amount, bool) or not isinstance(amount, (int, float)):
+        return False
+
+    # Regra 3: Valida se 'amount' e maior ou igual a zero
+    if amount < 0:
+        return False
+
+    return True
+
+def filter_valid_events(events: list[dict]) -> list[dict]:
+
+  return [event for event in events if is_valid_event(event)]
+   
