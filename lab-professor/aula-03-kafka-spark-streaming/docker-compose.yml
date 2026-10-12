@@ -1,0 +1,132 @@
+# =============================================================================
+# Ambiente_Demonstracao da aula-03: Kafka + Zookeeper + Spark (tecnologia REAL)
+# =============================================================================
+# Provisiona os tres Servicos_Reais da aula para o professor demonstrar ao vivo
+# os comandos reais de streaming: kafka-topics, kafka-console-producer e
+# spark-submit (Structured Streaming) dentro dos containers em execucao.
+#
+# Todas as imagens usam TAG FIXADA (pinned) -- NUNCA :latest (Requisito 6.2).
+# Conjunto coerente escolhido: Zookeeper 3.9 + Kafka 3.7 + Spark 3.5.1.
+#
+# ATENCAO (ordem de subida das dependencias): o Kafka NAO pode subir antes do
+# Zookeeper. Este compose usa Kafka em modo Zookeeper (nao KRaft) justamente
+# para demonstrar esse ponto de atencao classico da aula. A ordem correta e
+# garantida por `depends_on: condition: service_healthy` + healthchecks:
+#   1) zookeeper fica saudavel  ->  2) kafka sobe e fica saudavel  ->  3) spark.
+#
+# Como usar (a partir desta Subpasta_Aula):
+#   docker compose up -d        # sobe a tecnologia real (respeitando a ordem)
+#   ./exemplos/demo.sh          # roda os comandos reais dentro dos servicos
+#   docker compose down -v      # derruba tudo ao final
+#
+# Observacao sobre imagens Bitnami: caso o pull de `bitnami/*` falhe no seu
+# registro, use o namespace equivalente `bitnamilegacy/*` mantendo as MESMAS
+# tags fixadas abaixo, ou a alternativa confluentinc/cp-kafka + cp-zookeeper
+# (tambem com tags fixadas).
+# =============================================================================
+
+services:
+
+  # ---------------------------------------------------------------------------
+  # Zookeeper: coordenacao de metadados do cluster Kafka (modo classico).
+  # DEVE ficar saudavel ANTES do Kafka iniciar (ver ponto de atencao acima).
+  # ---------------------------------------------------------------------------
+  zookeeper:
+    image: bitnamilegacy/zookeeper:3.9
+    container_name: aula03-zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      # Permite conexao anonima -- ambiente de demonstracao local, sem auth.
+      ALLOW_ANONYMOUS_LOGIN: "yes"
+      # Libera os comandos "four letter word" usados pelo healthcheck.
+      # Por padrao o ZooKeeper habilita apenas [mntr, srvr]; sem isto o `ruok`
+      # nunca responde `imok` e o healthcheck (e o Kafka/Spark) falham.
+      ZOO_4LW_COMMANDS_WHITELIST: "srvr,mntr,ruok"
+    healthcheck:
+      # Readiness real: o comando `ruok` responde `imok` quando o ZK esta pronto.
+      test: ["CMD-SHELL", "echo ruok | nc -w 2 localhost 2181 | grep -q imok"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
+    networks:
+      - aula03-net
+
+  # ---------------------------------------------------------------------------
+  # Kafka: broker de mensagens. Conecta-se ao Zookeeper para coordenacao.
+  # So inicia depois que o Zookeeper reporta estado saudavel (service_healthy).
+  # ---------------------------------------------------------------------------
+  kafka:
+    image: bitnamilegacy/kafka:3.7
+    container_name: aula03-kafka
+    ports:
+      - "9092:9092"
+    depends_on:
+      zookeeper:
+        # Garante a ordem Zookeeper-antes-de-Kafka: aguarda o healthcheck do ZK.
+        condition: service_healthy
+    environment:
+      KAFKA_CFG_BROKER_ID: "1"
+      # Modo Zookeeper (nao KRaft): endereco do ensemble de coordenacao.
+      KAFKA_CFG_ZOOKEEPER_CONNECT: "zookeeper:2181"
+      # Listener interno (rede do compose) e externo (host) para o produtor/consumidor.
+      KAFKA_CFG_LISTENERS: "PLAINTEXT://:9092,INTERNAL://:29092"
+      KAFKA_CFG_ADVERTISED_LISTENERS: "PLAINTEXT://localhost:9092,INTERNAL://kafka:29092"
+      KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: "PLAINTEXT:PLAINTEXT,INTERNAL:PLAINTEXT"
+      KAFKA_CFG_INTER_BROKER_LISTENER_NAME: "INTERNAL"
+      KAFKA_CFG_OFFSETS_TOPIC_REPLICATION_FACTOR: "1"
+      # Ambiente de demonstracao de no unico, sem auth.
+      ALLOW_PLAINTEXT_LISTENER: "yes"
+    volumes:
+      # Monta os dados de amostra como VOLUME para o demo.sh produzir mensagens
+      # a partir de exemplos/data/ (Requisito 5.10). Somente leitura no broker.
+      - ./exemplos/data:/data:ro
+    healthcheck:
+      # Readiness real: lista topicos via bootstrap-server; so responde quando pronto.
+      test: ["CMD-SHELL", "kafka-topics.sh --bootstrap-server localhost:9092 --list >/dev/null 2>&1 || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 15
+      start_period: 30s
+    networks:
+      - aula03-net
+
+  # ---------------------------------------------------------------------------
+  # Spark: executa spark-submit (Structured Streaming) contra o Kafka.
+  # So inicia depois que o Kafka esta saudavel (topicos consultaveis).
+  # ---------------------------------------------------------------------------
+  spark:
+    image: bitnamilegacy/spark:3.5.1
+    container_name: aula03-spark
+    depends_on:
+      kafka:
+        # Aguarda o Kafka pronto antes de rodar jobs de streaming.
+        condition: service_healthy
+    environment:
+      SPARK_MODE: "master"
+    ports:
+      - "8080:8080"   # Spark master Web UI
+      - "7077:7077"   # Spark master endpoint
+    volumes:
+      # Mesmos dados de amostra montados no Spark para spark-submit ler/produzir.
+      - ./exemplos/data:/data:ro
+      # Codigo do gabarito/exemplos disponivel para spark-submit dentro do container.
+      - ./gabarito:/opt/gabarito:ro
+      - ./exemplos:/opt/exemplos:ro
+    healthcheck:
+      # Readiness real: a Web UI do master responde quando o Spark esta pronto.
+      # A imagem nao traz curl/wget, mas traz python3 -- usamos urllib para
+      # abrir a UI do master (porta 8080) e falhar caso ela nao responda.
+      test: ["CMD-SHELL", "python3 -c \"import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8080', timeout=3).status==200 else 1)\" || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
+    networks:
+      - aula03-net
+
+# Rede dedicada para os tres servicos se enxergarem pelos nomes de host.
+networks:
+  aula03-net:
+    driver: bridge
