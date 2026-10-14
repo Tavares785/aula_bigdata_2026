@@ -1,0 +1,34 @@
+# terraform.tfvars.example — aws-lab (aula-05)
+# =============================================================================
+# COPIE este arquivo para terraform.tfvars e preencha com os SEUS valores:
+#     cp terraform.tfvars.example terraform.tfvars
+#
+# ⚠️ NUNCA versione credenciais (Access Key, Secret Key, Session Token).
+#    As credenciais do Learner Lab são TEMPORÁRIAS e expiram por sessão.
+#    Elas NÃO vão neste arquivo — configure-as por variáveis de ambiente
+#    (AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY / AWS_SESSION_TOKEN) ou no
+#    arquivo ~/.aws/credentials (incluindo aws_session_token). Ao reiniciar
+#    o Learner Lab, pegue as credenciais novas em "AWS Details".
+#
+# ⚠️ O terraform.tfvars (com seus valores reais) está no .gitignore — não o
+#    commite. Apenas este .example deve ir para o Git.
+# =============================================================================
+
+# Região obrigatória do Learner Lab.
+regiao = "us-east-1"
+
+# ARN da LabRole (troque 000000000000 pelo ID da SUA conta do Learner Lab).
+# Obtenha com:
+#   aws iam get-role --role-name LabRole --query Role.Arn --output text
+labrole_arn = "arn:aws:iam::000000000000:role/LabRole"
+
+# Nome GLOBALMENTE único do bucket (troque SEURA pelo seu RA/identificação).
+# Guarda script, dados de entrada, saída e logs do Glue Job (um único bucket).
+bucket_nome = "lab-aula05-glue-SEURA"
+
+# Tags de custo padronizadas (aplicadas a todos os recursos).
+tags = {
+  Projeto    = "lab-aula-05-spark"
+  Disciplina = "Big Data"
+  Ambiente   = "LearnerLab"
+}

@@ -1,0 +1,12 @@
+{"product_id": "p1", "nome": "Notebook Pro 14", "category": "eletronicos", "price": 5499.90, "stock": 12, "tags": ["notebook", "trabalho"], "avaliacao": 4.7}
+{"product_id": "p2", "nome": "Mouse sem fio", "category": "eletronicos", "price": 129.90, "stock": 240, "tags": ["acessorio", "perifericos"], "avaliacao": 4.3}
+{"product_id": "p3", "nome": "Teclado mecanico", "category": "eletronicos", "price": 349.00, "stock": 80, "tags": ["acessorio", "perifericos"], "avaliacao": 4.6}
+{"product_id": "p4", "nome": "Monitor 27 4K", "category": "eletronicos", "price": 2199.00, "stock": 25, "tags": ["monitor", "trabalho"], "avaliacao": 4.8}
+{"product_id": "p5", "nome": "Livro: Big Data na Pratica", "category": "livros", "price": 89.90, "stock": 150, "tags": ["dados", "tecnico"], "avaliacao": 4.5}
+{"product_id": "p6", "nome": "Livro: Python para Dados", "category": "livros", "price": 74.90, "stock": 200, "tags": ["python", "tecnico"], "avaliacao": 4.4}
+{"product_id": "p7", "nome": "Cadeira ergonomica", "category": "moveis", "price": 1299.00, "stock": 18, "tags": ["escritorio", "conforto"], "avaliacao": 4.2}
+{"product_id": "p8", "nome": "Mesa de escritorio", "category": "moveis", "price": 899.00, "stock": 30, "tags": ["escritorio"], "avaliacao": 4.1}
+{"product_id": "p9", "nome": "Fone Bluetooth", "category": "eletronicos", "price": 259.90, "stock": 120, "tags": ["audio", "acessorio"], "avaliacao": 4.0}
+{"product_id": "p10", "nome": "Webcam Full HD", "category": "eletronicos", "price": 199.90, "stock": 60, "tags": ["video", "acessorio"], "avaliacao": 3.9}
+{"product_id": "p11", "nome": "Livro: Estatistica Aplicada", "category": "livros", "price": 119.90, "stock": 90, "tags": ["estatistica", "tecnico"], "avaliacao": 4.6}
+{"product_id": "p12", "nome": "Suporte para notebook", "category": "moveis", "price": 149.90, "stock": 75, "tags": ["escritorio", "ergonomia"], "avaliacao": 4.3}

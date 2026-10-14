@@ -1,0 +1,37 @@
+# Ambiente_Demonstracao da aula-04-nosql: provisiona um MongoDB REAL.
+#
+# Diferente do Ambiente_Teste_Gabarito (que usa mongomock, em memoria, para
+# rodar a suite pytest do lab), este compose sobe o MongoDB de verdade para o
+# professor demonstrar ao vivo comandos reais com o mongosh (CRUD e pipelines
+# de agregacao), exatamente como descrito no README/GUIA da aula.
+#
+# Uso tipico na Subpasta_Aula:
+#   docker compose up -d        # sobe o MongoDB real (tag fixada)
+#   ./exemplos/demo.sh          # roda mongoimport + mongosh (CRUD/aggregation)
+#   docker compose down -v      # derruba o ambiente e remove os volumes
+services:
+  # Servico_Real: MongoDB.
+  # Imagem com TAG FIXADA (pinned) -- nunca :latest -- para garantir
+  # reprodutibilidade da demonstracao entre execucoes e maquinas.
+  mongodb:
+    image: mongo:7.0
+    container_name: aula04-mongodb
+    ports:
+      # Expoe a porta padrao do MongoDB para conexoes externas (pymongo/mongosh
+      # em localhost:27017), permitindo a pratica manual alem do demo.sh.
+      - "27017:27017"
+    volumes:
+      # Monta os dados de amostra como volume (somente leitura) dentro do
+      # container. O demo.sh usa este diretorio para o mongoimport dos produtos
+      # de exemplo e para rodar as operacoes reais com o mongosh.
+      - ./exemplos/data:/data/sample:ro
+    healthcheck:
+      # Mecanismo de prontidao (readiness): o demo.sh so executa os comandos
+      # reais depois que este healthcheck confirmar que o MongoDB responde ao
+      # ping do servidor (db.adminCommand('ping')). Evita comandos contra um
+      # servico ainda inicializando.
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 20s

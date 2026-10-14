@@ -21,6 +21,16 @@ confia em `emr-serverless.amazonaws.com`, então qualquer chamada dá `AccessDen
 O **AWS Glue funciona** (a `LabRole` confia em `glue.amazonaws.com`) e é o mesmo
 Spark gerenciado usado com sucesso na prova deste repositório.
 
+### Como o bucket S3 é criado (AWS CLI, não `aws_s3_bucket`)
+
+No Learner Lab há uma **SCP** da organização que **nega**
+`s3:GetBucketObjectLockConfiguration` — leitura que o recurso `aws_s3_bucket`
+sempre faz no create/refresh, resultando em `AccessDenied`. Por isso o bucket é
+criado via **AWS CLI** dentro do próprio `terraform apply` (padrão
+`terraform_data` + `local-exec`); esse mesmo apply sobe o script e os dados, e o
+`terraform destroy` remove o bucket. É por isso também que o **AWS CLI é
+requisito** deste lab. Você não precisa editar nada disso — a infra já vem pronta.
+
 ---
 
 ## Arquitetura
@@ -61,7 +71,8 @@ Spark gerenciado usado com sucesso na prova deste repositório.
 ## Pré-requisitos
 
 - Conta **AWS Academy Learner Lab** (com sessão ativa).
-- **AWS CLI v2** instalada (`aws --version`).
+- **AWS CLI v2** instalada e autenticada (`aws --version`) — **obrigatório**: o
+  bucket S3 é criado via AWS CLI dentro do `terraform apply` (ver nota abaixo).
 - **Terraform >= 1.5** (`terraform version`).
 - O dado do lab: `data/sample_lines.txt` (já incluído nesta pasta).
 
@@ -159,6 +170,10 @@ PY
 
 ## Passo 4 — Provisionar a infraestrutura
 
+> ⚠️ O **AWS CLI v2** precisa estar **instalado e autenticado** antes do apply: é
+> ele quem **cria o bucket S3** (via `local-exec`). Confirme com
+> `aws sts get-caller-identity` antes de rodar os comandos abaixo.
+
 ```bash
 cd infra
 terraform init
@@ -167,8 +182,9 @@ terraform plan
 terraform apply     # confirme com 'yes'
 ```
 
-O `apply` já **sobe o script** (`job/rdd_job.py` → `s3://SEU_BUCKET/scripts/`) e o
-**dado de exemplo** (`data/sample_lines.txt` → `s3://SEU_BUCKET/input/`) para o S3.
+O `apply` **cria o bucket S3 (privado) via AWS CLI** e já **sobe o script**
+(`job/rdd_job.py` → `s3://SEU_BUCKET/scripts/`) e o **dado de exemplo**
+(`data/sample_lines.txt` → `s3://SEU_BUCKET/input/`) para o S3.
 
 Ao final, o Terraform mostra os **outputs**:
 - `bucket_nome` — nome do bucket S3 do lab.
@@ -292,6 +308,14 @@ Checklist das evidências:
 
 - **`ExpiredToken` / `403`**: credenciais expiraram. Volte ao "AWS Details" do
   Learner Lab e **reexporte** `AWS_ACCESS_KEY_ID`/`SECRET`/`SESSION_TOKEN`.
+- **`AccessDenied` em `GetBucketObjectLockConfiguration` / `voc-cancel-cred` /
+  SCP**: se aparecer erro de Object Lock ao criar o bucket, é a SCP do Learner
+  Lab. Por isso o lab cria o bucket via AWS CLI (não `aws_s3_bucket`). Garanta que
+  o `versions.tf` está com o provider `aws` fixado em `5.31.0` e que você não
+  substituiu o bloco do bucket por `aws_s3_bucket`.
+- **`aws: command not found` / bucket não criado**: o `terraform apply` cria o
+  bucket chamando o AWS CLI (`local-exec`). Instale o **AWS CLI v2** e garanta que
+  `aws sts get-caller-identity` funciona antes do apply.
 - **Bucket name já existe**: o nome do S3 é **global**. Escolha outro
   `bucket_nome` no `terraform.tfvars` e rode `terraform apply` de novo.
 - **Job `FAILED`**: leia o `ErrorMessage` do run (o `run_job.sh` já o imprime) e os

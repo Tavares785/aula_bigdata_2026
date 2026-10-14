@@ -1,0 +1,4 @@
+{"event_id": "e1", "event_time": "2026-01-01T10:00:01", "category": "compra", "amount": 100.0}
+{"event_id": "e2", "event_time": "2026-01-01T10:00:05", "category": "compra", "amount": 50.0}
+{"event_id": "e3", "event_time": "2026-01-01T10:00:08", "category": "devolucao", "amount": 20.0}
+{"event_id": "e4", "event_time": "2026-01-01T10:00:12", "category": "compra", "amount": 200.0}

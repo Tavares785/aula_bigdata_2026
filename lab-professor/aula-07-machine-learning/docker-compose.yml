@@ -1,0 +1,67 @@
+# Ambiente_Demonstracao - Cluster Spark real (aula-07-machine-learning)
+#
+# Provisiona um cluster Spark REAL (master + 1 worker) para demonstrar o
+# pipeline de MLlib via `spark-submit` dentro do container do master.
+#
+# Imagem com TAG FIXADA (pinned) casando com a versao do gabarito
+# (pyspark==3.5.1  ->  bitnami/spark:3.5.1). NUNCA usar :latest.
+#
+# Uso tipico (via exemplos/demo.sh):
+#   docker compose up -d
+#   docker compose exec spark-master spark-submit /data/<exemplo>.py
+#   docker compose down -v
+
+services:
+  # Spark master: coordena o cluster e expoe a Web UI na porta 8080.
+  # O healthcheck consulta a Web UI para sinalizar prontidao ao worker.
+  spark-master:
+    image: bitnami/spark:3.5.1
+    container_name: aula07-spark-master
+    environment:
+      - SPARK_MODE=master
+      - SPARK_RPC_AUTHENTICATION_ENABLED=no
+      - SPARK_RPC_ENCRYPTION_ENABLED=no
+      - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
+      - SPARK_SSL_ENABLED=no
+    ports:
+      - "8080:8080"   # Web UI do master
+      - "7077:7077"   # endpoint de submissao (spark://spark-master:7077)
+    volumes:
+      # Dados de amostra montados como volume para o spark-submit da demo.
+      - ./exemplos/data:/data:ro
+    healthcheck:
+      # Master pronto quando a Web UI (8080) responde.
+      test: ["CMD", "curl", "-f", "http://localhost:8080"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    networks:
+      - spark-net
+
+  # Spark worker: registra-se no master e executa as tasks.
+  # So sobe depois que o master esta saudavel (depends_on: condition).
+  spark-worker:
+    image: bitnami/spark:3.5.1
+    container_name: aula07-spark-worker
+    depends_on:
+      spark-master:
+        condition: service_healthy
+    environment:
+      - SPARK_MODE=worker
+      - SPARK_MASTER_URL=spark://spark-master:7077
+      - SPARK_WORKER_MEMORY=1G
+      - SPARK_WORKER_CORES=1
+      - SPARK_RPC_AUTHENTICATION_ENABLED=no
+      - SPARK_RPC_ENCRYPTION_ENABLED=no
+      - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
+      - SPARK_SSL_ENABLED=no
+    volumes:
+      # Mesmo volume de dados, para que as tasks acessem os arquivos de amostra.
+      - ./exemplos/data:/data:ro
+    networks:
+      - spark-net
+
+networks:
+  spark-net:
+    driver: bridge
