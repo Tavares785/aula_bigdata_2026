@@ -21,7 +21,10 @@ def build_feature_vector(df, feature_cols):
     "features", e retorne o DataFrame resultante (com todas as colunas
     originais + a nova coluna "features").
     """
-    raise NotImplementedError("TODO 1: implemente build_feature_vector")
+    # O VectorAssembler e um "transformer": recebe N colunas numericas e
+    # devolve UMA coluna de vetor. O MLlib so aceita features nesse formato.
+    assembler = VectorAssembler(inputCols=feature_cols, outputCol="features")
+    return assembler.transform(df)
 
 
 def train_classifier(train_df, label_col="label"):
@@ -33,7 +36,10 @@ def train_classifier(train_df, label_col="label"):
     `label_col`. Retorne o MODELO TREINADO (ou seja, o resultado de
     `.fit(train_df)`, nao o estimador em si).
     """
-    raise NotImplementedError("TODO 2: implemente train_classifier")
+    # featuresCol/labelCol dizem ao estimador ONDE olhar no DataFrame.
+    lr = LogisticRegression(featuresCol="features", labelCol=label_col)
+    # .fit() devolve o MODELO treinado (LogisticRegressionModel), nao o estimador.
+    return lr.fit(train_df)
 
 
 def evaluate_accuracy(model, test_df, label_col="label"):
@@ -45,4 +51,9 @@ def evaluate_accuracy(model, test_df, label_col="label"):
     "accuracy"), comparando a coluna "prediction" com `label_col`.
     Retorne a acuracia como um numero float entre 0 e 1.
     """
-    raise NotImplementedError("TODO 3: implemente evaluate_accuracy")
+    # .transform() aplica o modelo e acrescenta a coluna "prediction".
+    previsoes = model.transform(test_df)
+    evaluator = MulticlassClassificationEvaluator(
+        labelCol=label_col, predictionCol="prediction", metricName="accuracy"
+    )
+    return float(evaluator.evaluate(previsoes))
