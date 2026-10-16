@@ -1,0 +1,13 @@
+FROM python:3.10-slim
+
+LABEL maintainer="Professor - Big Data UNIFAAT"
+LABEL description="Ambiente para o Lab da Aula 08 - NLP com Big Data"
+
+WORKDIR /lab
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
+CMD ["pytest", "-v", "--tb=short"]
