@@ -33,7 +33,9 @@ def tokenize(text):
     Exemplo:
         tokenize("O Gato correu, rapido!") -> ["o", "gato", "correu", "rapido"]
     """
-    raise NotImplementedError("TODO 1: implemente tokenize")
+    # TOKEN_RE captura apenas sequencias de letras (incluindo acentuadas).
+    # findall retorna todas as ocorrencias; lower() garante minusculas.
+    return TOKEN_RE.findall(text.lower())
 
 
 def remove_stopwords(tokens, stopwords):
@@ -47,7 +49,9 @@ def remove_stopwords(tokens, stopwords):
         remove_stopwords(["o", "gato", "e", "o", "rato"], {"o", "e"})
         -> ["gato", "rato"]
     """
-    raise NotImplementedError("TODO 2: implemente remove_stopwords")
+    # List comprehension: mantém apenas tokens que NÃO estão no conjunto de stopwords.
+    # Usar set para stopwords garante busca O(1) por token.
+    return [token for token in tokens if token not in stopwords]
 
 
 def simple_stem(word):
@@ -73,7 +77,15 @@ def simple_stem(word):
         simple_stem("flor")        -> "flor"   (nenhum sufixo combina)
         simple_stem("ando")        -> "ando"   (sobraria so 0 caracteres)
     """
-    raise NotImplementedError("TODO 3: implemente simple_stem")
+    # Ordena sufixos do mais longo para o mais curto para dar preferência
+    # ao sufixo mais específico (ex: "amente" antes de "mente").
+    for suffix in sorted(SUFFIXES, key=len, reverse=True):
+        if word.endswith(suffix):
+            stem = word[: -len(suffix)]
+            # Só aplica o stemming se sobrar ao menos 3 caracteres.
+            if len(stem) >= 3:
+                return stem
+    return word
 
 
 def sentiment_score(tokens, positive_words, negative_words):
@@ -91,4 +103,7 @@ def sentiment_score(tokens, positive_words, negative_words):
             negative_words={"pessimo"},
         ) -> 2
     """
-    raise NotImplementedError("TODO 4: implemente sentiment_score")
+    # Conta tokens que aparecem em cada léxico e retorna a diferença.
+    positives = sum(1 for token in tokens if token in positive_words)
+    negatives = sum(1 for token in tokens if token in negative_words)
+    return positives - negatives
