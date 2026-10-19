@@ -33,7 +33,7 @@ def tokenize(text):
     Exemplo:
         tokenize("O Gato correu, rapido!") -> ["o", "gato", "correu", "rapido"]
     """
-    raise NotImplementedError("TODO 1: implemente tokenize")
+    return TOKEN_RE.findall(text.lower())
 
 
 def remove_stopwords(tokens, stopwords):
@@ -47,7 +47,7 @@ def remove_stopwords(tokens, stopwords):
         remove_stopwords(["o", "gato", "e", "o", "rato"], {"o", "e"})
         -> ["gato", "rato"]
     """
-    raise NotImplementedError("TODO 2: implemente remove_stopwords")
+    return [t for t in tokens if t not in stopwords]
 
 
 def simple_stem(word):
@@ -73,7 +73,12 @@ def simple_stem(word):
         simple_stem("flor")        -> "flor"   (nenhum sufixo combina)
         simple_stem("ando")        -> "ando"   (sobraria so 0 caracteres)
     """
-    raise NotImplementedError("TODO 3: implemente simple_stem")
+    for suffix in sorted(SUFFIXES, key=len, reverse=True):
+        if word.endswith(suffix):
+            stem = word[: -len(suffix)]
+            if len(stem) >= 3:
+                return stem
+    return word
 
 
 def sentiment_score(tokens, positive_words, negative_words):
@@ -91,4 +96,6 @@ def sentiment_score(tokens, positive_words, negative_words):
             negative_words={"pessimo"},
         ) -> 2
     """
-    raise NotImplementedError("TODO 4: implemente sentiment_score")
+    positives = sum(1 for t in tokens if t in positive_words)
+    negatives = sum(1 for t in tokens if t in negative_words)
+    return positives - negatives
