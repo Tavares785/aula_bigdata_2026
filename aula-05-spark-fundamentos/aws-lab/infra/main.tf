@@ -4,9 +4,37 @@
 
 provider "aws" {
   region = var.regiao
+}
 
-  default_tags {
-    tags = var.tags
+# -----------------------------------------------------------------------------
+# Bucket S3 do lab (criado via AWS CLI, NÃO via aws_s3_bucket).
+# Prefixos: scripts/, input/, output/, logs/, tmp/.
+# - create: cria o bucket, aplica public-access-block (PRIVADO) e sobe o script
+#   + o dado de entrada (sample_lines.txt).
+# - destroy: esvazia e remove o bucket no terraform destroy.
+# -----------------------------------------------------------------------------
+resource "terraform_data" "bucket" {
+  input = {
+    bucket = var.bucket_nome
+    regiao = var.regiao
+  }
+
+  triggers_replace = [var.bucket_nome, var.regiao]
+
+  provisioner "local-exec" {
+    command = <<-CMD
+      set -e
+      aws s3api create-bucket --bucket "${var.bucket_nome}" --region "${var.regiao}" 2>/dev/null || true
+      aws s3api put-public-access-block --bucket "${var.bucket_nome}" \
+        --public-access-block-configuration BlockPublicAcls=true,IgnorePublicAcls=true,BlockPublicPolicy=true,RestrictPublicBuckets=true
+      aws s3 cp "${path.module}/../job/rdd_job.py"        "s3://${var.bucket_nome}/scripts/rdd_job.py"
+      aws s3 cp "${path.module}/../data/sample_lines.txt" "s3://${var.bucket_nome}/input/sample_lines.txt"
+    CMD
+  }
+
+  provisioner "local-exec" {
+    when    = destroy
+    command = "aws s3 rb s3://${self.input.bucket} --force || true"
   }
 }
 
@@ -45,6 +73,7 @@ resource "aws_s3_object" "input" {
 resource "aws_glue_job" "wordcount" {
   name     = "job-aula05-wordcount"
   role_arn = var.labrole_arn
+  tags     = var.tags
 
   glue_version      = "4.0"
   worker_type       = "G.1X"

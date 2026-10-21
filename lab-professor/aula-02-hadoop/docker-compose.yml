@@ -1,0 +1,165 @@
+# =============================================================================
+# Ambiente_Demonstracao - aula-02-hadoop (Requisitos 6.1, 6.2, 6.7, 6.8, 5.10)
+#
+# Provisiona um cluster Hadoop REAL para o professor demonstrar, ao vivo, os
+# comandos reais da tecnologia (nao um substituto leve local):
+#   - HDFS ................ namenode + datanode
+#   - MapReduce / YARN .... resourcemanager + nodemanager
+#
+# Comandos reais demonstrados pelo demo.sh (tarefa 9.3), executados DENTRO dos
+# servicos em execucao:
+#   docker compose exec namenode      hdfs dfs -put /demo/data/... /demo
+#   docker compose exec resourcemanager hadoop jar ... wordcount ...
+#
+# Imagens: conjunto consolidado bde2020/hadoop-* com TAG FIXADA (pinned).
+# NENHUMA imagem usa :latest nem tag omitida (Requisito 6.2).
+# Tag unica e coerente para todos os servicos: 2.0.0-hadoop3.2.1-java8
+#
+# Ciclo de uso:
+#   docker compose up -d      # sobe o cluster (orcamento de ate 900 s, Req 6.5)
+#   ./exemplos/demo.sh        # roda a demonstracao apos os servicos ficarem ready
+#   docker compose down -v    # derruba o cluster e remove volumes
+# =============================================================================
+
+services:
+  # ---------------------------------------------------------------------------
+  # HDFS NameNode - no mestre do sistema de arquivos distribuido.
+  # Guarda os metadados (namespace, arvore de diretorios, mapa bloco->datanode)
+  # e expoe a UI web em 9870. E o primeiro servico a subir; datanode e YARN
+  # dependem dele. E onde o demo.sh executa os comandos `hdfs dfs -put`.
+  # ---------------------------------------------------------------------------
+  namenode:
+    image: bde2020/hadoop-namenode:2.0.0-hadoop3.2.1-java8
+    container_name: hadoop-namenode
+    hostname: namenode
+    restart: unless-stopped
+    networks:
+      - hadoop
+    ports:
+      - "9870:9870"   # UI web do NameNode (dfshealth)
+      - "9000:9000"   # RPC do HDFS (fs.defaultFS)
+    volumes:
+      - hadoop_namenode:/hadoop/dfs/name          # metadados persistidos
+      - ./exemplos/data:/demo/data:ro             # dados de amostra (Req 5.10)
+    environment:
+      - CLUSTER_NAME=lab-aula-02
+    env_file:
+      - ./hadoop.env
+    # Prontidao: a UI web do NameNode em 9870 responde quando o HDFS esta no ar.
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:9870/ || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 40s
+
+  # ---------------------------------------------------------------------------
+  # HDFS DataNode - no de armazenamento. Guarda os blocos reais dos arquivos e
+  # reporta ao NameNode. Sobe DEPOIS do namenode (depends_on + SERVICE_PRECONDITION):
+  # sem o namenode saudavel nao ha a quem registrar os blocos. UI web em 9864.
+  # ---------------------------------------------------------------------------
+  datanode:
+    image: bde2020/hadoop-datanode:2.0.0-hadoop3.2.1-java8
+    container_name: hadoop-datanode
+    hostname: datanode
+    restart: unless-stopped
+    networks:
+      - hadoop
+    ports:
+      - "9864:9864"   # UI web do DataNode
+    volumes:
+      - hadoop_datanode:/hadoop/dfs/data          # blocos persistidos
+    environment:
+      # Espera ativa: so inicia quando a UI do namenode (9870) estiver de pe.
+      SERVICE_PRECONDITION: "namenode:9870"
+    env_file:
+      - ./hadoop.env
+    depends_on:
+      namenode:
+        condition: service_healthy   # namenode ANTES de datanode (Req 6.7)
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:9864/ || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 40s
+
+  # ---------------------------------------------------------------------------
+  # YARN ResourceManager - escalonador/coordenador do cluster MapReduce/YARN.
+  # Recebe os jobs (`hadoop jar`), aloca containers nos nodemanagers e expoe a
+  # UI web em 8088. Sobe apos HDFS estar pronto (precisa do namenode+datanode).
+  # E onde o demo.sh submete o job MapReduce real de contagem de palavras.
+  # ---------------------------------------------------------------------------
+  resourcemanager:
+    image: bde2020/hadoop-resourcemanager:2.0.0-hadoop3.2.1-java8
+    container_name: hadoop-resourcemanager
+    hostname: resourcemanager
+    restart: unless-stopped
+    networks:
+      - hadoop
+    ports:
+      - "8088:8088"   # UI web do ResourceManager (jobs YARN)
+    volumes:
+      - ./exemplos/data:/demo/data:ro             # dados de amostra (Req 5.10)
+    environment:
+      # Espera HDFS (namenode RPC 9000 + UI 9870) e o datanode (9864) prontos.
+      SERVICE_PRECONDITION: "namenode:9000 namenode:9870 datanode:9864"
+    env_file:
+      - ./hadoop.env
+    depends_on:
+      namenode:
+        condition: service_healthy
+      datanode:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:8088/ || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 40s
+
+  # ---------------------------------------------------------------------------
+  # YARN NodeManager - no trabalhador do YARN. Executa os containers (map/reduce)
+  # designados pelo resourcemanager. Sobe por ULTIMO: resourcemanager ANTES de
+  # nodemanager (depends_on + SERVICE_PRECONDITION). UI web em 8042.
+  # ---------------------------------------------------------------------------
+  nodemanager:
+    image: bde2020/hadoop-nodemanager:2.0.0-hadoop3.2.1-java8
+    container_name: hadoop-nodemanager
+    hostname: nodemanager
+    restart: unless-stopped
+    networks:
+      - hadoop
+    ports:
+      - "8042:8042"   # UI web do NodeManager
+    environment:
+      # Espera HDFS e o resourcemanager (8088) prontos antes de se registrar.
+      SERVICE_PRECONDITION: "namenode:9000 namenode:9870 datanode:9864 resourcemanager:8088"
+    env_file:
+      - ./hadoop.env
+    depends_on:
+      namenode:
+        condition: service_healthy
+      datanode:
+        condition: service_healthy
+      resourcemanager:
+        condition: service_healthy   # resourcemanager ANTES de nodemanager (Req 6.7)
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:8042/ || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 40s
+
+# Rede dedicada do cluster: isola os servicos e permite que se resolvam pelos
+# nomes de host (namenode, datanode, resourcemanager, nodemanager).
+networks:
+  hadoop:
+    name: hadoop-aula-02
+    driver: bridge
+
+# Volumes nomeados que persistem os metadados do HDFS (namenode) e os blocos
+# de dados (datanode) entre reinicios de container.
+volumes:
+  hadoop_namenode:
+  hadoop_datanode:

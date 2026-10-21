@@ -1,0 +1,5 @@
+# Gabarito Aula 04 - Perfil A (Python 3.10 puro).
+# Versoes fixadas em paridade EXATA com aula-04-nosql/requirements.txt (Requisito 6.9).
+pymongo==4.8.0
+mongomock==4.3.0
+pytest==8.2.2
