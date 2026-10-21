@@ -29,6 +29,7 @@ evidencias/
     ├── 02-apply.png
     ├── 03-job-success.png
     └── 04-resultado.png
+
 ```
 
 ## Formatos aceitos

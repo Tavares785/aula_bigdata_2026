@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+# !/usr/bin/env bash
 # =============================================================================
 # run_job.sh — Dispara o Glue Job de RDDs (word count) e acompanha o resultado.
 #

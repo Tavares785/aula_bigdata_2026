@@ -43,7 +43,8 @@ resource "terraform_data" "bucket" {
   triggers_replace = [var.bucket_nome, var.regiao]
 
   provisioner "local-exec" {
-    command = <<-CMD
+    interpreter = ["C:/Program Files/Git/bin/bash.exe", "-c"]
+    command     = <<-CMD
       set -e
       aws s3api create-bucket --bucket "${var.bucket_nome}" --region "${var.regiao}" 2>/dev/null || true
       aws s3api put-public-access-block --bucket "${var.bucket_nome}" \
@@ -54,8 +55,9 @@ resource "terraform_data" "bucket" {
   }
 
   provisioner "local-exec" {
-    when    = destroy
-    command = "aws s3 rb s3://${self.input.bucket} --force || true"
+    when        = destroy
+    interpreter = ["C:/Program Files/Git/bin/bash.exe", "-c"]
+    command     = "aws s3 rb s3://${self.input.bucket} --force || true"
   }
 }
 
