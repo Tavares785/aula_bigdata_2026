@@ -99,8 +99,11 @@ resource "aws_glue_job" "spark_sql" {
   default_arguments = {
     "--PEDIDOS"  = "s3://${var.bucket_nome}/input/pedidos.csv"
     "--CLIENTES" = "s3://${var.bucket_nome}/input/clientes.csv"
-    "--OUTPUT"   = "s3://${var.bucket_nome}/output"
-    "--TOP_N"    = tostring(var.top_n)
+    # O job grava DIRETO no --OUTPUT (resultado.write.csv(args["OUTPUT"])),
+    # nao acrescenta subprefixo como o da aula-07. Por isso o caminho ja
+    # vem completo, e e o mesmo que o scripts/ver_resultado.sh le.
+    "--OUTPUT" = "s3://${var.bucket_nome}/output/top_clientes"
+    "--TOP_N"  = tostring(var.top_n)
     # Logs continuos do Spark/driver no CloudWatch (grupo /aws-glue/jobs/output).
     "--enable-continuous-cloudwatch-log" = "true"
     # Diretorio temporario exigido pelo Glue (dentro do mesmo bucket).
