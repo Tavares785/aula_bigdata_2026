@@ -40,7 +40,17 @@ def total_revenue_by_region(spark):
     Dica: SELECT region, SUM(revenue) AS total_revenue FROM sales
           GROUP BY region ORDER BY total_revenue DESC
     """
-    raise NotImplementedError("TODO 1: implemente total_revenue_by_region")
+    # GROUP BY agrega por regiao; ORDER BY ... DESC deixa a maior receita
+    # primeiro, como a especificacao pede.
+    resultado = spark.sql("""
+        SELECT region, SUM(revenue) AS total_revenue
+        FROM sales
+        GROUP BY region
+        ORDER BY total_revenue DESC
+    """)
+
+    # .collect() traz as linhas para o driver; cada Row vira um par do dict.
+    return {linha["region"]: linha["total_revenue"] for linha in resultado.collect()}
 
 
 def top_n_products(spark, n):
@@ -54,7 +64,16 @@ def top_n_products(spark, n):
     Dica: use LIMIT {n} na sua query (pode usar f-string para inserir o
     valor de n).
     """
-    raise NotImplementedError("TODO 2: implemente top_n_products")
+    # LIMIT corta depois da ordenacao, entao sobram os n maiores.
+    resultado = spark.sql(f"""
+        SELECT product, SUM(revenue) AS total_revenue
+        FROM sales
+        GROUP BY product
+        ORDER BY total_revenue DESC
+        LIMIT {int(n)}
+    """)
+
+    return [linha["product"] for linha in resultado.collect()]
 
 
 def regions_above_threshold(spark, threshold):
@@ -68,4 +87,14 @@ def regions_above_threshold(spark, threshold):
     Dica: use a clausula HAVING para filtrar depois do GROUP BY (WHERE
     nao funciona sobre valores agregados).
     """
-    raise NotImplementedError("TODO 3: implemente regions_above_threshold")
+    # HAVING filtra DEPOIS do GROUP BY, sobre o valor agregado. O WHERE
+    # nao serviria aqui: ele age antes da agregacao, linha a linha.
+    resultado = spark.sql(f"""
+        SELECT region, SUM(revenue) AS total_revenue
+        FROM sales
+        GROUP BY region
+        HAVING SUM(revenue) > {float(threshold)}
+        ORDER BY total_revenue DESC
+    """)
+
+    return [linha["region"] for linha in resultado.collect()]
