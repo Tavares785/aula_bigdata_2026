@@ -33,7 +33,9 @@ def tokenize(text):
     Exemplo:
         tokenize("O Gato correu, rapido!") -> ["o", "gato", "correu", "rapido"]
     """
-    raise NotImplementedError("TODO 1: implemente tokenize")
+    # TOKEN_RE so casa letras (inclusive acentuadas), entao numeros e
+    # pontuacao ficam de fora sem precisar limpar nada antes.
+    return TOKEN_RE.findall(text.lower())
 
 
 def remove_stopwords(tokens, stopwords):
@@ -47,7 +49,9 @@ def remove_stopwords(tokens, stopwords):
         remove_stopwords(["o", "gato", "e", "o", "rato"], {"o", "e"})
         -> ["gato", "rato"]
     """
-    raise NotImplementedError("TODO 2: implemente remove_stopwords")
+    # A ordem original e preservada porque a list comprehension percorre
+    # os tokens na sequencia em que vieram.
+    return [token for token in tokens if token not in stopwords]
 
 
 def simple_stem(word):
@@ -73,7 +77,19 @@ def simple_stem(word):
         simple_stem("flor")        -> "flor"   (nenhum sufixo combina)
         simple_stem("ando")        -> "ando"   (sobraria so 0 caracteres)
     """
-    raise NotImplementedError("TODO 3: implemente simple_stem")
+    # Do sufixo mais longo para o mais curto: assim "rapidamente" perde
+    # "amente" (6) antes de considerar "mente" (5).
+    for sufixo in sorted(SUFFIXES, key=len, reverse=True):
+        if not word.endswith(sufixo):
+            continue
+
+        raiz = word[: len(word) - len(sufixo)]
+
+        # So corta se sobrar raiz suficiente: "ando" viraria string vazia.
+        if len(raiz) >= 3:
+            return raiz
+
+    return word
 
 
 def sentiment_score(tokens, positive_words, negative_words):
@@ -91,4 +107,7 @@ def sentiment_score(tokens, positive_words, negative_words):
             negative_words={"pessimo"},
         ) -> 2
     """
-    raise NotImplementedError("TODO 4: implemente sentiment_score")
+    positivos = sum(1 for token in tokens if token in positive_words)
+    negativos = sum(1 for token in tokens if token in negative_words)
+
+    return positivos - negativos
