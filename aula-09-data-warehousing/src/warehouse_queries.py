@@ -30,42 +30,52 @@ def register_sales_table(spark, rows):
 
 def total_revenue_by_region(spark):
     """
-    TODO 1:
-    Escreva e execute (via `spark.sql(...)`) uma query SQL sobre a
-    tabela "sales" que retorne o total de receita ("revenue") por
-    regiao ("region"), ORDENADO da maior para a menor receita.
-
-    Retorne o resultado como um dicionario {region: total_revenue}.
-
-    Dica: SELECT region, SUM(revenue) AS total_revenue FROM sales
-          GROUP BY region ORDER BY total_revenue DESC
+    TODO 1: total de receita por regiao, ordenado da maior para a menor.
+    Retorna um dicionario {region: total_revenue}.
     """
-    raise NotImplementedError("TODO 1: implemente total_revenue_by_region")
+    rows = spark.sql(
+        """
+        SELECT region, SUM(revenue) AS total_revenue
+        FROM sales
+        GROUP BY region
+        ORDER BY total_revenue DESC
+        """
+    ).collect()
+    return {row["region"]: row["total_revenue"] for row in rows}
 
 
 def top_n_products(spark, n):
     """
-    TODO 2:
-    Escreva uma query SQL que retorne os `n` PRODUTOS com maior receita
-    total (somando "revenue" por "product"), ordenados do maior para o
-    menor. Retorne apenas os NOMES dos produtos, como uma lista de
-    strings (na ordem correta).
-
-    Dica: use LIMIT {n} na sua query (pode usar f-string para inserir o
-    valor de n).
+    TODO 2: os `n` produtos com maior receita total, em ordem decrescente.
+    Retorna uma lista com os nomes dos produtos.
     """
-    raise NotImplementedError("TODO 2: implemente top_n_products")
+    n = int(n)
+    rows = spark.sql(
+        f"""
+        SELECT product, SUM(revenue) AS total_revenue
+        FROM sales
+        GROUP BY product
+        ORDER BY total_revenue DESC
+        LIMIT {n}
+        """
+    ).collect()
+    return [row["product"] for row in rows]
 
 
 def regions_above_threshold(spark, threshold):
     """
-    TODO 3:
-    Escreva uma query SQL que retorne as regioes cuja receita TOTAL
-    (soma de "revenue") seja MAIOR que `threshold`, ordenadas da maior
-    para a menor receita. Retorne apenas os NOMES das regioes, como uma
-    lista de strings.
-
-    Dica: use a clausula HAVING para filtrar depois do GROUP BY (WHERE
-    nao funciona sobre valores agregados).
+    TODO 3: regioes cuja receita total e maior que `threshold`, em ordem
+    decrescente. Retorna uma lista com os nomes das regioes.
+    HAVING filtra sobre o agregado; WHERE nao faria isso.
     """
-    raise NotImplementedError("TODO 3: implemente regions_above_threshold")
+    threshold = float(threshold)
+    rows = spark.sql(
+        f"""
+        SELECT region, SUM(revenue) AS total_revenue
+        FROM sales
+        GROUP BY region
+        HAVING SUM(revenue) > {threshold}
+        ORDER BY total_revenue DESC
+        """
+    ).collect()
+    return [row["region"] for row in rows]
