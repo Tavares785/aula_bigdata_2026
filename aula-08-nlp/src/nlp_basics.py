@@ -28,12 +28,10 @@ def tokenize(text):
     Receba uma string `text` e retorne a lista de "palavras" (tokens)
     nela contidas, TODAS em minusculas, ignorando numeros e pontuacao.
 
-    Dica: use `TOKEN_RE.findall(text.lower())`.
-
     Exemplo:
         tokenize("O Gato correu, rapido!") -> ["o", "gato", "correu", "rapido"]
     """
-    raise NotImplementedError("TODO 1: implemente tokenize")
+    return TOKEN_RE.findall(text.lower())
 
 
 def remove_stopwords(tokens, stopwords):
@@ -47,7 +45,7 @@ def remove_stopwords(tokens, stopwords):
         remove_stopwords(["o", "gato", "e", "o", "rato"], {"o", "e"})
         -> ["gato", "rato"]
     """
-    raise NotImplementedError("TODO 2: implemente remove_stopwords")
+    return [token for token in tokens if token not in stopwords]
 
 
 def simple_stem(word):
@@ -58,22 +56,20 @@ def simple_stem(word):
     sobrarem pelo menos 3 caracteres depois de remover.
 
     Se MAIS DE UM sufixo da lista combinar com o final da palavra, use o
-    sufixo MAIS LONGO (ex: para "rapidamente", prefira remover "amente"
-    em vez de "mente", pois "amente" e mais especifico/longo).
-
-    Se nenhum sufixo combinar (ou a palavra ficaria curta demais),
-    retorne a palavra sem alteracao.
-
-    Dica: `sorted(SUFFIXES, key=len, reverse=True)` ja te da os sufixos
-    do mais longo para o mais curto, na ordem certa para testar.
+    sufixo MAIS LONGO.
 
     Exemplos:
         simple_stem("cantando")    -> "cant"
         simple_stem("rapidamente") -> "rapid"
-        simple_stem("flor")        -> "flor"   (nenhum sufixo combina)
-        simple_stem("ando")        -> "ando"   (sobraria so 0 caracteres)
+        simple_stem("flor")        -> "flor"
+        simple_stem("ando")        -> "ando"
     """
-    raise NotImplementedError("TODO 3: implemente simple_stem")
+    for suffix in sorted(SUFFIXES, key=len, reverse=True):
+        if word.endswith(suffix):
+            stem = word[: -len(suffix)]
+            if len(stem) >= 3:
+                return stem
+    return word
 
 
 def sentiment_score(tokens, positive_words, negative_words):
@@ -82,7 +78,6 @@ def sentiment_score(tokens, positive_words, negative_words):
     Receba uma lista de `tokens` e dois conjuntos de palavras,
     `positive_words` e `negative_words`. Calcule um score de sentimento
     simples: (numero de tokens positivos) - (numero de tokens negativos).
-    Retorne esse numero inteiro (pode ser negativo, zero ou positivo).
 
     Exemplo:
         sentiment_score(
@@ -91,4 +86,6 @@ def sentiment_score(tokens, positive_words, negative_words):
             negative_words={"pessimo"},
         ) -> 2
     """
-    raise NotImplementedError("TODO 4: implemente sentiment_score")
+    positives = sum(1 for t in tokens if t in positive_words)
+    negatives = sum(1 for t in tokens if t in negative_words)
+    return positives - negatives
