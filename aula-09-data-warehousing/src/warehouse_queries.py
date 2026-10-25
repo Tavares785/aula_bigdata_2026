@@ -36,11 +36,14 @@ def total_revenue_by_region(spark):
     regiao ("region"), ORDENADO da maior para a menor receita.
 
     Retorne o resultado como um dicionario {region: total_revenue}.
-
-    Dica: SELECT region, SUM(revenue) AS total_revenue FROM sales
-          GROUP BY region ORDER BY total_revenue DESC
     """
-    raise NotImplementedError("TODO 1: implemente total_revenue_by_region")
+    result = spark.sql("""
+        SELECT region, SUM(revenue) AS total_revenue
+        FROM sales
+        GROUP BY region
+        ORDER BY total_revenue DESC
+    """)
+    return {row["region"]: row["total_revenue"] for row in result.collect()}
 
 
 def top_n_products(spark, n):
@@ -50,11 +53,15 @@ def top_n_products(spark, n):
     total (somando "revenue" por "product"), ordenados do maior para o
     menor. Retorne apenas os NOMES dos produtos, como uma lista de
     strings (na ordem correta).
-
-    Dica: use LIMIT {n} na sua query (pode usar f-string para inserir o
-    valor de n).
     """
-    raise NotImplementedError("TODO 2: implemente top_n_products")
+    result = spark.sql(f"""
+        SELECT product, SUM(revenue) AS total_revenue
+        FROM sales
+        GROUP BY product
+        ORDER BY total_revenue DESC
+        LIMIT {n}
+    """)
+    return [row["product"] for row in result.collect()]
 
 
 def regions_above_threshold(spark, threshold):
@@ -64,8 +71,12 @@ def regions_above_threshold(spark, threshold):
     (soma de "revenue") seja MAIOR que `threshold`, ordenadas da maior
     para a menor receita. Retorne apenas os NOMES das regioes, como uma
     lista de strings.
-
-    Dica: use a clausula HAVING para filtrar depois do GROUP BY (WHERE
-    nao funciona sobre valores agregados).
     """
-    raise NotImplementedError("TODO 3: implemente regions_above_threshold")
+    result = spark.sql(f"""
+        SELECT region, SUM(revenue) AS total_revenue
+        FROM sales
+        GROUP BY region
+        HAVING total_revenue > {threshold}
+        ORDER BY total_revenue DESC
+    """)
+    return [row["region"] for row in result.collect()]
