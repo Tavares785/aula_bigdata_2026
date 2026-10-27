@@ -52,43 +52,31 @@ FEATURES = ["meses_ativo", "gasto_mensal", "chamados_suporte", "atraso_pagamento
 # compilar nesta etapa.
 # ---------------------------------------------------------------------------
 def build_feature_vector(df):
-    """
-    TODO 1:
-    O MLlib exige que as features de entrada de um modelo estejam
-    reunidas em UMA UNICA coluna do tipo vetor, chamada por convencao de
-    "features". Use `VectorAssembler` para transformar as colunas
-    listadas na constante `FEATURES` (meses_ativo, gasto_mensal,
-    chamados_suporte, atraso_pagamento) em uma nova coluna "features", e
-    retorne o DataFrame resultante (com todas as colunas originais + a
-    nova coluna "features").
-    """
-    raise NotImplementedError("TODO 1: implemente build_feature_vector")
+    # Utilizamos a constante global FEATURES importada no topo do seu arquivo
+    # para agrupar as variáveis em um único vetor chamado "features".
+    assembler = VectorAssembler(inputCols=FEATURES, outputCol="features")
+    return assembler.transform(df)
 
 
 def train_classifier(treino):
-    """
-    TODO 2:
-    Treine um classificador de Regressao Logistica (`LogisticRegression`
-    do `pyspark.ml.classification`) usando a coluna "features" (ja
-    montada por `build_feature_vector`) e a coluna de rotulo "label".
-    Treine APENAS o LogisticRegression e retorne o MODELO TREINADO (ou
-    seja, o resultado de `.fit(treino)`, nao o estimador em si).
-    """
-    raise NotImplementedError("TODO 2: implemente train_classifier")
+    # Configuramos a Regressão Logística para usar o vetor "features" 
+    # e buscar a resposta correta na coluna "label".
+    lr = LogisticRegression(featuresCol="features", labelCol="label")
+    
+    # O método .fit() treina o classificador e retorna o modelo final.
+    return lr.fit(treino)
 
 
 def evaluate_accuracy(previsoes):
-    """
-    TODO 3:
-    Receba o DataFrame `previsoes` (ja com as colunas "prediction" e
-    "label") e calcule a ACURACIA dessas previsoes usando
-    `MulticlassClassificationEvaluator` (metricName="accuracy"),
-    comparando a coluna "prediction" com a coluna "label". Retorne a
-    acuracia como um numero float entre 0 e 1.
-    """
-    raise NotImplementedError("TODO 3: implemente evaluate_accuracy")
-
-
+    # Configuramos o avaliador multiclasse para extrair especificamente a métrica "accuracy".
+    evaluator = MulticlassClassificationEvaluator(
+        labelCol="label", 
+        predictionCol="prediction", 
+        metricName="accuracy"
+    )
+    
+    # Executamos a avaliação sobre o DataFrame de previsões gerado pelo modelo.
+    return evaluator.evaluate(previsoes)
 # ---------------------------------------------------------------------------
 # Orquestracao do Glue Job (Req 9.1-9.3).
 # ---------------------------------------------------------------------------
