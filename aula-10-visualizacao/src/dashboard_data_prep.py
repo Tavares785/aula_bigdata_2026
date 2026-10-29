@@ -31,7 +31,15 @@ def aggregate_daily_totals(records):
         ]
         aggregate_daily_totals(records) -> {"2026-01-01": 120.0}
     """
-    raise NotImplementedError("TODO 1: implemente aggregate_daily_totals")
+    # Usar defaultdict para facilitar a agregação
+    daily_totals = defaultdict(float)
+    
+    # Somar valores por data
+    for record in records:
+        daily_totals[record["date"]] += record["value"]
+    
+    # Retornar dicionário ordenado por data (ordem crescente)
+    return dict(sorted(daily_totals.items()))
 
 
 def top_categories(records, n):
@@ -43,7 +51,21 @@ def top_categories(records, n):
     ordenada do maior para o menor total. Em caso de empate, ordene pelo
     nome da categoria em ordem alfabetica.
     """
-    raise NotImplementedError("TODO 2: implemente top_categories")
+    # Agregar valores por categoria
+    category_totals = defaultdict(float)
+    
+    for record in records:
+        category_totals[record["category"]] += record["value"]
+    
+    # Ordenar: primeiro por valor (decrescente), depois por nome (alfabética)
+    # sorted com chave negativa para valor e positiva para categoria
+    sorted_categories = sorted(
+        category_totals.items(),
+        key=lambda x: (-x[1], x[0])
+    )
+    
+    # Retornar apenas as top N categorias
+    return sorted_categories[:n]
 
 
 def compute_moving_average(values, window):
@@ -64,4 +86,17 @@ def compute_moving_average(values, window):
         (na posicao 0: media de [1]; na posicao 1: media de [1,2];
          na posicao 2 em diante: media dos ultimos 3 valores)
     """
-    raise NotImplementedError("TODO 3: implemente compute_moving_average")
+    result = []
+    
+    for i in range(len(values)):
+        # Determinar o início da janela (no máximo `window` elementos atrás)
+        start = max(0, i - window + 1)
+        
+        # Calcular a média dos elementos na janela
+        window_values = values[start:i + 1]
+        avg = sum(window_values) / len(window_values)
+        
+        # Arredondar para 4 casas decimais
+        result.append(round(avg, 4))
+    
+    return result
