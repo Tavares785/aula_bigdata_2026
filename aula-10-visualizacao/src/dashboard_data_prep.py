@@ -31,7 +31,16 @@ def aggregate_daily_totals(records):
         ]
         aggregate_daily_totals(records) -> {"2026-01-01": 120.0}
     """
-    raise NotImplementedError("TODO 1: implemente aggregate_daily_totals")
+    totais = defaultdict(float)
+
+    for registro in records:
+        totais[registro["date"]] += registro["value"]
+
+    # Dicionario em Python preserva a ordem de insercao, entao ordenar as
+    # chaves aqui e o que entrega o resultado em ordem crescente de data.
+    # As datas estao no formato ISO (AAAA-MM-DD), onde a ordem alfabetica
+    # coincide com a cronologica -- por isso `sorted` basta, sem parsear.
+    return {data: totais[data] for data in sorted(totais)}
 
 
 def top_categories(records, n):
@@ -43,7 +52,19 @@ def top_categories(records, n):
     ordenada do maior para o menor total. Em caso de empate, ordene pelo
     nome da categoria em ordem alfabetica.
     """
-    raise NotImplementedError("TODO 2: implemente top_categories")
+    totais = defaultdict(float)
+
+    for registro in records:
+        totais[registro["category"]] += registro["value"]
+
+    # Duas chaves de ordenacao: total DECRESCENTE e, no empate, nome
+    # crescente. O `-total` inverte so a primeira, o que seria impossivel
+    # com um unico `reverse=True` -- ele inverteria o nome tambem.
+    ordenadas = sorted(totais.items(), key=lambda par: (-par[1], par[0]))
+
+    # Fatiar lista mais curta que `n` nao levanta erro: devolve o que
+    # houver, que e o esperado quando se pede mais do que existe.
+    return ordenadas[:n]
 
 
 def compute_moving_average(values, window):
@@ -64,4 +85,14 @@ def compute_moving_average(values, window):
         (na posicao 0: media de [1]; na posicao 1: media de [1,2];
          na posicao 2 em diante: media dos ultimos 3 valores)
     """
-    raise NotImplementedError("TODO 3: implemente compute_moving_average")
+    medias = []
+
+    for posicao in range(len(values)):
+        # `max(0, ...)` e o que resolve as primeiras posicoes: sem ele, um
+        # indice negativo faria a fatia pegar do FIM da lista, e a media
+        # das primeiras posicoes sairia com valores do futuro.
+        inicio = max(0, posicao - window + 1)
+        janela = values[inicio:posicao + 1]
+        medias.append(round(sum(janela) / len(janela), 4))
+
+    return medias
