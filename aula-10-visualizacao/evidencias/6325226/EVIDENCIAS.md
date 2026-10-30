@@ -32,3 +32,6 @@ tests/test_dashboard_data_prep.py::test_compute_moving_average_window_larger_tha
 
 ============================== 8 passed in 0.02s ===============================
 ```
+
+Print (renderizado com Playwright a partir da saída real acima):
+![testes no docker](01-testes-docker.png)
