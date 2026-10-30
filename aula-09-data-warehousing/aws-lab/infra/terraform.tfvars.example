@@ -1,0 +1,16 @@
+# terraform.tfvars.example — aws-lab (aula-09 • Data Warehousing)
+# Copie para terraform.tfvars e preencha:  cp terraform.tfvars.example terraform.tfvars
+# ⚠️ NUNCA coloque credenciais aqui; o terraform.tfvars está no .gitignore.
+
+regiao = "us-east-1"
+
+# aws iam get-role --role-name LabRole --query Role.Arn --output text
+labrole_arn = "arn:aws:iam::000000000000:role/LabRole"
+
+bucket_nome = "lab-aula09-glue-SEURA"
+
+tags = {
+  Projeto    = "lab-aula-09-dw"
+  Disciplina = "Big Data"
+  Ambiente   = "LearnerLab"
+}
