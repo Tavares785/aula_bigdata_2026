@@ -1,3 +1,4 @@
+
 # Lab - Aula 09: Data Warehousing e Data Lakes
 
 ## Objetivo
