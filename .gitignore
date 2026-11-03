@@ -37,3 +37,10 @@ __pycache__/
 *.py[cod]
 venv/
 .venv/
+
+# --- CI ---
+CI_OLD/ci-aula-02.yml
+CI_OLD/ci-aula-03.yml
+CI_OLD/ci-aula-04.yml
+CI_OLD/ci-aula-05.yml
+CI_OLD/ci-aula-06.yml
