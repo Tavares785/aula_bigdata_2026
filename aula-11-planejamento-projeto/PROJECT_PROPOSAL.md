@@ -32,4 +32,4 @@ escolhido?>
 
 ## Cronograma
 
-<PREENCHER: quais são as principais etapas e prazos até a Aula 14?>
+<PREENCHER: quais são as principais etapas e prazos?>
