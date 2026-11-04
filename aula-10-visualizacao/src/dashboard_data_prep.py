@@ -31,7 +31,16 @@ def aggregate_daily_totals(records):
         ]
         aggregate_daily_totals(records) -> {"2026-01-01": 120.0}
     """
-    raise NotImplementedError("TODO 1: implemente aggregate_daily_totals")
+    
+    totals = defaultdict(float)
+
+    for record in records:
+        date = record["date"]
+        value = record["value"]
+        totals[date] += value
+
+    return dict(sorted(totals.items()))
+
 
 
 def top_categories(records, n):
@@ -43,7 +52,21 @@ def top_categories(records, n):
     ordenada do maior para o menor total. Em caso de empate, ordene pelo
     nome da categoria em ordem alfabetica.
     """
-    raise NotImplementedError("TODO 2: implemente top_categories")
+    
+    totals = defaultdict(float)
+
+    for record in records:
+        category = record["category"]
+        value = record["value"]
+        totals[category] += value
+
+    ranking = sorted(
+        totals.items(),
+        key=lambda item: (-item[1], item[0])
+    )
+
+    return ranking[:n]
+
 
 
 def compute_moving_average(values, window):
@@ -64,4 +87,15 @@ def compute_moving_average(values, window):
         (na posicao 0: media de [1]; na posicao 1: media de [1,2];
          na posicao 2 em diante: media dos ultimos 3 valores)
     """
-    raise NotImplementedError("TODO 3: implemente compute_moving_average")
+    
+    averages = []
+
+    for i in range(len(values)):
+        start = max(0, i - window + 1)
+        current_window = values[start:i + 1]
+
+        average = sum(current_window) / len(current_window)
+        averages.append(round(average, 4))
+
+    return averages
+
