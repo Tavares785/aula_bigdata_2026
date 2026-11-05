@@ -6,30 +6,36 @@
 
 ## Integrantes do Grupo
 
-<PREENCHER: liste os nomes completos de todos os integrantes do grupo>
+Matheus de Paula - 6325065
+João Pedro Paulino - 6325175
+Yuri Batista Sanches - 6325238
 
 ## Problema
 
-<PREENCHER: qual problema real o seu projeto vai investigar ou
-resolver? Por que ele é relevante?>
+É difícil saber qual operadora de plano de saúde dá mais problema, porque uma operadora grande sempre tem mais reclamações só por ter mais clientes. A ANS disponibiliza esses dados de graça, mas eles vêm espalhados em vários arquivos CSV grandes, o que dificulta a análise sem ferramentas de Big Data. Queremos descobrir quais operadoras têm mais reclamações em proporção ao número de clientes.
 
 ## Objetivos
 
-<PREENCHER: quais são os objetivos específicos e mensuráveis do
-projeto? O que vocês esperam responder ou entregar ao final?>
+Juntar os dados de beneficiários e de reclamações da ANS de pelo menos 12 meses.
+Calcular as reclamações a cada 10 mil clientes e montar um ranking das operadoras.
+Treinar um modelo simples para prever se as reclamações de uma operadora vão aumentar.
+Mostrar os resultados em um dashboard.
 
 ## Dataset(s) e Fonte
 
-<PREENCHER: quais dados vocês vão usar? De onde eles vêm (Kaggle, API
-pública, dados sintéticos, etc.)? Qual o volume aproximado?>
+Dados abertos da ANS (https://dadosabertos.ans.gov.br), baixados em CSV: beneficiários por operadora (um arquivo por estado por mês), reclamações registradas na ANS (NIP) e o cadastro de operadoras. Juntas, as bases devem passar de alguns GB. Se ficar pesado demais, vamos usar só alguns estados.
 
 ## Ferramentas de Big Data
 
-<PREENCHER: quais ferramentas vistas no curso vocês pretendem usar
-(Hadoop, Kafka, Spark, MongoDB/Cassandra/HBase, Hive, Zeppelin/Superset,
-MLlib, NLP, etc.) e por que cada uma faz sentido para o problema
-escolhido?>
+S3: guardar os arquivos brutos e os tratados.
+Spark / Spark SQL: ler, limpar, juntar e analisar os dados em paralelo.
+Kafka: simular as reclamações chegando em tempo real.
+Spark MLlib: treinar o modelo de previsão.
+Superset: montar o dashboard final.
 
 ## Cronograma
 
-<PREENCHER: quais são as principais etapas e prazos?>
+Aula 11: escolha do tema e proposta.
+Aula 12: baixar os dados, subir no S3 e limpar com Spark.
+Aula 13: análises e modelo de Machine Learning.
+Aula 14: dashboard e apresentação final.
