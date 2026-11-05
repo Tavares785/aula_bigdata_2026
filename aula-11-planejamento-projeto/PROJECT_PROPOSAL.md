@@ -6,22 +6,29 @@
 
 ## Integrantes do Grupo
 
-<PREENCHER: liste os nomes completos de todos os integrantes do grupo>
+Felipe Mariano | RA:3225014
+Maximus Ponciano | RA:6325066
+Matheus Mantovani | RA:1120245
+
 
 ## Problema
 
-<PREENCHER: qual problema real o seu projeto vai investigar ou
-resolver? Por que ele é relevante?>
+Seguindo nossa linha de trabalho no controle de documentações e checklists do parque aquático do qual estamos trabalhando em conjunto no projeto final.
+
+Qual é o problema? Atualmente, as rotinas de checklist do parque aquático são realizadas manualmente em folhas de papel. Essa prática dificulta o preenchimento, manuseio e armazenamento adequado dos documentos, os quais frequentemente se deterioram devido ao ambiente úmido. Por se tratar de um processo crítico que envolve diretamente a segurança física de colaboradores e hóspedes, a falta de controle digital impede o acompanhamento ágil de problemas detectados nas atrações.
+
+
 
 ## Objetivos
 
-<PREENCHER: quais são os objetivos específicos e mensuráveis do
-projeto? O que vocês esperam responder ou entregar ao final?>
+Nosso propósito é modernizar e padronizar o processo de vistoria pré-abertura das atrações, substituindo o controle manual em folhas de papel por uma aplicação segura, prática e auditável. O público-alvo são os guarda-vidas (que executam as vistorias em campo), supervisores de operação/manutenção e auditores de segurança.
 
 ## Dataset(s) e Fonte
 
-<PREENCHER: quais dados vocês vão usar? De onde eles vêm (Kaggle, API
-pública, dados sintéticos, etc.)? Qual o volume aproximado?>
+Dados preenchidos manualmente e diariamente pelos usuários da aplicação.
+
+Dados estruturados e padronizados em sua maior parte sendo: valores numéricos para indicar "conforme" e "não conforme" e textos como "observação".
+
 
 ## Ferramentas de Big Data
 
@@ -30,6 +37,14 @@ pública, dados sintéticos, etc.)? Qual o volume aproximado?>
 MLlib, NLP, etc.) e por que cada uma faz sentido para o problema
 escolhido?>
 
+* PortgreSQL -> para persistência íntegra dos documentos, cache/sessão via Redis, mensageria para alerta de não conformidades, infraestrutura provisionada em nuvem AWS via Terraform e esteira de CI/CD automatizada com GitHub Actions.
+
+
+
 ## Cronograma
 
-<PREENCHER: quais são as principais etapas e prazos?>
+Entregar algo funcional até o final deste semestre.
+
+1. Plataforma operando de forma básica.
+2. Fluxo de dados estável.
+3. Dados tratados e confiáveis.
