@@ -1,5 +1,5 @@
 """
-Aula 11 - Verifica se o grupo CONSTRUIU a infra Terraform do pipeline.
+Aula 12 - Verifica se o grupo CONSTRUIU a infra Terraform do pipeline.
 
 Checagem estrutural (sem acessar a AWS) sobre os arquivos *.tf que o grupo
 criou em aws-lab/infra/. Os nomes de arquivos, variaveis e recursos sao

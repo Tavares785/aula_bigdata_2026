@@ -1,9 +1,9 @@
 name: "Correcao - Aula 12 (Ingestao e Pre-processamento)"
 
-# Projeto livre por grupo -- o CI verifica apenas se as funcoes de
-# pipeline foram implementadas (nao NotImplementedError/pass/vazias) e
-# se o checkpoint PROGRESS.md foi preenchido. Nao executa o pipeline
-# contra dados reais (depende de recursos externos por grupo).
+# Projeto livre por grupo -- o CI verifica apenas a estrutura: infra
+# Terraform do pipeline (aws-lab/infra) completa, formatada e valida; ETL
+# PySpark (aws-lab/job); REGRAS_SILVER.md e PROGRESS.md preenchidos. Nao
+# acessa a AWS nem executa o pipeline.
 on:
   pull_request:
     branches: [master]
@@ -36,11 +36,25 @@ jobs:
       - name: Instalar dependencias
         run: pip install -r requirements.txt
 
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
       - name: Verificar estrutura da entrega
         shell: bash
         run: |
           set -o pipefail
           pytest -v --tb=short | tee test_output.txt
+
+      - name: Validar Terraform (fmt + validate)
+        if: always()
+        shell: bash
+        run: |
+          set -o pipefail
+          {
+            terraform -chdir=aws-lab/infra fmt -check -diff
+            terraform -chdir=aws-lab/infra init -backend=false -input=false
+            terraform -chdir=aws-lab/infra validate
+          } 2>&1 | tee terraform_output.txt
 
       - name: Publicar resumo da verificacao
         if: always()
@@ -51,5 +65,10 @@ jobs:
             echo ""
             echo '```'
             cat test_output.txt
+            echo '```'
+            echo ""
+            echo "### Terraform"
+            echo '```'
+            cat terraform_output.txt 2>/dev/null || echo "sem saida"
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"

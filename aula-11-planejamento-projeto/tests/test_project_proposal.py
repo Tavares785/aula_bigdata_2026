@@ -18,7 +18,7 @@ REQUIRED_SECTIONS = [
     "## Objetivos",
     "## Dataset(s) e Fonte",
     "## Ferramentas de Big Data",
-    "## Arquitetura do Pipeline",
+    "## Cronograma",
 ]
 
 MIN_CHARS_PER_SECTION = 20
