@@ -1,0 +1,26 @@
+# =============================================================================
+# .gitignore — aws-lab (aula-11)
+# =============================================================================
+
+# --- Artefatos do Terraform ---
+.terraform/
+.terraform.lock.hcl
+*.tfstate
+*.tfstate.*
+crash.log
+
+# --- Arquivos de variaveis com valores reais (NUNCA versionar) ---
+*.tfvars
+!*.tfvars.example
+
+# --- Credenciais e segredos (NUNCA versionar) ---
+.env
+.env.*
+credentials
+*.pem
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+venv/
+.venv/

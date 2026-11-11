@@ -3,7 +3,8 @@ name: "Correcao - Aula 11 (Definicao e Planejamento do Projeto)"
 # Este lab nao tem "resposta certa" (projeto livre por grupo) -- o CI
 # verifica apenas conformidade estrutural: se a proposta foi de fato
 # preenchida (secoes obrigatorias presentes, sem placeholders do
-# template, com conteudo minimo).
+# template, com conteudo minimo) e se a infra Terraform do pipeline
+# (aws-lab/infra) foi completada, formatada e e valida.
 on:
   pull_request:
     branches: [master]
@@ -36,11 +37,25 @@ jobs:
       - name: Instalar dependencias
         run: pip install -r requirements.txt
 
-      - name: Verificar estrutura da proposta
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Verificar estrutura da proposta e da infra
         shell: bash
         run: |
           set -o pipefail
           pytest -v --tb=short | tee test_output.txt
+
+      - name: Validar Terraform (fmt + validate)
+        if: always()
+        shell: bash
+        run: |
+          set -o pipefail
+          {
+            terraform -chdir=aws-lab/infra fmt -check -diff
+            terraform -chdir=aws-lab/infra init -backend=false -input=false
+            terraform -chdir=aws-lab/infra validate
+          } 2>&1 | tee terraform_output.txt
 
       - name: Publicar resumo da verificacao
         if: always()
@@ -51,5 +66,10 @@ jobs:
             echo ""
             echo '```'
             cat test_output.txt
+            echo '```'
+            echo ""
+            echo "### Terraform"
+            echo '```'
+            cat terraform_output.txt 2>/dev/null || echo "sem saida"
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
