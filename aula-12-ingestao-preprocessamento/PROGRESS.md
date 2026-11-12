@@ -33,17 +33,26 @@ e PySpark:
     `JobRunId`), roda o crawler e lista as tabelas.
   - `query_athena.sh` executa no Athena as consultas de `consultas_gold.sql`.
 
-O ETL foi executado de ponta a ponta localmente, com Spark 3.3 (a mesma versão
-do Glue 4.0), sobre o CSV completo. O fechamento bateu:
-`raw=10000 = silver 9601 + quarentena 399`. `terraform fmt -check` e
-`terraform validate` passam. Primeiros achados da gold:
+**Executado de ponta a ponta no AWS Academy Learner Lab em 2026-11-12:**
+`terraform apply` (6 recursos) → Glue Job `SUCCEEDED` em 133 s
+(JobRunId `jr_0d3b17c24abb09e1461bb437ca15bac801efbaea40cb51772b40b3073023ac5d`)
+→ Crawler `SUCCEEDED` (7 tabelas no `mercadofacil_db`) → consultas no Athena
+→ `terraform destroy` (6 recursos removidos, bucket conferido como inexistente).
+O log do job no CloudWatch fecha as contagens:
+`raw=10000 silver=9601 quarentena=399 soma_ok=True`. Antes, o mesmo script
+foi testado localmente com Spark 3.3, a mesma versão do Glue 4.0. Os prints
+estão em `aws-lab/prints/` (credenciais e ID da conta mascarados).
 
-- Nordeste (32,8%) e Norte (29,9%) atrasam quase o dobro do Sudeste/Sul (~18%).
-- Nov/dez têm ~30% de itens atrasados, contra ~17% no resto do ano.
-- A nota média cai de 4,12 (no prazo) para 2,21 (8+ dias de atraso).
+Primeiros achados da gold (Athena):
 
-Pendente: a execução na conta do Learner Lab (apply → job → crawler →
-Athena → destroy) e os prints para o professor.
+- Nordeste (35,1%) e Norte (31,6%) atrasam quase o dobro do Sudeste/Sul (~19%).
+  O pior par é Correios + CD-NORDESTE, com 39,9% dos pedidos atrasados.
+- Nov (Black Friday) e dez (Natal) têm 34% e 32% de itens atrasados,
+  contra 15–20% no resto do ano.
+- A nota média cai de 4,12 (no prazo) para 2,21 (8+ dias de atraso). Com
+  8+ dias de atraso, 65% das notas são 1 ou 2.
+- Eletrônicos concentram a maior receita perdida com cancelamento e
+  devolução (R$ 147,6 mil).
 
 ## Ferramentas efetivamente usadas
 

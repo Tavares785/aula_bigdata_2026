@@ -8,7 +8,7 @@ SELECT 'quarentena', count(*) FROM quarentena;
 -- 2) Motivos de quarentena
 SELECT motivo, count(*) AS linhas
 FROM quarentena
-CROSS JOIN UNNEST(split(motivo_quarentena, ';')) AS t(motivo)
+CROSS JOIN UNNEST(split(motivo_quarentena, chr(59))) AS t(motivo)
 GROUP BY motivo
 ORDER BY linhas DESC;
 
