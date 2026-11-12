@@ -1,14 +1,24 @@
+# =============================================================================
+# AWS Glue Resources
+# =============================================================================
+
 # Glue Catalog Database
 resource "aws_glue_catalog_database" "mercadofacil" {
   name        = "mercadofacil_db"
-  description = "Database para dados do e-commerce MercadoFácil"
+  description = "Database para dados do e-commerce MercadoFácil (raw, silver, gold)"
 }
 
-# Glue Job para ETL (raw -> silver -> gold)
+# Glue Job - ETL PySpark (raw -> silver -> gold)
 resource "aws_glue_job" "etl_mercadofacil" {
-  name         = "${var.project_name}-etl-job"
-  role_arn     = var.lab_role_arn
-  glue_version = var.glue_version
+  name     = "${var.project_name}-etl-job"
+  role_arn = var.lab_role_arn
+
+  glue_version      = var.glue_version
+  max_retries       = 0
+  timeout           = 60
+  number_of_workers = 2
+  worker_type       = "G.1X"
+
   command {
     name            = "glueetl"
     python_version  = "3"
@@ -18,22 +28,15 @@ resource "aws_glue_job" "etl_mercadofacil" {
   default_arguments = {
     "--job-language"                     = "python"
     "--job-bookmark-option"              = "job-bookmark-disable"
-    "--enable-continuous-cloudwatch-log" = "true"
     "--enable-metrics"                   = "true"
+    "--enable-continuous-cloudwatch-log" = "true"
     "--enable-spark-ui"                  = "true"
-    "--spark-event-logs-path"            = "s3://${var.bucket_name}/logs/spark-logs/"
-    "--TempDir"                          = "s3://${var.bucket_name}/temp/"
-    # Argumentos customizados para o script
-    "--INPUT_PATH"      = "s3://${var.bucket_name}/raw/"
-    "--SILVER_PATH"     = "s3://${var.bucket_name}/silver/"
-    "--GOLD_PATH"       = "s3://${var.bucket_name}/gold/"
-    "--QUARANTINE_PATH" = "s3://${var.bucket_name}/quarantine/"
+    "--spark-event-logs-path"            = "s3://${var.bucket_name}/logs/spark-ui/"
+    "--INPUT_PATH"                       = "s3://${var.bucket_name}/raw/"
+    "--SILVER_PATH"                      = "s3://${var.bucket_name}/silver/"
+    "--GOLD_PATH"                        = "s3://${var.bucket_name}/gold/"
+    "--QUARANTINE_PATH"                  = "s3://${var.bucket_name}/quarantine/"
   }
-
-  max_retries       = 0
-  timeout           = 60
-  number_of_workers = 2
-  worker_type       = "G.1X"
 
   depends_on = [
     terraform_data.upload_glue_script,
@@ -46,7 +49,7 @@ resource "aws_glue_job" "etl_mercadofacil" {
   }
 }
 
-# Glue Crawler para catalogar dados silver e gold
+# Glue Crawler - Silver Layer
 resource "aws_glue_crawler" "mercadofacil_silver" {
   name          = "${var.project_name}-silver-crawler"
   role          = var.lab_role_arn
@@ -59,17 +62,19 @@ resource "aws_glue_crawler" "mercadofacil_silver" {
   configuration = jsonencode({
     Version = 1.0
     CrawlerOutput = {
-      Partitions = { AddOrUpdateBehavior = "InheritFromTable" }
+      Partitions = {
+        AddOrUpdateBehavior = "InheritFromTable"
+      }
     }
   })
 
   tags = {
-    Project     = var.project_name
-    Environment = "dev"
+    Project = var.project_name
+    Layer   = "silver"
   }
 }
 
-# Glue Crawler para catalogar dados gold
+# Glue Crawler - Gold Layer
 resource "aws_glue_crawler" "mercadofacil_gold" {
   name          = "${var.project_name}-gold-crawler"
   role          = var.lab_role_arn
@@ -82,12 +87,14 @@ resource "aws_glue_crawler" "mercadofacil_gold" {
   configuration = jsonencode({
     Version = 1.0
     CrawlerOutput = {
-      Partitions = { AddOrUpdateBehavior = "InheritFromTable" }
+      Partitions = {
+        AddOrUpdateBehavior = "InheritFromTable"
+      }
     }
   })
 
   tags = {
-    Project     = var.project_name
-    Environment = "dev"
+    Project = var.project_name
+    Layer   = "gold"
   }
 }
