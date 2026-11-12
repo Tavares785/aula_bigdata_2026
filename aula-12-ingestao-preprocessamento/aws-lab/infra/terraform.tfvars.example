@@ -1,0 +1,13 @@
+# =============================================================================
+# Exemplo de terraform.tfvars
+# =============================================================================
+# 1. Copie este arquivo para terraform.tfvars
+# 2. Preencha os valores reais (não versione o terraform.tfvars!)
+# 3. Obtenha o ARN da LabRole: 
+#    aws iam get-role --role-name LabRole --query Role.Arn --output text
+# =============================================================================
+
+bucket_name   = "mercadofacil-bigdata-grupo-XX"  # Substitua XX pelo ID do seu grupo
+lab_role_arn  = "arn:aws:iam::123456789012:role/LabRole"  # Substitua pelo ARN real
+project_name  = "mercadofacil-bigdata"
+glue_version  = "4.0"
