@@ -1,0 +1,226 @@
+terraform_data.bucket: Refreshing state... [id=39f8bb01-d7e3-8b28-f545-97ede37403d9]
+aws_s3_object.raw_csv: Refreshing state... [id=raw/pedidos_mercadofacil.csv]
+aws_glue_catalog_database.pipeline: Refreshing state... [id=206818063339:mercadofacil_db]
+aws_s3_object.etl_script: Refreshing state... [id=scripts/etl_medalhao.py]
+aws_glue_job.etl: Refreshing state... [id=mercadofacil-etl-medalhao]
+aws_glue_crawler.pipeline: Refreshing state... [id=mercadofacil-crawler]
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  - destroy
+
+Terraform will perform the following actions:
+
+  # aws_glue_catalog_database.pipeline will be destroyed
+  - resource "aws_glue_catalog_database" "pipeline" {
+      - arn          = "arn:aws:glue:us-east-1:206818063339:database/mercadofacil_db" -> null
+      - catalog_id   = "206818063339" -> null
+      - id           = "206818063339:mercadofacil_db" -> null
+      - name         = "mercadofacil_db" -> null
+      - parameters   = {} -> null
+      - tags         = {} -> null
+      - tags_all     = {} -> null
+        # (2 unchanged attributes hidden)
+
+      - create_table_default_permission {
+          - permissions = [
+              - "ALL",
+            ] -> null
+
+          - principal {
+              - data_lake_principal_identifier = "IAM_ALLOWED_PRINCIPALS" -> null
+            }
+        }
+    }
+
+  # aws_glue_crawler.pipeline will be destroyed
+  - resource "aws_glue_crawler" "pipeline" {
+      - arn                    = "arn:aws:glue:us-east-1:206818063339:crawler/mercadofacil-crawler" -> null
+      - classifiers            = [] -> null
+      - database_name          = "mercadofacil_db" -> null
+      - id                     = "mercadofacil-crawler" -> null
+      - name                   = "mercadofacil-crawler" -> null
+      - role                   = "LabRole" -> null
+      - tags                   = {} -> null
+      - tags_all               = {} -> null
+        # (5 unchanged attributes hidden)
+
+      - lake_formation_configuration {
+          - use_lake_formation_credentials = false -> null
+            # (1 unchanged attribute hidden)
+        }
+
+      - lineage_configuration {
+          - crawler_lineage_settings = "DISABLE" -> null
+        }
+
+      - recrawl_policy {
+          - recrawl_behavior = "CRAWL_EVERYTHING" -> null
+        }
+
+      - s3_target {
+          - exclusions          = [] -> null
+          - path                = "s3://mercadofacil-6325149-aula12/silver/pedidos/" -> null
+          - sample_size         = 0 -> null
+            # (3 unchanged attributes hidden)
+        }
+      - s3_target {
+          - exclusions          = [] -> null
+          - path                = "s3://mercadofacil-6325149-aula12/quarentena/pedidos/" -> null
+          - sample_size         = 0 -> null
+            # (3 unchanged attributes hidden)
+        }
+      - s3_target {
+          - exclusions          = [] -> null
+          - path                = "s3://mercadofacil-6325149-aula12/gold/gold_atraso_por_estado_transportadora/" -> null
+          - sample_size         = 0 -> null
+            # (3 unchanged attributes hidden)
+        }
+      - s3_target {
+          - exclusions          = [] -> null
+          - path                = "s3://mercadofacil-6325149-aula12/gold/gold_nota_por_faixa_atraso/" -> null
+          - sample_size         = 0 -> null
+            # (3 unchanged attributes hidden)
+        }
+      - s3_target {
+          - exclusions          = [] -> null
+          - path                = "s3://mercadofacil-6325149-aula12/gold/gold_cancelamento_por_categoria_canal/" -> null
+          - sample_size         = 0 -> null
+            # (3 unchanged attributes hidden)
+        }
+      - s3_target {
+          - exclusions          = [] -> null
+          - path                = "s3://mercadofacil-6325149-aula12/gold/gold_vendas_mensal/" -> null
+          - sample_size         = 0 -> null
+            # (3 unchanged attributes hidden)
+        }
+
+      - schema_change_policy {
+          - delete_behavior = "DEPRECATE_IN_DATABASE" -> null
+          - update_behavior = "UPDATE_IN_DATABASE" -> null
+        }
+    }
+
+  # aws_glue_job.etl will be destroyed
+  - resource "aws_glue_job" "etl" {
+      - arn                       = "arn:aws:glue:us-east-1:206818063339:job/mercadofacil-etl-medalhao" -> null
+      - connections               = [] -> null
+      - default_arguments         = {
+          - "--gold_path"       = "s3://mercadofacil-6325149-aula12/gold/"
+          - "--job-language"    = "python"
+          - "--quarantine_path" = "s3://mercadofacil-6325149-aula12/quarentena/pedidos/"
+          - "--raw_path"        = "s3://mercadofacil-6325149-aula12/raw/"
+          - "--silver_path"     = "s3://mercadofacil-6325149-aula12/silver/pedidos/"
+        } -> null
+      - glue_version              = "4.0" -> null
+      - id                        = "mercadofacil-etl-medalhao" -> null
+      - max_capacity              = 2 -> null
+      - max_retries               = 0 -> null
+      - name                      = "mercadofacil-etl-medalhao" -> null
+      - non_overridable_arguments = {} -> null
+      - number_of_workers         = 2 -> null
+      - role_arn                  = "arn:aws:iam::206818063339:role/LabRole" -> null
+      - tags                      = {} -> null
+      - tags_all                  = {} -> null
+      - timeout                   = 15 -> null
+      - worker_type               = "G.1X" -> null
+        # (3 unchanged attributes hidden)
+
+      - command {
+          - name            = "glueetl" -> null
+          - python_version  = "3" -> null
+          - script_location = "s3://mercadofacil-6325149-aula12/scripts/etl_medalhao.py" -> null
+            # (1 unchanged attribute hidden)
+        }
+
+      - execution_property {
+          - max_concurrent_runs = 1 -> null
+        }
+    }
+
+  # aws_s3_object.etl_script will be destroyed
+  - resource "aws_s3_object" "etl_script" {
+      - bucket                        = "mercadofacil-6325149-aula12" -> null
+      - bucket_key_enabled            = false -> null
+      - content_type                  = "application/octet-stream" -> null
+      - etag                          = "94b59a3727c347a2e24837cbf110eb90" -> null
+      - force_destroy                 = false -> null
+      - id                            = "scripts/etl_medalhao.py" -> null
+      - key                           = "scripts/etl_medalhao.py" -> null
+      - metadata                      = {} -> null
+      - server_side_encryption        = "AES256" -> null
+      - source                        = "./../job/etl_medalhao.py" -> null
+      - storage_class                 = "STANDARD" -> null
+      - tags                          = {} -> null
+      - tags_all                      = {} -> null
+        # (13 unchanged attributes hidden)
+    }
+
+  # aws_s3_object.raw_csv will be destroyed
+  - resource "aws_s3_object" "raw_csv" {
+      - bucket                        = "mercadofacil-6325149-aula12" -> null
+      - bucket_key_enabled            = false -> null
+      - content_type                  = "application/octet-stream" -> null
+      - etag                          = "b2b4b8d4db47f41ca3e3eaca4f18a557" -> null
+      - force_destroy                 = false -> null
+      - id                            = "raw/pedidos_mercadofacil.csv" -> null
+      - key                           = "raw/pedidos_mercadofacil.csv" -> null
+      - metadata                      = {} -> null
+      - server_side_encryption        = "AES256" -> null
+      - source                        = "./../../data/pedidos_mercadofacil.csv" -> null
+      - storage_class                 = "STANDARD" -> null
+      - tags                          = {} -> null
+      - tags_all                      = {} -> null
+        # (13 unchanged attributes hidden)
+    }
+
+  # terraform_data.bucket will be destroyed
+  - resource "terraform_data" "bucket" {
+      - id     = "39f8bb01-d7e3-8b28-f545-97ede37403d9" -> null
+      - input  = "mercadofacil-6325149-aula12" -> null
+      - output = "mercadofacil-6325149-aula12" -> null
+    }
+
+Plan: 0 to add, 0 to change, 6 to destroy.
+
+Changes to Outputs:
+  - athena_results_path = "s3://mercadofacil-6325149-aula12/athena-results/" -> null
+  - bucket_name         = "mercadofacil-6325149-aula12" -> null
+  - glue_crawler_name   = "mercadofacil-crawler" -> null
+  - glue_database       = "mercadofacil_db" -> null
+  - glue_job_name       = "mercadofacil-etl-medalhao" -> null
+aws_s3_object.raw_csv: Destroying... [id=raw/pedidos_mercadofacil.csv]
+aws_glue_job.etl: Destroying... [id=mercadofacil-etl-medalhao]
+aws_glue_crawler.pipeline: Destroying... [id=mercadofacil-crawler]
+aws_glue_crawler.pipeline: Destruction complete after 1s
+aws_s3_object.raw_csv: Destruction complete after 1s
+aws_glue_job.etl: Destruction complete after 1s
+aws_glue_catalog_database.pipeline: Destroying... [id=206818063339:mercadofacil_db]
+aws_s3_object.etl_script: Destroying... [id=scripts/etl_medalhao.py]
+aws_s3_object.etl_script: Destruction complete after 1s
+aws_glue_catalog_database.pipeline: Destruction complete after 1s
+terraform_data.bucket: Destroying... [id=39f8bb01-d7e3-8b28-f545-97ede37403d9]
+terraform_data.bucket: Provisioning with 'local-exec'...
+terraform_data.bucket (local-exec): Executing: ["/bin/sh" "-c" "aws s3 rb s3://mercadofacil-6325149-aula12 --force"]
+terraform_data.bucket (local-exec): delete: s3://mercadofacil-6325149-aula12/athena-results/12b36dd6-75dc-4dfb-b2e9-b31a58d36fe2.csv.metadata
+terraform_data.bucket (local-exec): delete: s3://mercadofacil-6325149-aula12/athena-results/6c666d82-16d2-42cc-a63d-f0f51d95afd5.csv
+terraform_data.bucket (local-exec): delete: s3://mercadofacil-6325149-aula12/athena-results/6c666d82-16d2-42cc-a63d-f0f51d95afd5.csv.metadata
+terraform_data.bucket (local-exec): delete: s3://mercadofacil-6325149-aula12/gold/gold_nota_por_faixa_atraso/part-00000-76ea10e6-771b-4437-9d1c-9a18dbd07bbe-c000.snappy.parquet
+terraform_data.bucket (local-exec): delete: s3://mercadofacil-6325149-aula12/athena-results/c98f112a-bc6c-43ba-8767-7f4b9839f9e9.csv
+terraform_data.bucket (local-exec): delete: s3://mercadofacil-6325149-aula12/gold/gold_vendas_mensal/part-00000-26739690-790a-4b52-8c89-728b842900ab-c000.snappy.parquet
+terraform_data.bucket (local-exec): delete: s3://mercadofacil-6325149-aula12/gold/gold_cancelamento_por_categoria_canal/part-00000-7a1ab1fd-a809-4f81-8109-18c70b2f40d5-c000.snappy.parquet
+terraform_data.bucket (local-exec): delete: s3://mercadofacil-6325149-aula12/athena-results/12b36dd6-75dc-4dfb-b2e9-b31a58d36fe2.csv
+terraform_data.bucket (local-exec): delete: s3://mercadofacil-6325149-aula12/gold/gold_atraso_por_estado_transportadora/part-00000-358698fb-d3fd-417e-8cc4-6d14c5e17eae-c000.snappy.parquet
+terraform_data.bucket (local-exec): delete: s3://mercadofacil-6325149-aula12/athena-results/c98f112a-bc6c-43ba-8767-7f4b9839f9e9.csv.metadata
+terraform_data.bucket (local-exec): delete: s3://mercadofacil-6325149-aula12/quarentena/pedidos/part-00001-bacedd33-f0d9-48c4-b8f2-19c336a85b69-c000.snappy.parquet
+terraform_data.bucket (local-exec): delete: s3://mercadofacil-6325149-aula12/quarentena/pedidos/part-00000-bacedd33-f0d9-48c4-b8f2-19c336a85b69-c000.snappy.parquet
+terraform_data.bucket (local-exec): delete: s3://mercadofacil-6325149-aula12/quarentena/pedidos/part-00002-bacedd33-f0d9-48c4-b8f2-19c336a85b69-c000.snappy.parquet
+terraform_data.bucket (local-exec): delete: s3://mercadofacil-6325149-aula12/quarentena/pedidos/part-00003-bacedd33-f0d9-48c4-b8f2-19c336a85b69-c000.snappy.parquet
+terraform_data.bucket (local-exec): delete: s3://mercadofacil-6325149-aula12/silver/pedidos/part-00000-c0f512b5-08ef-4512-ade5-0a3979f07eec-c000.snappy.parquet
+terraform_data.bucket (local-exec): delete: s3://mercadofacil-6325149-aula12/silver/pedidos/part-00001-c0f512b5-08ef-4512-ade5-0a3979f07eec-c000.snappy.parquet
+terraform_data.bucket (local-exec): delete: s3://mercadofacil-6325149-aula12/silver/pedidos/part-00002-c0f512b5-08ef-4512-ade5-0a3979f07eec-c000.snappy.parquet
+terraform_data.bucket (local-exec): delete: s3://mercadofacil-6325149-aula12/silver/pedidos/part-00003-c0f512b5-08ef-4512-ade5-0a3979f07eec-c000.snappy.parquet
+terraform_data.bucket (local-exec): remove_bucket: mercadofacil-6325149-aula12
+terraform_data.bucket: Destruction complete after 5s
+
+Destroy complete! Resources: 6 destroyed.
