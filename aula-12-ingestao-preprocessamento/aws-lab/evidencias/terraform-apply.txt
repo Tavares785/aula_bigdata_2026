@@ -1,0 +1,128 @@
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  # aws_glue_catalog_database.catalog will be created
+  + resource "aws_glue_catalog_database" "catalog" {
+      + arn          = (known after apply)
+      + catalog_id   = (known after apply)
+      + id           = (known after apply)
+      + location_uri = (known after apply)
+      + name         = "mf_6325192_6cc42fbd"
+      + tags_all     = (known after apply)
+
+      + create_table_default_permission (known after apply)
+    }
+
+  # aws_glue_crawler.gold will be created
+  + resource "aws_glue_crawler" "gold" {
+      + arn           = (known after apply)
+      + database_name = "mf_6325192_6cc42fbd"
+      + id            = (known after apply)
+      + name          = "mf-6325192-6cc42fbd-crawler"
+      + role          = "arn:aws:iam::381492120730:role/LabRole"
+      + tags_all      = (known after apply)
+
+      + s3_target {
+          + path = "s3://mf-6325192-6cc42fbd-data/gold/atrasos_estado"
+        }
+      + s3_target {
+          + path = "s3://mf-6325192-6cc42fbd-data/gold/vendas_categoria"
+        }
+    }
+
+  # aws_glue_job.etl will be created
+  + resource "aws_glue_job" "etl" {
+      + arn               = (known after apply)
+      + default_arguments = {
+          + "--GOLD_PATH"           = "s3://mf-6325192-6cc42fbd-data/gold"
+          + "--QUARANTINE_PATH"     = "s3://mf-6325192-6cc42fbd-data/quarantine/items"
+          + "--RAW_PATH"            = "s3://mf-6325192-6cc42fbd-data/raw/pedidos_mercadofacil.csv"
+          + "--SILVER_PATH"         = "s3://mf-6325192-6cc42fbd-data/silver/items"
+          + "--TempDir"             = "s3://mf-6325192-6cc42fbd-data/temp/"
+          + "--job-bookmark-option" = "job-bookmark-disable"
+        }
+      + glue_version      = "4.0"
+      + id                = (known after apply)
+      + max_capacity      = (known after apply)
+      + max_retries       = 0
+      + name              = "mf-6325192-6cc42fbd-etl"
+      + number_of_workers = 2
+      + role_arn          = "arn:aws:iam::381492120730:role/LabRole"
+      + tags_all          = (known after apply)
+      + timeout           = 25
+      + worker_type       = "G.1X"
+
+      + command {
+          + name            = "glueetl"
+          + python_version  = "3"
+          + runtime         = (known after apply)
+          + script_location = "s3://mf-6325192-6cc42fbd-data/scripts/etl.py"
+        }
+
+      + execution_property (known after apply)
+
+      + notification_property (known after apply)
+    }
+
+  # terraform_data.bucket will be created
+  + resource "terraform_data" "bucket" {
+      + id     = (known after apply)
+      + input  = "mf-6325192-6cc42fbd-data"
+      + output = (known after apply)
+    }
+
+  # terraform_data.upload will be created
+  + resource "terraform_data" "upload" {
+      + id               = (known after apply)
+      + triggers_replace = [
+          + "e4a9a835adcd3b306212b7e127733490239bfc5a0704b369b1e2d45f5792f01a",
+          + "9d451ebc491ae74f5c03d81ee95ccd5c08204e8afea45f1412f1e6fd890376a7",
+        ]
+    }
+
+Plan: 5 to add, 0 to change, 0 to destroy.
+
+Changes to Outputs:
+  + bucket   = "mf-6325192-6cc42fbd-data"
+  + crawler  = "mf-6325192-6cc42fbd-crawler"
+  + database = "mf_6325192_6cc42fbd"
+  + job      = "mf-6325192-6cc42fbd-etl"
+terraform_data.bucket: Creating...
+terraform_data.bucket: Provisioning with 'local-exec'...
+terraform_data.bucket (local-exec): Executing: ["/bin/bash" "-c" "set -euo pipefail\naws s3api create-bucket --bucket \"$BUCKET\" --region us-east-1\naws s3api put-public-access-block --bucket \"$BUCKET\" --public-access-block-configuration BlockPublicAcls=true,IgnorePublicAcls=true,BlockPublicPolicy=true,RestrictPublicBuckets=true\naws s3api put-bucket-encryption --bucket \"$BUCKET\" --server-side-encryption-configuration '{\"Rules\":[{\"ApplyServerSideEncryptionByDefault\":{\"SSEAlgorithm\":\"AES256\"}}]}'\n"]
+aws_glue_catalog_database.catalog: Creating...
+terraform_data.bucket (local-exec): {
+terraform_data.bucket (local-exec):     "Location": "/mf-6325192-6cc42fbd-data",
+terraform_data.bucket (local-exec):     "BucketArn": "arn:aws:s3:::mf-6325192-6cc42fbd-data"
+terraform_data.bucket (local-exec): }
+aws_glue_catalog_database.catalog: Creation complete after 2s [id=381492120730:mf_6325192_6cc42fbd]
+terraform_data.bucket: Creation complete after 5s [id=db899e02-1f83-3fb9-1153-340adb2aedbe]
+aws_glue_crawler.gold: Creating...
+terraform_data.upload: Creating...
+terraform_data.upload: Provisioning with 'local-exec'...
+terraform_data.upload (local-exec): Executing: ["/bin/sh" "-c" "set -e\naws s3 cp './../../data/pedidos_mercadofacil.csv' \"s3://$BUCKET/raw/pedidos_mercadofacil.csv\"\naws s3 cp './../job/etl.py' \"s3://$BUCKET/scripts/etl.py\"\n"]
+aws_glue_crawler.gold: Creation complete after 1s [id=mf-6325192-6cc42fbd-crawler]
+terraform_data.upload (local-exec): Completed 1.0 MiB/3.2 MiB (1.0 MiB/s) with 1 file(s) remaining
+terraform_data.upload (local-exec): Completed 2.0 MiB/3.2 MiB (332.7 KiB/s) with 1 file(s) remaining
+terraform_data.upload (local-exec): Completed 3.0 MiB/3.2 MiB (411.6 KiB/s) with 1 file(s) remaining
+terraform_data.upload (local-exec): Completed 3.2 MiB/3.2 MiB (358.0 KiB/s) with 1 file(s) remaining
+terraform_data.upload (local-exec): upload: ../../data/pedidos_mercadofacil.csv to s3://mf-6325192-6cc42fbd-data/raw/pedidos_mercadofacil.csv
+terraform_data.upload: Still creating... [00m11s elapsed]
+terraform_data.upload (local-exec): Completed 6.8 KiB/6.8 KiB (6.6 KiB/s) with 1 file(s) remaining
+terraform_data.upload (local-exec): upload: ../job/etl.py to s3://mf-6325192-6cc42fbd-data/scripts/etl.py
+terraform_data.upload: Creation complete after 11s [id=7a9f44ab-c2fd-6fe7-77da-b3a6b28a4b0f]
+aws_glue_job.etl: Creating...
+aws_glue_job.etl: Creation complete after 1s [id=mf-6325192-6cc42fbd-etl]
+
+Apply complete! Resources: 5 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+bucket = "mf-6325192-6cc42fbd-data"
+crawler = "mf-6325192-6cc42fbd-crawler"
+database = "mf_6325192_6cc42fbd"
+job = "mf-6325192-6cc42fbd-etl"

@@ -1,0 +1,38 @@
+Linhas: 10000
+SHA256: e4a9a835adcd3b306212b7e127733490239bfc5a0704b369b1e2d45f5792f01a
+Ausencias por coluna:
+pedido_id 0
+item_id 0
+data_pedido 0
+cliente_id 0
+cliente_nome 0
+cliente_email 321
+cliente_cpf 200
+cliente_segmento 160
+cliente_data_cadastro 0
+estado 0
+cidade 0
+canal 0
+categoria 0
+sku 0
+produto 0
+marca 173
+fornecedor 253
+custo_unitario 0
+preco_unitario 80
+quantidade 74
+desconto_pct 242
+valor_total 79
+forma_pagamento 0
+parcelas 159
+status_pedido 0
+transportadora 0
+centro_distribuicao 162
+prazo_estimado_dias 0
+prazo_real_dias 726
+data_entrega 549
+atraso_dias 903
+nota_avaliacao 938
+comentario 3583
+Chaves repetidas: 200
+Copias alem da primeira: 200

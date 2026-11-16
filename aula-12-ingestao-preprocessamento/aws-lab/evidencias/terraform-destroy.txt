@@ -1,0 +1,171 @@
+terraform_data.bucket: Refreshing state... [id=db899e02-1f83-3fb9-1153-340adb2aedbe]
+terraform_data.upload: Refreshing state... [id=7a9f44ab-c2fd-6fe7-77da-b3a6b28a4b0f]
+aws_glue_catalog_database.catalog: Refreshing state... [id=381492120730:mf_6325192_6cc42fbd]
+aws_glue_job.etl: Refreshing state... [id=mf-6325192-6cc42fbd-etl]
+aws_glue_crawler.gold: Refreshing state... [id=mf-6325192-6cc42fbd-crawler]
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  - destroy
+
+Terraform will perform the following actions:
+
+  # aws_glue_catalog_database.catalog will be destroyed
+  - resource "aws_glue_catalog_database" "catalog" {
+      - arn          = "arn:aws:glue:us-east-1:381492120730:database/mf_6325192_6cc42fbd" -> null
+      - catalog_id   = "381492120730" -> null
+      - id           = "381492120730:mf_6325192_6cc42fbd" -> null
+      - name         = "mf_6325192_6cc42fbd" -> null
+      - parameters   = {} -> null
+      - tags         = {} -> null
+      - tags_all     = {} -> null
+        # (2 unchanged attributes hidden)
+
+      - create_table_default_permission {
+          - permissions = [
+              - "ALL",
+            ] -> null
+
+          - principal {
+              - data_lake_principal_identifier = "IAM_ALLOWED_PRINCIPALS" -> null
+            }
+        }
+    }
+
+  # aws_glue_crawler.gold will be destroyed
+  - resource "aws_glue_crawler" "gold" {
+      - arn                    = "arn:aws:glue:us-east-1:381492120730:crawler/mf-6325192-6cc42fbd-crawler" -> null
+      - classifiers            = [] -> null
+      - database_name          = "mf_6325192_6cc42fbd" -> null
+      - id                     = "mf-6325192-6cc42fbd-crawler" -> null
+      - name                   = "mf-6325192-6cc42fbd-crawler" -> null
+      - role                   = "LabRole" -> null
+      - tags                   = {} -> null
+      - tags_all               = {} -> null
+        # (5 unchanged attributes hidden)
+
+      - lake_formation_configuration {
+          - use_lake_formation_credentials = false -> null
+            # (1 unchanged attribute hidden)
+        }
+
+      - lineage_configuration {
+          - crawler_lineage_settings = "DISABLE" -> null
+        }
+
+      - recrawl_policy {
+          - recrawl_behavior = "CRAWL_EVERYTHING" -> null
+        }
+
+      - s3_target {
+          - exclusions          = [] -> null
+          - path                = "s3://mf-6325192-6cc42fbd-data/gold/atrasos_estado" -> null
+          - sample_size         = 0 -> null
+            # (3 unchanged attributes hidden)
+        }
+      - s3_target {
+          - exclusions          = [] -> null
+          - path                = "s3://mf-6325192-6cc42fbd-data/gold/vendas_categoria" -> null
+          - sample_size         = 0 -> null
+            # (3 unchanged attributes hidden)
+        }
+
+      - schema_change_policy {
+          - delete_behavior = "DEPRECATE_IN_DATABASE" -> null
+          - update_behavior = "UPDATE_IN_DATABASE" -> null
+        }
+    }
+
+  # aws_glue_job.etl will be destroyed
+  - resource "aws_glue_job" "etl" {
+      - arn                       = "arn:aws:glue:us-east-1:381492120730:job/mf-6325192-6cc42fbd-etl" -> null
+      - connections               = [] -> null
+      - default_arguments         = {
+          - "--GOLD_PATH"           = "s3://mf-6325192-6cc42fbd-data/gold"
+          - "--QUARANTINE_PATH"     = "s3://mf-6325192-6cc42fbd-data/quarantine/items"
+          - "--RAW_PATH"            = "s3://mf-6325192-6cc42fbd-data/raw/pedidos_mercadofacil.csv"
+          - "--SILVER_PATH"         = "s3://mf-6325192-6cc42fbd-data/silver/items"
+          - "--TempDir"             = "s3://mf-6325192-6cc42fbd-data/temp/"
+          - "--job-bookmark-option" = "job-bookmark-disable"
+        } -> null
+      - glue_version              = "4.0" -> null
+      - id                        = "mf-6325192-6cc42fbd-etl" -> null
+      - max_capacity              = 2 -> null
+      - max_retries               = 0 -> null
+      - name                      = "mf-6325192-6cc42fbd-etl" -> null
+      - non_overridable_arguments = {} -> null
+      - number_of_workers         = 2 -> null
+      - role_arn                  = "arn:aws:iam::381492120730:role/LabRole" -> null
+      - tags                      = {} -> null
+      - tags_all                  = {} -> null
+      - timeout                   = 25 -> null
+      - worker_type               = "G.1X" -> null
+        # (3 unchanged attributes hidden)
+
+      - command {
+          - name            = "glueetl" -> null
+          - python_version  = "3" -> null
+          - script_location = "s3://mf-6325192-6cc42fbd-data/scripts/etl.py" -> null
+            # (1 unchanged attribute hidden)
+        }
+
+      - execution_property {
+          - max_concurrent_runs = 1 -> null
+        }
+    }
+
+  # terraform_data.bucket will be destroyed
+  - resource "terraform_data" "bucket" {
+      - id     = "db899e02-1f83-3fb9-1153-340adb2aedbe" -> null
+      - input  = "mf-6325192-6cc42fbd-data" -> null
+      - output = "mf-6325192-6cc42fbd-data" -> null
+    }
+
+  # terraform_data.upload will be destroyed
+  - resource "terraform_data" "upload" {
+      - id               = "7a9f44ab-c2fd-6fe7-77da-b3a6b28a4b0f" -> null
+      - triggers_replace = [
+          - "e4a9a835adcd3b306212b7e127733490239bfc5a0704b369b1e2d45f5792f01a",
+          - "9d451ebc491ae74f5c03d81ee95ccd5c08204e8afea45f1412f1e6fd890376a7",
+        ] -> null
+    }
+
+Plan: 0 to add, 0 to change, 5 to destroy.
+
+Changes to Outputs:
+  - bucket   = "mf-6325192-6cc42fbd-data" -> null
+  - crawler  = "mf-6325192-6cc42fbd-crawler" -> null
+  - database = "mf_6325192_6cc42fbd" -> null
+  - job      = "mf-6325192-6cc42fbd-etl" -> null
+aws_glue_job.etl: Destroying... [id=mf-6325192-6cc42fbd-etl]
+aws_glue_crawler.gold: Destroying... [id=mf-6325192-6cc42fbd-crawler]
+aws_glue_crawler.gold: Destruction complete after 1s
+aws_glue_catalog_database.catalog: Destroying... [id=381492120730:mf_6325192_6cc42fbd]
+aws_glue_job.etl: Destruction complete after 1s
+terraform_data.upload: Destroying... [id=7a9f44ab-c2fd-6fe7-77da-b3a6b28a4b0f]
+terraform_data.upload: Destruction complete after 0s
+terraform_data.bucket: Destroying... [id=db899e02-1f83-3fb9-1153-340adb2aedbe]
+terraform_data.bucket: Provisioning with 'local-exec'...
+terraform_data.bucket (local-exec): Executing: ["/bin/bash" "-c" "aws s3 rb \"s3://$BUCKET\" --force --region us-east-1"]
+aws_glue_catalog_database.catalog: Destruction complete after 0s
+terraform_data.bucket (local-exec): delete: s3://mf-6325192-6cc42fbd-data/athena/54dbd8a6-cfcc-45b3-a6d0-b2ba905fb98b.csv.metadata
+terraform_data.bucket (local-exec): delete: s3://mf-6325192-6cc42fbd-data/athena/54dbd8a6-cfcc-45b3-a6d0-b2ba905fb98b.csv
+terraform_data.bucket (local-exec): delete: s3://mf-6325192-6cc42fbd-data/quarantine/items/part-00005-21a45520-1d1e-491f-b67b-8989d593bfed-c000.snappy.parquet
+terraform_data.bucket (local-exec): delete: s3://mf-6325192-6cc42fbd-data/raw/pedidos_mercadofacil.csv
+terraform_data.bucket (local-exec): delete: s3://mf-6325192-6cc42fbd-data/scripts/etl.py
+terraform_data.bucket (local-exec): delete: s3://mf-6325192-6cc42fbd-data/silver/items/part-00000-8cdff20d-6755-4b7e-8069-92ade616e8ed-c000.snappy.parquet
+terraform_data.bucket (local-exec): delete: s3://mf-6325192-6cc42fbd-data/silver/items/part-00001-8cdff20d-6755-4b7e-8069-92ade616e8ed-c000.snappy.parquet
+terraform_data.bucket (local-exec): delete: s3://mf-6325192-6cc42fbd-data/silver/items/part-00002-8cdff20d-6755-4b7e-8069-92ade616e8ed-c000.snappy.parquet
+terraform_data.bucket (local-exec): delete: s3://mf-6325192-6cc42fbd-data/quarantine/items/part-00000-21a45520-1d1e-491f-b67b-8989d593bfed-c000.snappy.parquet
+terraform_data.bucket (local-exec): delete: s3://mf-6325192-6cc42fbd-data/gold/vendas_categoria/part-00000-6e721f67-15fe-4da3-ac19-b7db9308c818-c000.snappy.parquet
+terraform_data.bucket (local-exec): delete: s3://mf-6325192-6cc42fbd-data/athena/c5fe3b86-abe3-4c8a-895c-ed23e5e8e42f.csv.metadata
+terraform_data.bucket (local-exec): delete: s3://mf-6325192-6cc42fbd-data/quarantine/items/part-00002-21a45520-1d1e-491f-b67b-8989d593bfed-c000.snappy.parquet
+terraform_data.bucket (local-exec): delete: s3://mf-6325192-6cc42fbd-data/gold/atrasos_estado/part-00000-1466c849-7d55-4a39-b9f2-76199ebd443c-c000.snappy.parquet
+terraform_data.bucket (local-exec): delete: s3://mf-6325192-6cc42fbd-data/athena/c5fe3b86-abe3-4c8a-895c-ed23e5e8e42f.csv
+terraform_data.bucket (local-exec): delete: s3://mf-6325192-6cc42fbd-data/quarantine/items/part-00004-21a45520-1d1e-491f-b67b-8989d593bfed-c000.snappy.parquet
+terraform_data.bucket (local-exec): delete: s3://mf-6325192-6cc42fbd-data/quarantine/items/part-00003-21a45520-1d1e-491f-b67b-8989d593bfed-c000.snappy.parquet
+terraform_data.bucket (local-exec): delete: s3://mf-6325192-6cc42fbd-data/silver/items/part-00003-8cdff20d-6755-4b7e-8069-92ade616e8ed-c000.snappy.parquet
+terraform_data.bucket (local-exec): remove_bucket: mf-6325192-6cc42fbd-data
+terraform_data.bucket: Destruction complete after 4s
+
+Destroy complete! Resources: 5 destroyed.

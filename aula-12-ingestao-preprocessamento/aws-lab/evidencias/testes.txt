@@ -1,0 +1,19 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-8.2.2, pluggy-1.7.0 -- /home/emar/.venvs/bigdata-aula12/bin/python
+cachedir: .pytest_cache
+rootdir: /mnt/c/Users/Emar2/bigdata-aula12/aula-12-ingestao-preprocessamento
+collecting ... collected 11 items
+
+tests/test_progress_and_docs.py::test_progress_doc_exists_and_sections_present PASSED [  9%]
+tests/test_progress_and_docs.py::test_progress_doc_sections_filled PASSED [ 18%]
+tests/test_progress_and_docs.py::test_etl_job_is_a_real_pyspark_pipeline PASSED [ 27%]
+tests/test_progress_and_docs.py::test_regras_silver_documented PASSED    [ 36%]
+tests/test_terraform_pipeline.py::test_provider_aws_us_east_1 PASSED     [ 45%]
+tests/test_terraform_pipeline.py::test_bucket_not_created_with_aws_s3_bucket_and_no_iam PASSED [ 54%]
+tests/test_terraform_pipeline.py::test_dataset_is_uploaded_to_s3 PASSED  [ 63%]
+tests/test_terraform_pipeline.py::test_glue_database_declared PASSED     [ 72%]
+tests/test_terraform_pipeline.py::test_glue_job_declared PASSED          [ 81%]
+tests/test_terraform_pipeline.py::test_glue_crawler_declared_with_s3_targets PASSED [ 90%]
+tests/test_terraform_pipeline.py::test_outputs_declared PASSED           [100%]
+
+============================== 11 passed in 0.13s ==============================
