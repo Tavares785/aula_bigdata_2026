@@ -24,3 +24,6 @@ __pycache__/
 *.py[cod]
 venv/
 .venv/
+
+# Planos salvos do terraform carregam os valores das variaveis.
+*.tfplan
