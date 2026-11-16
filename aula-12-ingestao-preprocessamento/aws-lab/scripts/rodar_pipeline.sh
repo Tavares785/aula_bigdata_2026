@@ -8,6 +8,12 @@ set -euo pipefail
 
 cd "$(dirname "$0")/../infra"
 
+# A regiao precisa estar no ambiente, e nao so no terraform.tfvars: os
+# comandos `aws` abaixo nao leem o tfvars. Um perfil do Learner Lab sem
+# `region` no ~/.aws/config faz a CLI falhar com NoRegion depois de o
+# apply ja ter passado — o erro aparece no meio do pipeline, nao no comeco.
+export AWS_DEFAULT_REGION="${AWS_DEFAULT_REGION:-us-east-1}"
+
 echo "==> apply"
 terraform init -input=false
 terraform apply -auto-approve -input=false

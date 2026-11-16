@@ -7,6 +7,11 @@ set -euo pipefail
 CONSULTA="${1:-SELECT estado, categoria, taxa_atraso_pct, nota_media FROM atraso_por_recorte ORDER BY taxa_atraso_pct DESC LIMIT 10}"
 
 cd "$(dirname "$0")/../infra"
+
+# Mesma razao do rodar_pipeline.sh: os comandos `aws` nao leem o
+# terraform.tfvars, e um perfil do Learner Lab sem `region` no
+# ~/.aws/config faz a CLI falhar com NoRegion.
+export AWS_DEFAULT_REGION="${AWS_DEFAULT_REGION:-us-east-1}"
 BUCKET=$(terraform output -raw bucket)
 BANCO=$(terraform output -raw glue_database)
 

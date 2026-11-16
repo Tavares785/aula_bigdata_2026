@@ -123,17 +123,43 @@ def para_data(coluna):
     Converte data em três formatos, mais lixo.
 
     O arquivo traz ISO (`2025-03-07`), brasileiro (`02/03/2025`),
-    timestamp (`2025-11-18 00:00:00`) e a palavra `ontem`. O `coalesce`
-    tenta na ordem e devolve NULL quando nenhum formato serve — `ontem`
-    cai aqui, porque não há data de referência para resolvê-lo e
-    inventar uma seria fabricar fato.
+    timestamp (`2025-11-18 00:00:00`) e a palavra `ontem`.
+
+    A construção é `when` com `rlike`, e não `coalesce` de vários
+    `to_date`. O motivo foi medido, não suposto: no Spark do Glue 4.0 a
+    política de parsing é estrita, e `to_date` **lança exceção** quando o
+    texto não casa com o formato, em vez de devolver NULL. O job morreu
+    com
+
+        Text '2025-12-28 05:35:49' could not be parsed,
+        unparsed text found at index 10
+
+    — o índice 10 é onde termina a parte ISO. Num `coalesce`, a primeira
+    alternativa derruba o job antes de a quarta ter chance de tratar o
+    timestamp. Testar o formato antes de converter é o que mantém a
+    conversão total.
+
+    `ontem` e qualquer outro texto caem no `otherwise` e viram NULL: não
+    há data de referência para resolvê-lo, e inventar uma seria fabricar
+    fato.
     """
     texto = F.trim(F.col(coluna))
-    return F.coalesce(
-        F.to_date(texto, "yyyy-MM-dd"),
-        F.to_date(texto, "dd/MM/yyyy"),
-        F.to_date(texto, "dd-MM-yyyy"),
-        F.to_date(F.substring(texto, 1, 10), "yyyy-MM-dd"),
+    return (
+        # ISO, com ou sem hora depois. O substring corta a hora; sem ele,
+        # o formato não casa e o parser estrito reclama.
+        F.when(
+            texto.rlike(r"^\d{4}-\d{2}-\d{2}"),
+            F.to_date(F.substring(texto, 1, 10), "yyyy-MM-dd"),
+        )
+        .when(
+            texto.rlike(r"^\d{2}/\d{2}/\d{4}$"),
+            F.to_date(texto, "dd/MM/yyyy"),
+        )
+        .when(
+            texto.rlike(r"^\d{2}-\d{2}-\d{4}$"),
+            F.to_date(texto, "dd-MM-yyyy"),
+        )
+        .otherwise(F.lit(None).cast("date"))
     )
 
 
