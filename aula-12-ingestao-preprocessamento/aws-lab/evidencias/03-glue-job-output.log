@@ -1,0 +1,13 @@
+RESUMO raw=10000 silver=9362 quarentena=638
+	+----------------------+-----+
+|motivo                |count|
++----------------------+-----+
+|duplicado_item_id     |200  |
+|quantidade_invalida   |148  |
+|valor_total_incoerente|142  |
+|preco_invalido        |95   |
+|data_pedido_invalida  |48   |
+|desconto_invalido     |5    |
++----------------------+-----+
+
+

@@ -1,0 +1,220 @@
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  # aws_glue_catalog_database.pipeline will be created
+  + resource "aws_glue_catalog_database" "pipeline" {
+      + arn          = (known after apply)
+      + catalog_id   = (known after apply)
+      + id           = (known after apply)
+      + location_uri = (known after apply)
+      + name         = "mercadofacil_db"
+      + tags_all     = (known after apply)
+
+      + create_table_default_permission (known after apply)
+    }
+
+  # aws_glue_crawler.pipeline will be created
+  + resource "aws_glue_crawler" "pipeline" {
+      + arn           = (known after apply)
+      + database_name = "mercadofacil_db"
+      + id            = (known after apply)
+      + name          = "mercadofacil-crawler"
+      + role          = "arn:aws:iam::206818063339:role/LabRole"
+      + tags_all      = (known after apply)
+
+      + s3_target {
+          + path = "s3://mercadofacil-6325149-aula12/silver/pedidos/"
+        }
+      + s3_target {
+          + path = "s3://mercadofacil-6325149-aula12/quarentena/pedidos/"
+        }
+      + s3_target {
+          + path = "s3://mercadofacil-6325149-aula12/gold/gold_atraso_por_estado_transportadora/"
+        }
+      + s3_target {
+          + path = "s3://mercadofacil-6325149-aula12/gold/gold_nota_por_faixa_atraso/"
+        }
+      + s3_target {
+          + path = "s3://mercadofacil-6325149-aula12/gold/gold_cancelamento_por_categoria_canal/"
+        }
+      + s3_target {
+          + path = "s3://mercadofacil-6325149-aula12/gold/gold_vendas_mensal/"
+        }
+    }
+
+  # aws_glue_job.etl will be created
+  + resource "aws_glue_job" "etl" {
+      + arn               = (known after apply)
+      + default_arguments = {
+          + "--gold_path"       = "s3://mercadofacil-6325149-aula12/gold/"
+          + "--job-language"    = "python"
+          + "--quarantine_path" = "s3://mercadofacil-6325149-aula12/quarentena/pedidos/"
+          + "--raw_path"        = "s3://mercadofacil-6325149-aula12/raw/"
+          + "--silver_path"     = "s3://mercadofacil-6325149-aula12/silver/pedidos/"
+        }
+      + glue_version      = "4.0"
+      + id                = (known after apply)
+      + max_capacity      = (known after apply)
+      + name              = "mercadofacil-etl-medalhao"
+      + number_of_workers = 2
+      + role_arn          = "arn:aws:iam::206818063339:role/LabRole"
+      + tags_all          = (known after apply)
+      + timeout           = 15
+      + worker_type       = "G.1X"
+
+      + command {
+          + name            = "glueetl"
+          + python_version  = "3"
+          + runtime         = (known after apply)
+          + script_location = "s3://mercadofacil-6325149-aula12/scripts/etl_medalhao.py"
+        }
+
+      + execution_property (known after apply)
+
+      + notification_property (known after apply)
+    }
+
+  # aws_s3_object.etl_script will be created
+  + resource "aws_s3_object" "etl_script" {
+      + acl                    = (known after apply)
+      + bucket                 = "mercadofacil-6325149-aula12"
+      + bucket_key_enabled     = (known after apply)
+      + checksum_crc32         = (known after apply)
+      + checksum_crc32c        = (known after apply)
+      + checksum_sha1          = (known after apply)
+      + checksum_sha256        = (known after apply)
+      + content_type           = (known after apply)
+      + etag                   = "94b59a3727c347a2e24837cbf110eb90"
+      + force_destroy          = false
+      + id                     = (known after apply)
+      + key                    = "scripts/etl_medalhao.py"
+      + kms_key_id             = (known after apply)
+      + server_side_encryption = (known after apply)
+      + source                 = "./../job/etl_medalhao.py"
+      + storage_class          = (known after apply)
+      + tags_all               = (known after apply)
+      + version_id             = (known after apply)
+    }
+
+  # aws_s3_object.raw_csv will be created
+  + resource "aws_s3_object" "raw_csv" {
+      + acl                    = (known after apply)
+      + bucket                 = "mercadofacil-6325149-aula12"
+      + bucket_key_enabled     = (known after apply)
+      + checksum_crc32         = (known after apply)
+      + checksum_crc32c        = (known after apply)
+      + checksum_sha1          = (known after apply)
+      + checksum_sha256        = (known after apply)
+      + content_type           = (known after apply)
+      + etag                   = "b2b4b8d4db47f41ca3e3eaca4f18a557"
+      + force_destroy          = false
+      + id                     = (known after apply)
+      + key                    = "raw/pedidos_mercadofacil.csv"
+      + kms_key_id             = (known after apply)
+      + server_side_encryption = (known after apply)
+      + source                 = "./../../data/pedidos_mercadofacil.csv"
+      + storage_class          = (known after apply)
+      + tags_all               = (known after apply)
+      + version_id             = (known after apply)
+    }
+
+  # terraform_data.bucket will be created
+  + resource "terraform_data" "bucket" {
+      + id     = (known after apply)
+      + input  = "mercadofacil-6325149-aula12"
+      + output = (known after apply)
+    }
+
+Plan: 6 to add, 0 to change, 0 to destroy.
+
+Changes to Outputs:
+  + athena_results_path = "s3://mercadofacil-6325149-aula12/athena-results/"
+  + bucket_name         = "mercadofacil-6325149-aula12"
+  + glue_crawler_name   = "mercadofacil-crawler"
+  + glue_database       = "mercadofacil_db"
+  + glue_job_name       = "mercadofacil-etl-medalhao"
+terraform_data.bucket: Creating...
+terraform_data.bucket: Provisioning with 'local-exec'...
+terraform_data.bucket (local-exec): Executing: ["/bin/sh" "-c" "aws s3api create-bucket --bucket mercadofacil-6325149-aula12 --region us-east-1\naws s3api put-public-access-block --bucket mercadofacil-6325149-aula12 \\\n  --public-access-block-configuration BlockPublicAcls=true,IgnorePublicAcls=true,BlockPublicPolicy=true,RestrictPublicBuckets=true\n"]
+terraform_data.bucket (local-exec): {
+terraform_data.bucket (local-exec):     "Location": "/mercadofacil-6325149-aula12",
+terraform_data.bucket (local-exec):     "BucketArn": "arn:aws:s3:::mercadofacil-6325149-aula12"
+terraform_data.bucket (local-exec): }
+terraform_data.bucket: Still creating... [00m10s elapsed]
+aws_glue_catalog_database.pipeline: Creating...
+terraform_data.bucket: Still creating... [00m20s elapsed]
+aws_glue_catalog_database.pipeline: Still creating... [00m10s elapsed]
+terraform_data.bucket: Still creating... [00m31s elapsed]
+aws_glue_catalog_database.pipeline: Still creating... [00m21s elapsed]
+terraform_data.bucket: Still creating... [00m41s elapsed]
+aws_glue_catalog_database.pipeline: Still creating... [00m31s elapsed]
+terraform_data.bucket: Still creating... [00m51s elapsed]
+aws_glue_catalog_database.pipeline: Still creating... [00m41s elapsed]
+terraform_data.bucket: Creation complete after 51s [id=39f8bb01-d7e3-8b28-f545-97ede37403d9]
+aws_s3_object.etl_script: Creating...
+aws_s3_object.raw_csv: Creating...
+aws_glue_catalog_database.pipeline: Still creating... [00m51s elapsed]
+aws_s3_object.etl_script: Still creating... [00m11s elapsed]
+aws_s3_object.raw_csv: Still creating... [00m11s elapsed]
+aws_glue_catalog_database.pipeline: Still creating... [01m01s elapsed]
+aws_s3_object.etl_script: Still creating... [00m21s elapsed]
+aws_s3_object.raw_csv: Still creating... [00m21s elapsed]
+aws_glue_catalog_database.pipeline: Still creating... [01m11s elapsed]
+aws_s3_object.etl_script: Still creating... [00m31s elapsed]
+aws_s3_object.raw_csv: Still creating... [00m31s elapsed]
+aws_glue_catalog_database.pipeline: Still creating... [01m21s elapsed]
+aws_s3_object.etl_script: Still creating... [00m41s elapsed]
+aws_s3_object.raw_csv: Still creating... [00m41s elapsed]
+aws_glue_catalog_database.pipeline: Still creating... [01m31s elapsed]
+aws_s3_object.etl_script: Still creating... [00m51s elapsed]
+aws_s3_object.raw_csv: Still creating... [00m51s elapsed]
+aws_glue_catalog_database.pipeline: Still creating... [01m42s elapsed]
+aws_s3_object.etl_script: Still creating... [01m02s elapsed]
+aws_s3_object.raw_csv: Still creating... [01m02s elapsed]
+aws_glue_catalog_database.pipeline: Creation complete after 1m45s [id=206818063339:mercadofacil_db]
+aws_glue_crawler.pipeline: Creating...
+aws_s3_object.etl_script: Still creating... [01m11s elapsed]
+aws_s3_object.raw_csv: Still creating... [01m12s elapsed]
+aws_glue_crawler.pipeline: Still creating... [00m09s elapsed]
+aws_s3_object.etl_script: Still creating... [01m21s elapsed]
+aws_s3_object.raw_csv: Still creating... [01m22s elapsed]
+aws_glue_crawler.pipeline: Still creating... [00m19s elapsed]
+aws_s3_object.etl_script: Still creating... [01m31s elapsed]
+aws_s3_object.raw_csv: Still creating... [01m32s elapsed]
+aws_glue_crawler.pipeline: Still creating... [00m29s elapsed]
+aws_glue_crawler.pipeline: Creation complete after 36s [id=mercadofacil-crawler]
+aws_s3_object.etl_script: Still creating... [01m42s elapsed]
+aws_s3_object.raw_csv: Still creating... [01m42s elapsed]
+aws_s3_object.etl_script: Still creating... [01m52s elapsed]
+aws_s3_object.raw_csv: Still creating... [01m52s elapsed]
+aws_s3_object.etl_script: Creation complete after 1m59s [id=scripts/etl_medalhao.py]
+aws_glue_job.etl: Creating...
+aws_s3_object.raw_csv: Still creating... [02m02s elapsed]
+aws_glue_job.etl: Creation complete after 4s [id=mercadofacil-etl-medalhao]
+aws_s3_object.raw_csv: Still creating... [02m12s elapsed]
+aws_s3_object.raw_csv: Still creating... [02m22s elapsed]
+aws_s3_object.raw_csv: Still creating... [02m32s elapsed]
+aws_s3_object.raw_csv: Still creating... [02m42s elapsed]
+aws_s3_object.raw_csv: Still creating... [02m52s elapsed]
+aws_s3_object.raw_csv: Still creating... [03m02s elapsed]
+aws_s3_object.raw_csv: Still creating... [03m12s elapsed]
+aws_s3_object.raw_csv: Still creating... [03m22s elapsed]
+aws_s3_object.raw_csv: Still creating... [03m32s elapsed]
+aws_s3_object.raw_csv: Still creating... [03m42s elapsed]
+aws_s3_object.raw_csv: Still creating... [03m52s elapsed]
+aws_s3_object.raw_csv: Still creating... [04m02s elapsed]
+aws_s3_object.raw_csv: Creation complete after 4m4s [id=raw/pedidos_mercadofacil.csv]
+
+Apply complete! Resources: 6 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+athena_results_path = "s3://mercadofacil-6325149-aula12/athena-results/"
+bucket_name = "mercadofacil-6325149-aula12"
+glue_crawler_name = "mercadofacil-crawler"
+glue_database = "mercadofacil_db"
+glue_job_name = "mercadofacil-etl-medalhao"

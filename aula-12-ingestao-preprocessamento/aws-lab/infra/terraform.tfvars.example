@@ -1,0 +1,2 @@
+lab_role_arn = "arn:aws:iam::<ACCOUNT_ID>:role/LabRole"
+bucket_name  = "mercadofacil-<grupo>-aula12"
