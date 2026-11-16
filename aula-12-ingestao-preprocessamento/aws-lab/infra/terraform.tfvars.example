@@ -1,0 +1,3 @@
+# Copie para terraform.tfvars (ignorado pelo git) e ajuste.
+bucket_name  = "mercadofacil-GRUPO-123456"
+lab_role_arn = "arn:aws:iam::000000000000:role/LabRole"
