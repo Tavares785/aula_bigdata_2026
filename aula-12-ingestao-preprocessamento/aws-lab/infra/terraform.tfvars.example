@@ -1,0 +1,8 @@
+# Copie para terraform.tfvars (ignorado pelo Git) e preencha com os seus valores.
+bucket_nome = "mercadofacil-SEU-RA-datalake"
+
+# aws iam get-role --role-name LabRole --query Role.Arn --output text
+labrole_arn = "arn:aws:iam::000000000000:role/LabRole"
+
+# Nao coloque o salt aqui. Exporte antes do apply:
+#   export TF_VAR_lgpd_salt="$(openssl rand -hex 32)"
