@@ -1,0 +1,13 @@
+CrawlerState=RUNNING LastCrawl=None
+CrawlerState=RUNNING LastCrawl=None
+CrawlerState=RUNNING LastCrawl=None
+CrawlerState=RUNNING LastCrawl=None
+CrawlerState=READY LastCrawl=SUCCEEDED
+------------------------------------------------------------------------------
+|                                  GetTables                                 |
++-------------------------------------------------------+--------------------+
+|                       Location                        |       Name         |
++-------------------------------------------------------+--------------------+
+|  s3://mf-6325192-6cc42fbd-data/gold/atrasos_estado/   |  atrasos_estado    |
+|  s3://mf-6325192-6cc42fbd-data/gold/vendas_categoria/ |  vendas_categoria  |
++-------------------------------------------------------+--------------------+

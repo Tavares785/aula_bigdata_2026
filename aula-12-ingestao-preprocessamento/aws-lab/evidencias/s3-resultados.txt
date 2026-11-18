@@ -1,0 +1,20 @@
+2026-11-16 20:16:56      53618 silver/items/part-00000-8cdff20d-6755-4b7e-8069-92ade616e8ed-c000.snappy.parquet
+2026-11-16 20:16:56      52301 silver/items/part-00001-8cdff20d-6755-4b7e-8069-92ade616e8ed-c000.snappy.parquet
+2026-11-16 20:16:56      51909 silver/items/part-00002-8cdff20d-6755-4b7e-8069-92ade616e8ed-c000.snappy.parquet
+2026-11-16 20:16:56      54792 silver/items/part-00003-8cdff20d-6755-4b7e-8069-92ade616e8ed-c000.snappy.parquet
+
+Total Objects: 4
+   Total Size: 212620
+2026-11-16 20:17:00       2579 gold/atrasos_estado/part-00000-1466c849-7d55-4a39-b9f2-76199ebd443c-c000.snappy.parquet
+2026-11-16 20:17:01       5731 gold/vendas_categoria/part-00000-6e721f67-15fe-4da3-ac19-b7db9308c818-c000.snappy.parquet
+
+Total Objects: 2
+   Total Size: 8310
+2026-11-16 20:16:58     206279 quarantine/items/part-00000-21a45520-1d1e-491f-b67b-8989d593bfed-c000.snappy.parquet
+2026-11-16 20:16:58      11341 quarantine/items/part-00002-21a45520-1d1e-491f-b67b-8989d593bfed-c000.snappy.parquet
+2026-11-16 20:16:58      10574 quarantine/items/part-00003-21a45520-1d1e-491f-b67b-8989d593bfed-c000.snappy.parquet
+2026-11-16 20:16:58      11634 quarantine/items/part-00004-21a45520-1d1e-491f-b67b-8989d593bfed-c000.snappy.parquet
+2026-11-16 20:16:58      11197 quarantine/items/part-00005-21a45520-1d1e-491f-b67b-8989d593bfed-c000.snappy.parquet
+
+Total Objects: 5
+   Total Size: 251025
