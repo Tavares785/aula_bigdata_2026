@@ -1,0 +1,10 @@
+# terraform.tfvars.example - aula-12 MercadoFacil
+# Copie para terraform.tfvars e preencha com seus valores:
+#   cp terraform.tfvars.example terraform.tfvars
+#
+# ⚠️ NUNCA versione terraform.tfvars (ja esta no .gitignore)
+
+regiao      = "us-east-1"
+labrole_arn = "arn:aws:iam::000000000000:role/LabRole"
+bucket_nome = "lab-aula12-mercadofacil-1120245"
+top_n       = 10
