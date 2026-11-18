@@ -3,12 +3,14 @@
 ## O que foi feito nesta etapa
 
 Construí a infraestrutura em Terraform e o ETL PySpark que leva os pedidos da
-camada raw até a silver, a quarentena e quatro tabelas gold. O ETL foi executado
-localmente na imagem oficial do AWS Glue 4.0: das 10.000 linhas do raw, 9.754
-foram para a silver e 246 para a quarentena.
+camada raw até a silver, a quarentena e quatro tabelas gold. Das 10.000 linhas do
+raw, 9.754 foram para a silver e 246 para a quarentena.
 
-Pendente: executar o pipeline no AWS Academy Learner Lab (apply, Glue Job,
-Crawler, Athena e destroy) e anexar os prints à PR.
+O pipeline rodou de ponta a ponta no AWS Academy Learner Lab: `terraform apply`
+com 6 recursos, Glue Job `SUCCEEDED`
+(`jr_6c3c335a11d8018a2437181ac9dad53a1410133009812300356a761bd0a9d70c`), Crawler
+com 6 tabelas, consultas no Athena e `terraform destroy` com 6 recursos removidos.
+Os prints estão em `aws-lab/evidencias/`. Nada ficou pendente nesta etapa.
 
 ## Ferramentas efetivamente usadas
 
@@ -16,7 +18,7 @@ Crawler, Athena e destroy) e anexar os prints à PR.
 - **AWS CLI**: cria e remove o bucket S3 privado e envia o CSV e o script.
 - **PySpark no Glue 4.0**: faz a limpeza, a quarentena e as agregações.
 - **Docker**: roda a imagem do Glue 4.0 para testar o ETL localmente.
-- **Glue Crawler e Athena**: catalogam e consultam as tabelas (scripts prontos em `aws-lab/scripts/`).
+- **Glue Crawler e Athena**: catalogam as tabelas e executam as consultas de negócio (`aws-lab/scripts/`).
 - **pytest**: faz a verificação estrutural da entrega.
 
 ## Dificuldades encontradas
@@ -25,6 +27,7 @@ Crawler, Athena e destroy) e anexar os prints à PR.
 - **Qualidade dos dados**: a mesma informação aparece com muitas grafias e formatos. Resolvi com mapas de valores canônicos e reconstruí campos ausentes a partir de colunas relacionadas.
 - **Validação das regras**: a conferência da saída mostrou que `cartao_credito` e `cartao_debito` estavam fora do mapa de pagamentos, o que enviava linhas válidas para a quarentena. Corrigi o mapa e repeti a execução.
 - **Atraso de pedidos cancelados**: o `greatest` do Spark ignora nulos e geraria atraso 0 nesses pedidos. A regra agora só calcula o atraso quando existe prazo real.
+- **Evidências sem dados sensíveis**: a tela do Glue Job exibe os argumentos de execução, incluindo o salt da pseudonimização. Recortei os prints e descartei o salt ao final da execução.
 
 ## Próxima etapa (Aula 13)
 
