@@ -1,0 +1,8 @@
+centro_distribuicao,pedidos,com_prazo,atrasados,media_atraso_dias,com_nota,media_nota,taxa_atraso_pct
+cd-nordeste,594,539,189,1.9295,528,3.6503,35.0649
+cd-norte,146,134,46,2.0224,130,3.6654,34.3284
+desconhecido,61,54,12,1.1667,53,3.8113,22.2222
+-,15,14,3,0.7143,14,3.8571,21.4286
+cd-sul,556,509,102,1.0393,494,3.8134,20.0393
+cd-sudeste,2067,1879,362,1.0937,1842,3.8561,19.2656
+cd-centro-oeste,126,120,20,1.0917,118,4.0056,16.6667
