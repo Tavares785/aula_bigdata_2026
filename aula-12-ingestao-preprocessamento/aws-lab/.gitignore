@@ -18,6 +18,7 @@ crash.log
 .env.*
 credentials
 *.pem
+terraform.tfvars
 
 # --- Python ---
 __pycache__/
