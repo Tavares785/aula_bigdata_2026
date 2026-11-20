@@ -10,7 +10,7 @@ corretos -- isso depende do dataset e do problema escolhidos pelo seu
 grupo, e e avaliado pelo professor na revisao da PR.
 
 -------------------------------------------------------------------------
-Projeto MercadoFacil (RA 6325226)
+Projeto MercadoFacil (RAs 6325226, 6325149, 6325269)
 
 Entrada: a camada silver gerada na Aula 12 (`silver/pedidos_itens`,
 Parquet, 1 linha = 1 item de pedido, sem PII). A analise roda em Spark

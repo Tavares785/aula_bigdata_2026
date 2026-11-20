@@ -5,7 +5,8 @@
 
 ## Análise/modelo implementado
 
-Projeto MercadoFácil (RA 6325226). A entrada é a silver
+Projeto MercadoFácil. Grupo: Weslley Lucas (RA 6325226), Gabriel Reis
+Cunha (RA 6325149) e Sirlande Martins (RA 6325269). A entrada é a silver
 `silver/pedidos_itens` da Aula 12 (9.601 itens, Parquet, sem PII). A análise
 fica em `src/analise.py` e roda em Spark 3.3, a mesma versão do Glue 4.0:
 

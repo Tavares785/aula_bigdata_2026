@@ -29,7 +29,7 @@ pip install -r requirements.txt
 pytest -v
 ```
 
-## Como rodar a análise (MercadoFácil, RA 6325226)
+## Como rodar a análise (MercadoFácil, RAs 6325226, 6325149, 6325269)
 
 A análise precisa de Spark 3.3 (a mesma versão do Glue 4.0) e de JDK 11. O
 `pyspark` não está no `requirements.txt` porque o CI só verifica a
