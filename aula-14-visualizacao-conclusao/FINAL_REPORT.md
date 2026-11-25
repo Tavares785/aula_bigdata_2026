@@ -119,7 +119,7 @@ contra 4,14. É o Insight 3 visível em dois cliques.
 
 | # | Gráfico | View que alimenta | O que mostra | Decisão que apoia |
 |:-:|---|---|---|---|
-| 0 | Big Numbers (6) | `vw_kpis` | Receita, pedidos, ticket, % atrasados, nota, % cancelado+devolvido | Leitura de abertura da diretoria |
+| 0 | Stat tiles (6) | `vw_kpis` | Receita, pedidos, ticket, % atrasados, nota, % cancelado+devolvido | Leitura de abertura da diretoria |
 | 1 | Barras + linha, por semana | `vw_serie_diaria` | Receita e pedidos ao longo de 2025 | Quando reforçar a capacidade |
 | 2 | Barras | `vw_atraso_nota` | Nota média por faixa de atraso | Priorizar prazo sobre preço |
 | 3 | Barras ordenadas | `vw_logistica_estado` | % atrasados por estado (mín. 20 itens) | Onde atacar primeiro |
@@ -151,6 +151,23 @@ e um filtro equivalente sem depender da AWS. Ele foi o que permitiu fechar a an�
 abrir a sessão do Learner Lab, e continua útil porque a sessão expira em 4 horas enquanto o
 relatório não expira. O `dashboard_local.py` do template desenha 3 gráficos fixos e não tem
 filtro; o nosso manda as linhas para o navegador e agrega em JavaScript a cada mudança.
+
+Ele foi redesenhado numa segunda passada, e três decisões vieram de regras de visualização,
+não de gosto:
+
+- **Nenhum gráfico tem dois eixos Y.** A primeira versão tinha três — receita com pedidos,
+  percentual de atraso com dias de atraso, movimento com atraso no feriado. Duas escalas num
+  plano só inventam uma correlação que não está no dado, porque o alinhamento entre elas é
+  arbitrário. A segunda medida foi para o tooltip e para a tabela, e o gráfico do feriado
+  virou dois.
+- **Toda carta tem tabela.** Três dos cinco tons da paleta ficam abaixo de 3:1 de contraste
+  contra a superfície clara, e a regra nesse caso é oferecer o valor por outro canal. O botão
+  *Tabela* troca o gráfico pelos números, que é também o que torna o dashboard legível para
+  quem não distingue as cores.
+- **A paleta foi medida, não escolhida a olho.** Os cinco tons passam no teste de separação
+  para daltonismo na lista de pares adjacentes (pior par ΔE 9,1 em protanopia, piso 8) e no
+  piso de visão normal (pior par ΔE 19,6, piso 15). A cor segue a entidade: a região Sudeste
+  tem o mesmo tom antes e depois de qualquer filtro.
 
 ## Lições Aprendidas
 
@@ -238,7 +255,7 @@ pôde nomear as colunas pensando no eixo do gráfico.
 | `evidencias/03-athena-validacao.txt` | Consultas de validação no Athena, com o `QueryExecutionId` de cada uma |
 | `evidencias/04-athena-views.txt` | `SELECT` de cada view no Athena — a fonte dos números deste relatório |
 | `evidencias/07-terraform-apply-destroy.txt` | `Apply complete! Resources: 8 added` e `Destroy complete! Resources: 8 destroyed` |
-| `evidencias/01-dashboard-completo.png` | Plano B local, sem filtro |
+| `evidencias/01-dashboard-completo.png` | Plano B local (8 gráficos, 6 tiles), sem filtro |
 | `evidencias/02-dashboard-filtro-sudeste-nov-dez.png` | Plano B local com filtro Sudeste + nov/dez |
 | `aws-lab/sql/03_views_atividade.sql` | As 6 views pedidas e a view bônus |
 | `aws-lab/scripts/dashboard_views.py` | Gerador do dashboard (biblioteca padrão) |
