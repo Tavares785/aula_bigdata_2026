@@ -1,8 +1,5 @@
 # Checkpoint de Progresso - Aula 12: Ingestão e Pré-processamento
 
-> Preencha cada seção, substituindo `<PREENCHER>`. Não remova os
-> títulos (`##`).
-
 ## O que foi feito nesta etapa
 
 Construímos o pipeline em Terraform (`aws-lab/infra/`) e o ETL PySpark
