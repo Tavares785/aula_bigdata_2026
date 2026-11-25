@@ -7,8 +7,8 @@
 ## Integrantes do Grupo
 
 - Rafael Nogueira Maruca - RA 6322006
-- Gabriel De Souza Oliveira - RA 6325262
-- Matheus Borali - RA 6325135
+- Gabriel de Souza Oliveira - RA 6325262
+- Caio Akiyama - RA 6325124
 
 ## Problema
 
