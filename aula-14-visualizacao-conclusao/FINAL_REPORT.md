@@ -139,12 +139,18 @@ Três decisões de desenho que mudam a leitura:
 - As faixas levam prefixo `1)`..`4)` porque o Superset ordena rótulo alfabeticamente; sem o
   prefixo, "sem chuva" apareceria depois de "muito forte" e o gradiente sumiria.
 
-**Sobre a ferramenta.** O dashboard entregue é o Plano B do enunciado, estendido. O
-`dashboard_local.py` do template agrega em Python e desenha 3 gráficos fixos, sem filtro;
-nossa versão manda as linhas para o navegador e agrega em JavaScript a cada mudança do
-filtro, que é o que torna o filtro interativo de verdade e atende os 6+ gráficos pedidos.
-As regras de negócio são **as mesmas das views** — o mesmo `CASE` de faixa, o mesmo filtro de
-status, o mesmo denominador. A conferência está na seção de evidências.
+**Sobre a ferramenta.** O dashboard foi montado no **Superset 3.1.3** rodando na EC2 do
+`terraform apply`, lendo as views pelo Athena: 11 gráficos (4 Big Numbers, 1 linha, 6 barras,
+uma delas empilhada e outra agrupada por região) e **3 filtros nativos** — região, faixa de
+chuva e categoria. O print `06-superset-filtro-sudeste.png` mostra o filtro de região em uso:
+o gráfico de estados passa a listar só MG, SP e RJ e o gráfico bônus mostra só a série do
+Sudeste, com o gradiente de 10,6% a 33,2% isolado.
+
+Mantivemos também o **Plano B local** (`dashboard_views.py`), que replica os mesmos gráficos
+e um filtro equivalente sem depender da AWS. Ele foi o que permitiu fechar a análise antes de
+abrir a sessão do Learner Lab, e continua útil porque a sessão expira em 4 horas enquanto o
+relatório não expira. O `dashboard_local.py` do template desenha 3 gráficos fixos e não tem
+filtro; o nosso manda as linhas para o navegador e agrega em JavaScript a cada mudança.
 
 ## Lições Aprendidas
 
@@ -171,15 +177,17 @@ poderia ser só geografia. Testar custou meia hora, e o resultado é mais forte:
 sobrevive. O inverso também vale — o `centro_distribuicao` **não** sobreviveu ao teste, e
 teria rendido um slide convincente e inútil.
 
-**O que faríamos diferente.** Os números deste relatório vêm de uma replicação das views em
-DuckDB sobre os mesmos CSVs, porque a sessão do AWS Academy Learner Lab expira em 4 horas e
-não tínhamos uma ativa na hora de fechar a análise. As views estão escritas em sintaxe Trino
-e as construções usadas (`CASE`, `AVG`, `COUNT(DISTINCT CASE ...)`, `ROUND`, `BETWEEN`,
-incluindo o descarte de `NULL` pelo `AVG`) têm a mesma semântica nos dois motores, mas
-**replicação não é execução**: só o Athena prova o Athena. Numa próxima, a análise começa
-com a sessão aberta e o `terraform apply` em pé, e o relatório sai com o print da consulta
-real. É a mesma lição que o grupo levou do Terraform em outra disciplina: ferramenta que
-responde "ok" sem tocar no alvo não é verificação.
+**Replicação não é execução — e desta vez deu para provar as duas coisas.** A análise foi
+fechada primeiro numa replicação das views em DuckDB sobre os mesmos CSVs, porque a sessão do
+Learner Lab expira em 4 horas e não havia uma ativa. Escrevemos no relatório que aquilo era
+replicação e não execução, porque só o Athena prova o Athena. Depois a sessão foi aberta, as
+**9 views foram criadas no Athena sem um único erro de sintaxe** e cada número foi reconsultado
+lá: `vw_kpis` devolveu 3297891.59 / 6706 / 491.78 / 16.27 / 4.11 / 7.56, as quatro faixas de
+atraso devolveram 4,39 / 3,59 / 2,35 / 1,24, e as vinte linhas da view bônus bateram uma a uma.
+A replicação estava certa — **mas isso só se sabe depois de executar**, e era igualmente
+possível que não estivesse. A regra que sobrou é a mesma que o grupo levou do Terraform em
+outra disciplina: ferramenta que responde "ok" sem tocar no alvo não é verificação, e um
+resultado plausível não é um resultado conferido.
 
 **Sobre trabalho em equipe.** Dividir por missão (SQL, dashboard, relatório) funcionou melhor
 que dividir por arquivo, porque quem escreveu a view sabia qual gráfico ela alimentava e
@@ -225,17 +233,24 @@ pôde nomear as colunas pensando no eixo do gráfico.
 
 | Arquivo | O que mostra |
 |---|---|
-| `evidencias/01-dashboard-completo.png` | Dashboard inteiro sem filtro: 6 Big Numbers e os 7 gráficos |
-| `evidencias/02-dashboard-filtro-sudeste-nov-dez.png` | O mesmo dashboard com o filtro Sudeste + nov/dez aplicado |
+| `evidencias/05-superset-dashboard.png` | **Dashboard no Superset**: 4 Big Numbers, 7 gráficos e os 3 filtros nativos |
+| `evidencias/06-superset-filtro-sudeste.png` | O mesmo dashboard com o filtro nativo de região em Sudeste |
+| `evidencias/03-athena-validacao.txt` | Consultas de validação no Athena, com o `QueryExecutionId` de cada uma |
+| `evidencias/04-athena-views.txt` | `SELECT` de cada view no Athena — a fonte dos números deste relatório |
+| `evidencias/07-terraform-apply-destroy.txt` | `Apply complete! Resources: 8 added` e `Destroy complete! Resources: 8 destroyed` |
+| `evidencias/01-dashboard-completo.png` | Plano B local, sem filtro |
+| `evidencias/02-dashboard-filtro-sudeste-nov-dez.png` | Plano B local com filtro Sudeste + nov/dez |
 | `aws-lab/sql/03_views_atividade.sql` | As 6 views pedidas e a view bônus |
 | `aws-lab/scripts/dashboard_views.py` | Gerador do dashboard (biblioteca padrão) |
 | `APRESENTACAO.md` | Roteiro do pitch de 8 minutos |
 
-**Conferência dos números.** Os seis Big Numbers lidos do HTML renderizado em navegador
-batem com a `vw_kpis` replicada: R$ 3.297.892 / 6.706 pedidos / R$ 492 de ticket / 16,3% de
-atraso / nota 4,11 / 7,6% de cancelado+devolvido. Os sete `canvas` foram verificados
-desenhados (pixels não transparentes) e o console do navegador não emitiu nenhum erro.
+**Conferência dos números.** Os números deste relatório foram consultados no Athena, e os
+mesmos valores aparecem nos Big Numbers do Superset no print: R$ 3,3 M de receita, ticket de
+491,78, 16,27% de atraso e nota 4,11. A validação da carga também passou: 10.000 linhas,
+7.255 pedidos, período de 2025-01-01 a 2025-12-31, e o JOIN com a chuva fecha em 10.000 itens
+com **0 sem par**.
 
-> **Pendente do ambiente AWS:** os prints de `terraform apply`, de uma consulta no Athena e
-> do `terraform destroy` dependem de uma sessão ativa do Learner Lab. As views estão prontas
-> para colar no Athena e o `aws-lab/infra/` do template não foi modificado.
+**Encerramento da infra.** `Destroy complete! Resources: 8 destroyed`, e o `terraform state
+list` depois do destroy voltou **vazio** — que é a verificação que vale, porque o código de
+saída de um pipeline é o do último comando e já nos enganou antes. Nada ficou rodando na
+conta do Learner Lab.

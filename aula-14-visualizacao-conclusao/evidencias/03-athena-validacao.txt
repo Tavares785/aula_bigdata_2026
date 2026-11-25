@@ -1,0 +1,22 @@
+########## 1) linhas (esperado 10000)  [QueryExecutionId: cdf3dcff-efb7-48d9-a69d-8e0937166b06] ##########
+linhas
+10000
+
+########## 3) distintos e periodo  [QueryExecutionId: 861b2423-5293-4e72-9960-28968a00db1d] ##########
+pedidos | clientes | skus | primeira | ultima
+7255 | 2461 | 29 | 2025-01-01 | 2025-12-31
+
+########## 4) status  [QueryExecutionId: e52c6e6b-5f5a-4011-bbd1-8e0c6335c9b3] ##########
+status_pedido | itens
+entregue | 9244
+devolvido | 408
+cancelado | 348
+
+########## 5) nulos  [QueryExecutionId: dbe8eb5f-b248-46b0-97dc-dff291a1955c] ##########
+sem_atraso | sem_nota | sem_data_entrega
+348 | 1290 | 348
+
+########## 7) JOIN da chuva  [QueryExecutionId: b72ce34d-f4a7-4abd-9fe2-050be6d2b1ac] ##########
+itens | sem_chuva
+10000 | 0
+

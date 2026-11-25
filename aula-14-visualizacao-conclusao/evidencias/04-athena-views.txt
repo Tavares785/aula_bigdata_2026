@@ -1,0 +1,65 @@
+########## vw_kpis  [QueryExecutionId: d94679bf-45b1-423c-bebc-66bd204fd7ee] ##########
+receita_total | pedidos | ticket_medio | pct_itens_atrasados | nota_media | pct_cancelado_devolvido
+3297891.59 | 6706 | 491.78 | 16.27 | 4.11 | 7.56
+
+########## vw_atraso_nota  [QueryExecutionId: f970023b-f10d-4a89-bf8d-02bfdfd063db] ##########
+faixa_atraso | avaliacoes | nota_media
+1) 0 - no prazo | 6964 | 4.39
+2) 1-3 dias | 496 | 3.59
+3) 4-7 dias | 738 | 2.35
+4) 8+ dias | 140 | 1.24
+
+########## vw_atraso_chuva  [QueryExecutionId: 48ebfcf6-4649-4f85-b28b-f516668e98c8] ##########
+faixa_chuva | itens | atraso_medio_dias | pct_atrasados
+1) sem chuva (<5 mm) | 4677 | 0.49 | 12.8
+2) fraca (5-20) | 2840 | 0.68 | 15.7
+3) forte (20-40) | 1187 | 1.21 | 24.4
+4) muito forte (40+) | 540 | 1.93 | 31.5
+
+########## vw_feriados  [QueryExecutionId: 6d6f59ce-37c7-43ce-955a-6c1bd39f8717] ##########
+tipo_dia | dias | pedidos | pedidos_por_dia | atraso_medio_dias
+dia comum | 351 | 6399 | 18.23 | 0.71
+feriado | 14 | 307 | 21.93 | 1.12
+
+########## vw_atraso_chuva_regiao  [QueryExecutionId: d2bcf0d0-bc44-4e9e-91aa-3eb24bd8359f] ##########
+regiao | faixa_chuva | itens | atraso_medio_dias | pct_atrasados
+Centro-Oeste | 3) forte (20-40) | 38 | 1.21 | 21.1
+Centro-Oeste | 4) muito forte (40+) | 18 | 1.61 | 27.8
+Centro-Oeste | 2) fraca (5-20) | 60 | 0.53 | 11.7
+Centro-Oeste | 1) sem chuva (<5 mm) | 190 | 0.55 | 17.4
+Nordeste | 2) fraca (5-20) | 648 | 0.72 | 16.7
+Nordeste | 1) sem chuva (<5 mm) | 837 | 0.8 | 17.9
+Nordeste | 3) forte (20-40) | 142 | 1.03 | 21.8
+Nordeste | 4) muito forte (40+) | 70 | 2.37 | 32.9
+Norte | 3) forte (20-40) | 103 | 1.71 | 28.2
+Norte | 1) sem chuva (<5 mm) | 75 | 0.69 | 14.7
+Norte | 4) muito forte (40+) | 63 | 2.08 | 31.7
+Norte | 2) fraca (5-20) | 144 | 1.19 | 22.9
+Sudeste | 3) forte (20-40) | 666 | 1.16 | 23.6
+Sudeste | 1) sem chuva (<5 mm) | 2935 | 0.38 | 10.6
+Sudeste | 4) muito forte (40+) | 295 | 1.99 | 33.2
+Sudeste | 2) fraca (5-20) | 1548 | 0.59 | 14.1
+Sul | 1) sem chuva (<5 mm) | 640 | 0.51 | 14.2
+Sul | 3) forte (20-40) | 238 | 1.27 | 27.3
+Sul | 4) muito forte (40+) | 94 | 1.34 | 25.5
+Sul | 2) fraca (5-20) | 440 | 0.8 | 18.4
+
+########## vw_serie_diaria (top 5)  [QueryExecutionId: a638cce4-359e-4995-9006-464212a7b612] ##########
+dia | pedidos | receita | ticket_medio
+2025-11-28 | 142 | 51657.35 | 363.78
+2025-05-08 | 33 | 24634.84 | 746.51
+2025-12-06 | 40 | 21220.57 | 530.51
+2025-12-11 | 39 | 20510.64 | 525.91
+2025-07-10 | 25 | 20054.78 | 802.19
+
+########## vw_problemas_categoria (por categoria)  [QueryExecutionId: 74f926ad-8e47-4c90-b2eb-c27871274bd1] ##########
+categoria | itens | pct_canc | pct_dev
+Brinquedos | 411 | 3.41 | 4.62
+Eletrônicos | 3169 | 3.5 | 4.39
+Livros | 502 | 3.59 | 4.38
+Casa e Cozinha | 1786 | 3.36 | 4.26
+Beleza e Saúde | 664 | 4.97 | 4.07
+Esporte | 1088 | 3.58 | 3.86
+Moda | 2092 | 2.97 | 3.59
+Pet | 288 | 3.82 | 2.78
+

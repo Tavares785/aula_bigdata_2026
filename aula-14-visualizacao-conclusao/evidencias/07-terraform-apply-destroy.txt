@@ -1,0 +1,40 @@
+=== terraform apply (us-east-1, conta 471112746297) ===
+terraform_data.bucket: Creation complete after 39s [id=32632ec7-2e8f-f3c7-5a7f-0faaae129fe3]
+aws_athena_workgroup.aula14: Creating...
+aws_glue_catalog_table.chuva_diaria: Creating...
+aws_glue_catalog_table.feriados: Creating...
+aws_glue_catalog_table.pedidos: Creating...
+aws_athena_workgroup.aula14: Creation complete after 1s [id=wg-mercadofacil-aula14-3225002]
+aws_glue_catalog_table.chuva_diaria: Creation complete after 2s [id=471112746297:mercadofacil_aula14:chuva_diaria]
+aws_glue_catalog_table.feriados: Creation complete after 2s [id=471112746297:mercadofacil_aula14:feriados]
+aws_glue_catalog_table.pedidos: Creation complete after 2s [id=471112746297:mercadofacil_aula14:pedidos]
+aws_instance.superset[0]: Creating...
+aws_instance.superset[0]: Still creating... [00m10s elapsed]
+aws_instance.superset[0]: Creation complete after 15s [id=i-02813942dbce5079a]
+
+Apply complete! Resources: 8 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+athena_workgroup = "wg-mercadofacil-aula14-3225002"
+bucket_nome = "mercadofacil-aula14-3225002"
+glue_database = "mercadofacil_aula14"
+superset_url = "http://3.88.41.104:8088"
+superset_usuario = "admin"
+
+=== terraform destroy ===
+terraform_data.bucket (local-exec): delete: s3://mercadofacil-aula14-3225002/athena-results/f2cc208c-c047-4bdf-b19f-e3cf6d0568e3.csv.metadata
+terraform_data.bucket (local-exec): delete: s3://mercadofacil-aula14-3225002/athena-results/f970023b-f10d-4a89-bf8d-02bfdfd063db.csv
+terraform_data.bucket (local-exec): delete: s3://mercadofacil-aula14-3225002/athena-results/f970023b-f10d-4a89-bf8d-02bfdfd063db.csv.metadata
+terraform_data.bucket (local-exec): delete: s3://mercadofacil-aula14-3225002/silver/pedidos/pedidos_mercadofacil_tratado.csv
+terraform_data.bucket (local-exec): delete: s3://mercadofacil-aula14-3225002/athena-results/0d1615a2-7069-4224-8a93-a4a3bddc7c11.csv.metadata
+terraform_data.bucket (local-exec): delete: s3://mercadofacil-aula14-3225002/athena-results/0d3d609e-74a2-43e1-b701-f7b50fdc58cc.txt
+terraform_data.bucket (local-exec): delete: s3://mercadofacil-aula14-3225002/athena-results/16b9411a-0374-4fc4-ad76-5e08ae4e56a5.csv
+terraform_data.bucket (local-exec): delete: s3://mercadofacil-aula14-3225002/athena-results/16b9411a-0374-4fc4-ad76-5e08ae4e56a5.csv.metadata
+terraform_data.bucket (local-exec): remove_bucket: mercadofacil-aula14-3225002
+terraform_data.bucket: Destruction complete after 16s
+
+Destroy complete! Resources: 8 destroyed.
+
+=== terraform state list apos o destroy (vazio) ===
+(nenhum recurso)
