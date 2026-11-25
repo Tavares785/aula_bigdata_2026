@@ -1,0 +1,17 @@
+# Copie para terraform.tfvars e preencha (o .tfvars NAO vai para o Git):
+#   cp terraform.tfvars.example terraform.tfvars
+#
+# Credenciais da AWS NAO vao aqui: use as variaveis de ambiente
+# AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY / AWS_SESSION_TOKEN (AWS Details > Show).
+
+# Nome global unico. Troque pelo identificador do seu grupo.
+bucket_nome = "aula14-grupoX-rmXXXXX"
+
+# Superset (Missao 3). Deixe criar_superset = false se quiser so o Athena.
+criar_superset = true
+
+# Seu IP publico: curl -s https://checkip.amazonaws.com   (acrescente /32)
+meu_ip_cidr = "0.0.0.0/32"
+
+# Senha do admin do Superset (8+ caracteres, sem espacos ou aspas).
+superset_senha = "TroqueEstaSenha_2025"
