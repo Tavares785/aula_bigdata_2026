@@ -1,0 +1,1652 @@
+{
+  "metadados": {
+    "commit_aula12": "5ccc0cbee58006cdea6ceb4f63074bbfd9ac20cb",
+    "sha256_raw": "e4a9a835adcd3b306212b7e127733490239bfc5a0704b369b1e2d45f5792f01a",
+    "spark": "3.5.3",
+    "contagens": {
+      "raw": 10000,
+      "silver": 4087,
+      "quarentena": 5913
+    },
+    "validacao": "Gold de atrasos e vendas conciliadas integralmente"
+  },
+  "geral": [
+    {
+      "pedidos": 3544,
+      "com_prazo": 3229,
+      "atrasados": 729,
+      "media_atraso_dias": "1.2629",
+      "com_nota": 3160,
+      "media_nota": "3.8127",
+      "taxa_atraso_pct": 22.5766
+    }
+  ],
+  "avaliacoes": [
+    {
+      "situacao": "atrasado",
+      "pedidos": 729,
+      "com_nota": 701,
+      "media_nota": "2.6919"
+    },
+    {
+      "situacao": "pontual",
+      "pedidos": 2500,
+      "com_nota": 2400,
+      "media_nota": "4.1363"
+    },
+    {
+      "situacao": "prazo desconhecido",
+      "pedidos": 315,
+      "com_nota": 59,
+      "media_nota": "3.9661"
+    }
+  ],
+  "vendas_categoria_mes": [
+    {
+      "categoria": "beleza e saúde",
+      "mes": "2025-01",
+      "itens": 25,
+      "pedidos": 25,
+      "unidades": "35.0000",
+      "valor_bruto": "5644.0900",
+      "valor_sem_cancelados_devolvidos": "5062.0900",
+      "valor_cancelados_devolvidos": "582.0000"
+    },
+    {
+      "categoria": "brinquedo",
+      "mes": "2025-01",
+      "itens": 1,
+      "pedidos": 1,
+      "unidades": "1.0000",
+      "valor_bruto": "162.4200",
+      "valor_sem_cancelados_devolvidos": "162.4200",
+      "valor_cancelados_devolvidos": "0.0000"
+    },
+    {
+      "categoria": "brinquedos",
+      "mes": "2025-01",
+      "itens": 20,
+      "pedidos": 20,
+      "unidades": "25.0000",
+      "valor_bruto": "3101.7800",
+      "valor_sem_cancelados_devolvidos": "2220.0600",
+      "valor_cancelados_devolvidos": "881.7200"
+    },
+    {
+      "categoria": "casa e cozinh",
+      "mes": "2025-01",
+      "itens": 1,
+      "pedidos": 1,
+      "unidades": "1.0000",
+      "valor_bruto": "447.0300",
+      "valor_sem_cancelados_devolvidos": "447.0300",
+      "valor_cancelados_devolvidos": "0.0000"
+    },
+    {
+      "categoria": "casa e cozinha",
+      "mes": "2025-01",
+      "itens": 48,
+      "pedidos": 47,
+      "unidades": "62.0000",
+      "valor_bruto": "17287.2500",
+      "valor_sem_cancelados_devolvidos": "16240.1700",
+      "valor_cancelados_devolvidos": "1047.0800"
+    },
+    {
+      "categoria": "eletronicos",
+      "mes": "2025-01",
+      "itens": 1,
+      "pedidos": 1,
+      "unidades": "3.0000",
+      "valor_bruto": "6936.3000",
+      "valor_sem_cancelados_devolvidos": "6936.3000",
+      "valor_cancelados_devolvidos": "0.0000"
+    },
+    {
+      "categoria": "eletrônicos",
+      "mes": "2025-01",
+      "itens": 67,
+      "pedidos": 63,
+      "unidades": "90.0000",
+      "valor_bruto": "35792.5400",
+      "valor_sem_cancelados_devolvidos": "32813.2900",
+      "valor_cancelados_devolvidos": "2979.2500"
+    },
+    {
+      "categoria": "esporte",
+      "mes": "2025-01",
+      "itens": 26,
+      "pedidos": 24,
+      "unidades": "33.0000",
+      "valor_bruto": "13854.5100",
+      "valor_sem_cancelados_devolvidos": "10733.0800",
+      "valor_cancelados_devolvidos": "3121.4300"
+    },
+    {
+      "categoria": "livros",
+      "mes": "2025-01",
+      "itens": 21,
+      "pedidos": 21,
+      "unidades": "29.0000",
+      "valor_bruto": "1688.7600",
+      "valor_sem_cancelados_devolvidos": "1342.0100",
+      "valor_cancelados_devolvidos": "346.7500"
+    },
+    {
+      "categoria": "mod",
+      "mes": "2025-01",
+      "itens": 2,
+      "pedidos": 2,
+      "unidades": "4.0000",
+      "valor_bruto": "1223.1600",
+      "valor_sem_cancelados_devolvidos": "1223.1600",
+      "valor_cancelados_devolvidos": "0.0000"
+    },
+    {
+      "categoria": "moda",
+      "mes": "2025-01",
+      "itens": 75,
+      "pedidos": 74,
+      "unidades": "95.0000",
+      "valor_bruto": "15042.8400",
+      "valor_sem_cancelados_devolvidos": "13408.3900",
+      "valor_cancelados_devolvidos": "1634.4500"
+    },
+    {
+      "categoria": "pet",
+      "mes": "2025-01",
+      "itens": 10,
+      "pedidos": 10,
+      "unidades": "14.0000",
+      "valor_bruto": "1625.1800",
+      "valor_sem_cancelados_devolvidos": "1378.3300",
+      "valor_cancelados_devolvidos": "246.8500"
+    },
+    {
+      "categoria": "beleza e saúde",
+      "mes": "2025-02",
+      "itens": 30,
+      "pedidos": 29,
+      "unidades": "42.0000",
+      "valor_bruto": "6854.5300",
+      "valor_sem_cancelados_devolvidos": "6674.4900",
+      "valor_cancelados_devolvidos": "180.0400"
+    },
+    {
+      "categoria": "brinquedos",
+      "mes": "2025-02",
+      "itens": 16,
+      "pedidos": 16,
+      "unidades": "18.0000",
+      "valor_bruto": "1897.7800",
+      "valor_sem_cancelados_devolvidos": "1522.4600",
+      "valor_cancelados_devolvidos": "375.3200"
+    },
+    {
+      "categoria": "casa e cozinha",
+      "mes": "2025-02",
+      "itens": 54,
+      "pedidos": 52,
+      "unidades": "71.0000",
+      "valor_bruto": "18667.2300",
+      "valor_sem_cancelados_devolvidos": "17939.4200",
+      "valor_cancelados_devolvidos": "727.8100"
+    },
+    {
+      "categoria": "eletronicos",
+      "mes": "2025-02",
+      "itens": 3,
+      "pedidos": 3,
+      "unidades": "4.0000",
+      "valor_bruto": "695.3000",
+      "valor_sem_cancelados_devolvidos": "695.3000",
+      "valor_cancelados_devolvidos": "0.0000"
+    },
+    {
+      "categoria": "eletrônico",
+      "mes": "2025-02",
+      "itens": 2,
+      "pedidos": 2,
+      "unidades": "2.0000",
+      "valor_bruto": "1301.6600",
+      "valor_sem_cancelados_devolvidos": "1155.6900",
+      "valor_cancelados_devolvidos": "145.9700"
+    },
+    {
+      "categoria": "eletrônicos",
+      "mes": "2025-02",
+      "itens": 72,
+      "pedidos": 70,
+      "unidades": "106.0000",
+      "valor_bruto": "46580.9000",
+      "valor_sem_cancelados_devolvidos": "43351.7000",
+      "valor_cancelados_devolvidos": "3229.2000"
+    },
+    {
+      "categoria": "esport",
+      "mes": "2025-02",
+      "itens": 1,
+      "pedidos": 1,
+      "unidades": "1.0000",
+      "valor_bruto": "194.7500",
+      "valor_sem_cancelados_devolvidos": "194.7500",
+      "valor_cancelados_devolvidos": "0.0000"
+    },
+    {
+      "categoria": "esporte",
+      "mes": "2025-02",
+      "itens": 23,
+      "pedidos": 23,
+      "unidades": "32.0000",
+      "valor_bruto": "6743.9900",
+      "valor_sem_cancelados_devolvidos": "6420.0100",
+      "valor_cancelados_devolvidos": "323.9800"
+    },
+    {
+      "categoria": "livros",
+      "mes": "2025-02",
+      "itens": 11,
+      "pedidos": 11,
+      "unidades": "12.0000",
+      "valor_bruto": "878.4200",
+      "valor_sem_cancelados_devolvidos": "721.5900",
+      "valor_cancelados_devolvidos": "156.8300"
+    },
+    {
+      "categoria": "mod",
+      "mes": "2025-02",
+      "itens": 1,
+      "pedidos": 1,
+      "unidades": "1.0000",
+      "valor_bruto": "255.4000",
+      "valor_sem_cancelados_devolvidos": "255.4000",
+      "valor_cancelados_devolvidos": "0.0000"
+    },
+    {
+      "categoria": "moda",
+      "mes": "2025-02",
+      "itens": 57,
+      "pedidos": 55,
+      "unidades": "82.0000",
+      "valor_bruto": "11719.2300",
+      "valor_sem_cancelados_devolvidos": "10386.7600",
+      "valor_cancelados_devolvidos": "1332.4700"
+    },
+    {
+      "categoria": "pe",
+      "mes": "2025-02",
+      "itens": 1,
+      "pedidos": 1,
+      "unidades": "1.0000",
+      "valor_bruto": "126.3200",
+      "valor_sem_cancelados_devolvidos": "126.3200",
+      "valor_cancelados_devolvidos": "0.0000"
+    },
+    {
+      "categoria": "pet",
+      "mes": "2025-02",
+      "itens": 11,
+      "pedidos": 11,
+      "unidades": "15.0000",
+      "valor_bruto": "1701.8100",
+      "valor_sem_cancelados_devolvidos": "1701.8100",
+      "valor_cancelados_devolvidos": "0.0000"
+    },
+    {
+      "categoria": "beleza e saúde",
+      "mes": "2025-03",
+      "itens": 27,
+      "pedidos": 27,
+      "unidades": "37.0000",
+      "valor_bruto": "5564.5300",
+      "valor_sem_cancelados_devolvidos": "4898.9600",
+      "valor_cancelados_devolvidos": "665.5700"
+    },
+    {
+      "categoria": "brinquedos",
+      "mes": "2025-03",
+      "itens": 20,
+      "pedidos": 20,
+      "unidades": "31.0000",
+      "valor_bruto": "3903.0400",
+      "valor_sem_cancelados_devolvidos": "3476.3400",
+      "valor_cancelados_devolvidos": "426.7000"
+    },
+    {
+      "categoria": "casa e cozinha",
+      "mes": "2025-03",
+      "itens": 67,
+      "pedidos": 64,
+      "unidades": "95.0000",
+      "valor_bruto": "25187.3100",
+      "valor_sem_cancelados_devolvidos": "23163.3200",
+      "valor_cancelados_devolvidos": "2023.9900"
+    },
+    {
+      "categoria": "eletronicos",
+      "mes": "2025-03",
+      "itens": 3,
+      "pedidos": 3,
+      "unidades": "3.0000",
+      "valor_bruto": "2557.3400",
+      "valor_sem_cancelados_devolvidos": "2557.3400",
+      "valor_cancelados_devolvidos": "0.0000"
+    },
+    {
+      "categoria": "eletrônicos",
+      "mes": "2025-03",
+      "itens": 89,
+      "pedidos": 88,
+      "unidades": "131.0000",
+      "valor_bruto": "50019.3600",
+      "valor_sem_cancelados_devolvidos": "48278.5300",
+      "valor_cancelados_devolvidos": "1740.8300"
+    },
+    {
+      "categoria": "esport",
+      "mes": "2025-03",
+      "itens": 1,
+      "pedidos": 1,
+      "unidades": "1.0000",
+      "valor_bruto": "56.7200",
+      "valor_sem_cancelados_devolvidos": "56.7200",
+      "valor_cancelados_devolvidos": "0.0000"
+    },
+    {
+      "categoria": "esporte",
+      "mes": "2025-03",
+      "itens": 42,
+      "pedidos": 41,
+      "unidades": "58.0000",
+      "valor_bruto": "31915.3400",
+      "valor_sem_cancelados_devolvidos": "25878.2900",
+      "valor_cancelados_devolvidos": "6037.0500"
+    },
+    {
+      "categoria": "livros",
+      "mes": "2025-03",
+      "itens": 20,
+      "pedidos": 20,
+      "unidades": "33.0000",
+      "valor_bruto": "1992.1500",
+      "valor_sem_cancelados_devolvidos": "1904.5700",
+      "valor_cancelados_devolvidos": "87.5800"
+    },
+    {
+      "categoria": "mod",
+      "mes": "2025-03",
+      "itens": 1,
+      "pedidos": 1,
+      "unidades": "2.0000",
+      "valor_bruto": "236.4400",
+      "valor_sem_cancelados_devolvidos": "236.4400",
+      "valor_cancelados_devolvidos": "0.0000"
+    },
+    {
+      "categoria": "moda",
+      "mes": "2025-03",
+      "itens": 64,
+      "pedidos": 59,
+      "unidades": "87.0000",
+      "valor_bruto": "13003.3600",
+      "valor_sem_cancelados_devolvidos": "11878.8800",
+      "valor_cancelados_devolvidos": "1124.4800"
+    },
+    {
+      "categoria": "pet",
+      "mes": "2025-03",
+      "itens": 12,
+      "pedidos": 12,
+      "unidades": "13.0000",
+      "valor_bruto": "1510.2600",
+      "valor_sem_cancelados_devolvidos": "1364.1100",
+      "valor_cancelados_devolvidos": "146.1500"
+    },
+    {
+      "categoria": "beleza e saude",
+      "mes": "2025-04",
+      "itens": 1,
+      "pedidos": 1,
+      "unidades": "1.0000",
+      "valor_bruto": "158.9800",
+      "valor_sem_cancelados_devolvidos": "158.9800",
+      "valor_cancelados_devolvidos": "0.0000"
+    },
+    {
+      "categoria": "beleza e saúd",
+      "mes": "2025-04",
+      "itens": 1,
+      "pedidos": 1,
+      "unidades": "2.0000",
+      "valor_bruto": "272.8200",
+      "valor_sem_cancelados_devolvidos": "272.8200",
+      "valor_cancelados_devolvidos": "0.0000"
+    },
+    {
+      "categoria": "beleza e saúde",
+      "mes": "2025-04",
+      "itens": 24,
+      "pedidos": 24,
+      "unidades": "27.0000",
+      "valor_bruto": "5259.8200",
+      "valor_sem_cancelados_devolvidos": "4530.7700",
+      "valor_cancelados_devolvidos": "729.0500"
+    },
+    {
+      "categoria": "brinquedos",
+      "mes": "2025-04",
+      "itens": 15,
+      "pedidos": 14,
+      "unidades": "21.0000",
+      "valor_bruto": "2496.6700",
+      "valor_sem_cancelados_devolvidos": "2413.1500",
+      "valor_cancelados_devolvidos": "83.5200"
+    },
+    {
+      "categoria": "casa e cozinh",
+      "mes": "2025-04",
+      "itens": 1,
+      "pedidos": 1,
+      "unidades": "1.0000",
+      "valor_bruto": "259.6800",
+      "valor_sem_cancelados_devolvidos": "0.0000",
+      "valor_cancelados_devolvidos": "259.6800"
+    },
+    {
+      "categoria": "casa e cozinha",
+      "mes": "2025-04",
+      "itens": 44,
+      "pedidos": 43,
+      "unidades": "65.0000",
+      "valor_bruto": "16308.0100",
+      "valor_sem_cancelados_devolvidos": "14739.2300",
+      "valor_cancelados_devolvidos": "1568.7800"
+    },
+    {
+      "categoria": "eletronicos",
+      "mes": "2025-04",
+      "itens": 5,
+      "pedidos": 5,
+      "unidades": "8.0000",
+      "valor_bruto": "1484.1900",
+      "valor_sem_cancelados_devolvidos": "1021.9300",
+      "valor_cancelados_devolvidos": "462.2600"
+    },
+    {
+      "categoria": "eletrônicos",
+      "mes": "2025-04",
+      "itens": 77,
+      "pedidos": 76,
+      "unidades": "95.0000",
+      "valor_bruto": "40952.5000",
+      "valor_sem_cancelados_devolvidos": "37671.4300",
+      "valor_cancelados_devolvidos": "3281.0700"
+    },
+    {
+      "categoria": "esporte",
+      "mes": "2025-04",
+      "itens": 30,
+      "pedidos": 30,
+      "unidades": "35.0000",
+      "valor_bruto": "7937.7400",
+      "valor_sem_cancelados_devolvidos": "7797.1100",
+      "valor_cancelados_devolvidos": "140.6300"
+    },
+    {
+      "categoria": "livros",
+      "mes": "2025-04",
+      "itens": 15,
+      "pedidos": 15,
+      "unidades": "18.0000",
+      "valor_bruto": "1184.9000",
+      "valor_sem_cancelados_devolvidos": "999.2200",
+      "valor_cancelados_devolvidos": "185.6800"
+    },
+    {
+      "categoria": "mod",
+      "mes": "2025-04",
+      "itens": 1,
+      "pedidos": 1,
+      "unidades": "1.0000",
+      "valor_bruto": "164.5000",
+      "valor_sem_cancelados_devolvidos": "164.5000",
+      "valor_cancelados_devolvidos": "0.0000"
+    },
+    {
+      "categoria": "moda",
+      "mes": "2025-04",
+      "itens": 51,
+      "pedidos": 49,
+      "unidades": "67.0000",
+      "valor_bruto": "10109.3000",
+      "valor_sem_cancelados_devolvidos": "9340.6800",
+      "valor_cancelados_devolvidos": "768.6200"
+    },
+    {
+      "categoria": "pet",
+      "mes": "2025-04",
+      "itens": 11,
+      "pedidos": 11,
+      "unidades": "16.0000",
+      "valor_bruto": "1783.5300",
+      "valor_sem_cancelados_devolvidos": "1525.8500",
+      "valor_cancelados_devolvidos": "257.6800"
+    },
+    {
+      "categoria": "beleza e saúde",
+      "mes": "2025-05",
+      "itens": 34,
+      "pedidos": 34,
+      "unidades": "41.0000",
+      "valor_bruto": "6291.2000",
+      "valor_sem_cancelados_devolvidos": "5676.5000",
+      "valor_cancelados_devolvidos": "614.7000"
+    },
+    {
+      "categoria": "brinquedos",
+      "mes": "2025-05",
+      "itens": 15,
+      "pedidos": 15,
+      "unidades": "16.0000",
+      "valor_bruto": "1862.6400",
+      "valor_sem_cancelados_devolvidos": "1583.7700",
+      "valor_cancelados_devolvidos": "278.8700"
+    },
+    {
+      "categoria": "casa e cozinha",
+      "mes": "2025-05",
+      "itens": 53,
+      "pedidos": 50,
+      "unidades": "74.0000",
+      "valor_bruto": "17790.3500",
+      "valor_sem_cancelados_devolvidos": "16727.9500",
+      "valor_cancelados_devolvidos": "1062.4000"
+    },
+    {
+      "categoria": "eletrônico",
+      "mes": "2025-05",
+      "itens": 1,
+      "pedidos": 1,
+      "unidades": "2.0000",
+      "valor_bruto": "863.2400",
+      "valor_sem_cancelados_devolvidos": "863.2400",
+      "valor_cancelados_devolvidos": "0.0000"
+    },
+    {
+      "categoria": "eletrônicos",
+      "mes": "2025-05",
+      "itens": 81,
+      "pedidos": 79,
+      "unidades": "107.0000",
+      "valor_bruto": "43488.6400",
+      "valor_sem_cancelados_devolvidos": "37558.5500",
+      "valor_cancelados_devolvidos": "5930.0900"
+    },
+    {
+      "categoria": "esporte",
+      "mes": "2025-05",
+      "itens": 22,
+      "pedidos": 22,
+      "unidades": "38.0000",
+      "valor_bruto": "21531.9200",
+      "valor_sem_cancelados_devolvidos": "21034.7600",
+      "valor_cancelados_devolvidos": "497.1600"
+    },
+    {
+      "categoria": "livros",
+      "mes": "2025-05",
+      "itens": 16,
+      "pedidos": 16,
+      "unidades": "22.0000",
+      "valor_bruto": "1084.9200",
+      "valor_sem_cancelados_devolvidos": "864.3000",
+      "valor_cancelados_devolvidos": "220.6200"
+    },
+    {
+      "categoria": "moda",
+      "mes": "2025-05",
+      "itens": 59,
+      "pedidos": 58,
+      "unidades": "89.0000",
+      "valor_bruto": "11824.8800",
+      "valor_sem_cancelados_devolvidos": "10422.9300",
+      "valor_cancelados_devolvidos": "1401.9500"
+    },
+    {
+      "categoria": "pet",
+      "mes": "2025-05",
+      "itens": 8,
+      "pedidos": 8,
+      "unidades": "11.0000",
+      "valor_bruto": "1329.4600",
+      "valor_sem_cancelados_devolvidos": "1329.4600",
+      "valor_cancelados_devolvidos": "0.0000"
+    },
+    {
+      "categoria": "beleza e saude",
+      "mes": "2025-06",
+      "itens": 2,
+      "pedidos": 2,
+      "unidades": "2.0000",
+      "valor_bruto": "270.6500",
+      "valor_sem_cancelados_devolvidos": "270.6500",
+      "valor_cancelados_devolvidos": "0.0000"
+    },
+    {
+      "categoria": "beleza e saúd",
+      "mes": "2025-06",
+      "itens": 1,
+      "pedidos": 1,
+      "unidades": "1.0000",
+      "valor_bruto": "136.1200",
+      "valor_sem_cancelados_devolvidos": "136.1200",
+      "valor_cancelados_devolvidos": "0.0000"
+    },
+    {
+      "categoria": "beleza e saúde",
+      "mes": "2025-06",
+      "itens": 35,
+      "pedidos": 35,
+      "unidades": "45.0000",
+      "valor_bruto": "7322.2700",
+      "valor_sem_cancelados_devolvidos": "6853.9600",
+      "valor_cancelados_devolvidos": "468.3100"
+    },
+    {
+      "categoria": "brinquedos",
+      "mes": "2025-06",
+      "itens": 18,
+      "pedidos": 18,
+      "unidades": "31.0000",
+      "valor_bruto": "3779.5100",
+      "valor_sem_cancelados_devolvidos": "3522.9400",
+      "valor_cancelados_devolvidos": "256.5700"
+    },
+    {
+      "categoria": "casa e cozinh",
+      "mes": "2025-06",
+      "itens": 1,
+      "pedidos": 1,
+      "unidades": "1.0000",
+      "valor_bruto": "224.3600",
+      "valor_sem_cancelados_devolvidos": "224.3600",
+      "valor_cancelados_devolvidos": "0.0000"
+    },
+    {
+      "categoria": "casa e cozinha",
+      "mes": "2025-06",
+      "itens": 61,
+      "pedidos": 61,
+      "unidades": "81.0000",
+      "valor_bruto": "21439.9400",
+      "valor_sem_cancelados_devolvidos": "17602.0000",
+      "valor_cancelados_devolvidos": "3837.9400"
+    },
+    {
+      "categoria": "eletronicos",
+      "mes": "2025-06",
+      "itens": 2,
+      "pedidos": 2,
+      "unidades": "3.0000",
+      "valor_bruto": "2245.3800",
+      "valor_sem_cancelados_devolvidos": "2155.5700",
+      "valor_cancelados_devolvidos": "89.8100"
+    },
+    {
+      "categoria": "eletrônico",
+      "mes": "2025-06",
+      "itens": 2,
+      "pedidos": 2,
+      "unidades": "2.0000",
+      "valor_bruto": "2565.4000",
+      "valor_sem_cancelados_devolvidos": "2565.4000",
+      "valor_cancelados_devolvidos": "0.0000"
+    },
+    {
+      "categoria": "eletrônicos",
+      "mes": "2025-06",
+      "itens": 76,
+      "pedidos": 72,
+      "unidades": "93.0000",
+      "valor_bruto": "41496.4700",
+      "valor_sem_cancelados_devolvidos": "38723.5400",
+      "valor_cancelados_devolvidos": "2772.9300"
+    },
+    {
+      "categoria": "esporte",
+      "mes": "2025-06",
+      "itens": 34,
+      "pedidos": 34,
+      "unidades": "49.0000",
+      "valor_bruto": "13347.5500",
+      "valor_sem_cancelados_devolvidos": "11359.1100",
+      "valor_cancelados_devolvidos": "1988.4400"
+    },
+    {
+      "categoria": "livros",
+      "mes": "2025-06",
+      "itens": 34,
+      "pedidos": 33,
+      "unidades": "45.0000",
+      "valor_bruto": "2897.9400",
+      "valor_sem_cancelados_devolvidos": "2386.7100",
+      "valor_cancelados_devolvidos": "511.2300"
+    },
+    {
+      "categoria": "moda",
+      "mes": "2025-06",
+      "itens": 68,
+      "pedidos": 68,
+      "unidades": "97.0000",
+      "valor_bruto": "16081.1600",
+      "valor_sem_cancelados_devolvidos": "14882.3000",
+      "valor_cancelados_devolvidos": "1198.8600"
+    },
+    {
+      "categoria": "pet",
+      "mes": "2025-06",
+      "itens": 10,
+      "pedidos": 10,
+      "unidades": "11.0000",
+      "valor_bruto": "1237.0400",
+      "valor_sem_cancelados_devolvidos": "1237.0400",
+      "valor_cancelados_devolvidos": "0.0000"
+    },
+    {
+      "categoria": "beleza e saude",
+      "mes": "2025-07",
+      "itens": 1,
+      "pedidos": 1,
+      "unidades": "1.0000",
+      "valor_bruto": "133.2500",
+      "valor_sem_cancelados_devolvidos": "133.2500",
+      "valor_cancelados_devolvidos": "0.0000"
+    },
+    {
+      "categoria": "beleza e saúde",
+      "mes": "2025-07",
+      "itens": 28,
+      "pedidos": 28,
+      "unidades": "36.0000",
+      "valor_bruto": "5972.8300",
+      "valor_sem_cancelados_devolvidos": "5801.0400",
+      "valor_cancelados_devolvidos": "171.7900"
+    },
+    {
+      "categoria": "brinquedos",
+      "mes": "2025-07",
+      "itens": 18,
+      "pedidos": 18,
+      "unidades": "23.0000",
+      "valor_bruto": "2621.3300",
+      "valor_sem_cancelados_devolvidos": "2621.3300",
+      "valor_cancelados_devolvidos": "0.0000"
+    },
+    {
+      "categoria": "casa e cozinha",
+      "mes": "2025-07",
+      "itens": 60,
+      "pedidos": 60,
+      "unidades": "75.0000",
+      "valor_bruto": "19113.0400",
+      "valor_sem_cancelados_devolvidos": "17230.2500",
+      "valor_cancelados_devolvidos": "1882.7900"
+    },
+    {
+      "categoria": "eletronicos",
+      "mes": "2025-07",
+      "itens": 1,
+      "pedidos": 1,
+      "unidades": "1.0000",
+      "valor_bruto": "88.3700",
+      "valor_sem_cancelados_devolvidos": "88.3700",
+      "valor_cancelados_devolvidos": "0.0000"
+    },
+    {
+      "categoria": "eletrônicos",
+      "mes": "2025-07",
+      "itens": 74,
+      "pedidos": 73,
+      "unidades": "105.0000",
+      "valor_bruto": "35882.8600",
+      "valor_sem_cancelados_devolvidos": "33746.2400",
+      "valor_cancelados_devolvidos": "2136.6200"
+    },
+    {
+      "categoria": "esporte",
+      "mes": "2025-07",
+      "itens": 31,
+      "pedidos": 30,
+      "unidades": "40.0000",
+      "valor_bruto": "16388.7300",
+      "valor_sem_cancelados_devolvidos": "14536.8400",
+      "valor_cancelados_devolvidos": "1851.8900"
+    },
+    {
+      "categoria": "livro",
+      "mes": "2025-07",
+      "itens": 1,
+      "pedidos": 1,
+      "unidades": "1.0000",
+      "valor_bruto": "40.1800",
+      "valor_sem_cancelados_devolvidos": "40.1800",
+      "valor_cancelados_devolvidos": "0.0000"
+    },
+    {
+      "categoria": "livros",
+      "mes": "2025-07",
+      "itens": 15,
+      "pedidos": 15,
+      "unidades": "22.0000",
+      "valor_bruto": "1131.2100",
+      "valor_sem_cancelados_devolvidos": "1040.6800",
+      "valor_cancelados_devolvidos": "90.5300"
+    },
+    {
+      "categoria": "mod",
+      "mes": "2025-07",
+      "itens": 1,
+      "pedidos": 1,
+      "unidades": "2.0000",
+      "valor_bruto": "274.9200",
+      "valor_sem_cancelados_devolvidos": "274.9200",
+      "valor_cancelados_devolvidos": "0.0000"
+    },
+    {
+      "categoria": "moda",
+      "mes": "2025-07",
+      "itens": 75,
+      "pedidos": 73,
+      "unidades": "99.0000",
+      "valor_bruto": "12476.6600",
+      "valor_sem_cancelados_devolvidos": "9885.2300",
+      "valor_cancelados_devolvidos": "2591.4300"
+    },
+    {
+      "categoria": "pet",
+      "mes": "2025-07",
+      "itens": 9,
+      "pedidos": 9,
+      "unidades": "16.0000",
+      "valor_bruto": "1918.7700",
+      "valor_sem_cancelados_devolvidos": "1918.7700",
+      "valor_cancelados_devolvidos": "0.0000"
+    },
+    {
+      "categoria": "beleza e saúde",
+      "mes": "2025-08",
+      "itens": 25,
+      "pedidos": 25,
+      "unidades": "32.0000",
+      "valor_bruto": "5025.2900",
+      "valor_sem_cancelados_devolvidos": "4254.8300",
+      "valor_cancelados_devolvidos": "770.4600"
+    },
+    {
+      "categoria": "brinquedos",
+      "mes": "2025-08",
+      "itens": 19,
+      "pedidos": 19,
+      "unidades": "30.0000",
+      "valor_bruto": "3363.0800",
+      "valor_sem_cancelados_devolvidos": "2976.3100",
+      "valor_cancelados_devolvidos": "386.7700"
+    },
+    {
+      "categoria": "casa e cozinha",
+      "mes": "2025-08",
+      "itens": 65,
+      "pedidos": 64,
+      "unidades": "81.0000",
+      "valor_bruto": "20525.1400",
+      "valor_sem_cancelados_devolvidos": "16942.6100",
+      "valor_cancelados_devolvidos": "3582.5300"
+    },
+    {
+      "categoria": "eletronicos",
+      "mes": "2025-08",
+      "itens": 3,
+      "pedidos": 3,
+      "unidades": "5.0000",
+      "valor_bruto": "840.0200",
+      "valor_sem_cancelados_devolvidos": "840.0200",
+      "valor_cancelados_devolvidos": "0.0000"
+    },
+    {
+      "categoria": "eletrônicos",
+      "mes": "2025-08",
+      "itens": 88,
+      "pedidos": 83,
+      "unidades": "119.0000",
+      "valor_bruto": "73556.0900",
+      "valor_sem_cancelados_devolvidos": "67129.8400",
+      "valor_cancelados_devolvidos": "6426.2500"
+    },
+    {
+      "categoria": "esporte",
+      "mes": "2025-08",
+      "itens": 41,
+      "pedidos": 39,
+      "unidades": "52.0000",
+      "valor_bruto": "29927.2800",
+      "valor_sem_cancelados_devolvidos": "28238.9600",
+      "valor_cancelados_devolvidos": "1688.3200"
+    },
+    {
+      "categoria": "livros",
+      "mes": "2025-08",
+      "itens": 17,
+      "pedidos": 17,
+      "unidades": "24.0000",
+      "valor_bruto": "1621.0000",
+      "valor_sem_cancelados_devolvidos": "1438.5800",
+      "valor_cancelados_devolvidos": "182.4200"
+    },
+    {
+      "categoria": "mod",
+      "mes": "2025-08",
+      "itens": 1,
+      "pedidos": 1,
+      "unidades": "1.0000",
+      "valor_bruto": "43.7600",
+      "valor_sem_cancelados_devolvidos": "43.7600",
+      "valor_cancelados_devolvidos": "0.0000"
+    },
+    {
+      "categoria": "moda",
+      "mes": "2025-08",
+      "itens": 67,
+      "pedidos": 66,
+      "unidades": "95.0000",
+      "valor_bruto": "15722.1600",
+      "valor_sem_cancelados_devolvidos": "14292.5200",
+      "valor_cancelados_devolvidos": "1429.6400"
+    },
+    {
+      "categoria": "pet",
+      "mes": "2025-08",
+      "itens": 17,
+      "pedidos": 17,
+      "unidades": "21.0000",
+      "valor_bruto": "3242.6700",
+      "valor_sem_cancelados_devolvidos": "2920.4600",
+      "valor_cancelados_devolvidos": "322.2100"
+    },
+    {
+      "categoria": "beleza e saúde",
+      "mes": "2025-09",
+      "itens": 28,
+      "pedidos": 28,
+      "unidades": "33.0000",
+      "valor_bruto": "5188.1600",
+      "valor_sem_cancelados_devolvidos": "4320.8500",
+      "valor_cancelados_devolvidos": "867.3100"
+    },
+    {
+      "categoria": "brinquedos",
+      "mes": "2025-09",
+      "itens": 13,
+      "pedidos": 13,
+      "unidades": "19.0000",
+      "valor_bruto": "2462.9100",
+      "valor_sem_cancelados_devolvidos": "1883.6900",
+      "valor_cancelados_devolvidos": "579.2200"
+    },
+    {
+      "categoria": "casa e cozinha",
+      "mes": "2025-09",
+      "itens": 47,
+      "pedidos": 47,
+      "unidades": "67.0000",
+      "valor_bruto": "18197.3600",
+      "valor_sem_cancelados_devolvidos": "16373.8300",
+      "valor_cancelados_devolvidos": "1823.5300"
+    },
+    {
+      "categoria": "eletronicos",
+      "mes": "2025-09",
+      "itens": 2,
+      "pedidos": 2,
+      "unidades": "3.0000",
+      "valor_bruto": "2650.5000",
+      "valor_sem_cancelados_devolvidos": "2650.5000",
+      "valor_cancelados_devolvidos": "0.0000"
+    },
+    {
+      "categoria": "eletrônicos",
+      "mes": "2025-09",
+      "itens": 59,
+      "pedidos": 59,
+      "unidades": "72.0000",
+      "valor_bruto": "33510.5100",
+      "valor_sem_cancelados_devolvidos": "30802.5900",
+      "valor_cancelados_devolvidos": "2707.9200"
+    },
+    {
+      "categoria": "esporte",
+      "mes": "2025-09",
+      "itens": 38,
+      "pedidos": 37,
+      "unidades": "47.0000",
+      "valor_bruto": "18197.9100",
+      "valor_sem_cancelados_devolvidos": "12923.8200",
+      "valor_cancelados_devolvidos": "5274.0900"
+    },
+    {
+      "categoria": "livros",
+      "mes": "2025-09",
+      "itens": 21,
+      "pedidos": 20,
+      "unidades": "31.0000",
+      "valor_bruto": "1553.2500",
+      "valor_sem_cancelados_devolvidos": "1391.6300",
+      "valor_cancelados_devolvidos": "161.6200"
+    },
+    {
+      "categoria": "moda",
+      "mes": "2025-09",
+      "itens": 57,
+      "pedidos": 55,
+      "unidades": "81.0000",
+      "valor_bruto": "12803.6800",
+      "valor_sem_cancelados_devolvidos": "11454.7900",
+      "valor_cancelados_devolvidos": "1348.8900"
+    },
+    {
+      "categoria": "pet",
+      "mes": "2025-09",
+      "itens": 8,
+      "pedidos": 8,
+      "unidades": "12.0000",
+      "valor_bruto": "1414.8800",
+      "valor_sem_cancelados_devolvidos": "1414.8800",
+      "valor_cancelados_devolvidos": "0.0000"
+    },
+    {
+      "categoria": "beleza e saude",
+      "mes": "2025-10",
+      "itens": 1,
+      "pedidos": 1,
+      "unidades": "1.0000",
+      "valor_bruto": "142.8000",
+      "valor_sem_cancelados_devolvidos": "142.8000",
+      "valor_cancelados_devolvidos": "0.0000"
+    },
+    {
+      "categoria": "beleza e saúde",
+      "mes": "2025-10",
+      "itens": 25,
+      "pedidos": 25,
+      "unidades": "37.0000",
+      "valor_bruto": "5761.4900",
+      "valor_sem_cancelados_devolvidos": "5330.7200",
+      "valor_cancelados_devolvidos": "430.7700"
+    },
+    {
+      "categoria": "brinquedo",
+      "mes": "2025-10",
+      "itens": 1,
+      "pedidos": 1,
+      "unidades": "1.0000",
+      "valor_bruto": "160.9100",
+      "valor_sem_cancelados_devolvidos": "0.0000",
+      "valor_cancelados_devolvidos": "160.9100"
+    },
+    {
+      "categoria": "brinquedos",
+      "mes": "2025-10",
+      "itens": 21,
+      "pedidos": 21,
+      "unidades": "32.0000",
+      "valor_bruto": "6463.6400",
+      "valor_sem_cancelados_devolvidos": "5424.2700",
+      "valor_cancelados_devolvidos": "1039.3700"
+    },
+    {
+      "categoria": "casa e cozinha",
+      "mes": "2025-10",
+      "itens": 55,
+      "pedidos": 54,
+      "unidades": "82.0000",
+      "valor_bruto": "21865.9600",
+      "valor_sem_cancelados_devolvidos": "20431.0700",
+      "valor_cancelados_devolvidos": "1434.8900"
+    },
+    {
+      "categoria": "eletronicos",
+      "mes": "2025-10",
+      "itens": 1,
+      "pedidos": 1,
+      "unidades": "1.0000",
+      "valor_bruto": "1284.1400",
+      "valor_sem_cancelados_devolvidos": "1284.1400",
+      "valor_cancelados_devolvidos": "0.0000"
+    },
+    {
+      "categoria": "eletrônicos",
+      "mes": "2025-10",
+      "itens": 88,
+      "pedidos": 83,
+      "unidades": "118.0000",
+      "valor_bruto": "58292.2700",
+      "valor_sem_cancelados_devolvidos": "54734.1500",
+      "valor_cancelados_devolvidos": "3558.1200"
+    },
+    {
+      "categoria": "esporte",
+      "mes": "2025-10",
+      "itens": 38,
+      "pedidos": 37,
+      "unidades": "57.0000",
+      "valor_bruto": "24345.9100",
+      "valor_sem_cancelados_devolvidos": "24210.1300",
+      "valor_cancelados_devolvidos": "135.7800"
+    },
+    {
+      "categoria": "livros",
+      "mes": "2025-10",
+      "itens": 18,
+      "pedidos": 18,
+      "unidades": "24.0000",
+      "valor_bruto": "1952.9300",
+      "valor_sem_cancelados_devolvidos": "1553.7400",
+      "valor_cancelados_devolvidos": "399.1900"
+    },
+    {
+      "categoria": "moda",
+      "mes": "2025-10",
+      "itens": 54,
+      "pedidos": 53,
+      "unidades": "70.0000",
+      "valor_bruto": "10665.0500",
+      "valor_sem_cancelados_devolvidos": "9152.3500",
+      "valor_cancelados_devolvidos": "1512.7000"
+    },
+    {
+      "categoria": "pet",
+      "mes": "2025-10",
+      "itens": 12,
+      "pedidos": 12,
+      "unidades": "16.0000",
+      "valor_bruto": "1878.1100",
+      "valor_sem_cancelados_devolvidos": "1761.4000",
+      "valor_cancelados_devolvidos": "116.7100"
+    },
+    {
+      "categoria": "beleza e saude",
+      "mes": "2025-11",
+      "itens": 2,
+      "pedidos": 2,
+      "unidades": "2.0000",
+      "valor_bruto": "256.7400",
+      "valor_sem_cancelados_devolvidos": "256.7400",
+      "valor_cancelados_devolvidos": "0.0000"
+    },
+    {
+      "categoria": "beleza e saúde",
+      "mes": "2025-11",
+      "itens": 44,
+      "pedidos": 44,
+      "unidades": "65.0000",
+      "valor_bruto": "7108.2100",
+      "valor_sem_cancelados_devolvidos": "6791.5500",
+      "valor_cancelados_devolvidos": "316.6600"
+    },
+    {
+      "categoria": "brinquedos",
+      "mes": "2025-11",
+      "itens": 22,
+      "pedidos": 22,
+      "unidades": "36.0000",
+      "valor_bruto": "3501.7200",
+      "valor_sem_cancelados_devolvidos": "2603.7400",
+      "valor_cancelados_devolvidos": "897.9800"
+    },
+    {
+      "categoria": "casa e cozinha",
+      "mes": "2025-11",
+      "itens": 83,
+      "pedidos": 82,
+      "unidades": "117.0000",
+      "valor_bruto": "24441.6100",
+      "valor_sem_cancelados_devolvidos": "22584.3700",
+      "valor_cancelados_devolvidos": "1857.2400"
+    },
+    {
+      "categoria": "eletronicos",
+      "mes": "2025-11",
+      "itens": 5,
+      "pedidos": 5,
+      "unidades": "8.0000",
+      "valor_bruto": "862.3600",
+      "valor_sem_cancelados_devolvidos": "862.3600",
+      "valor_cancelados_devolvidos": "0.0000"
+    },
+    {
+      "categoria": "eletrônico",
+      "mes": "2025-11",
+      "itens": 1,
+      "pedidos": 1,
+      "unidades": "1.0000",
+      "valor_bruto": "164.0800",
+      "valor_sem_cancelados_devolvidos": "164.0800",
+      "valor_cancelados_devolvidos": "0.0000"
+    },
+    {
+      "categoria": "eletrônicos",
+      "mes": "2025-11",
+      "itens": 120,
+      "pedidos": 117,
+      "unidades": "179.0000",
+      "valor_bruto": "63548.5300",
+      "valor_sem_cancelados_devolvidos": "61743.8800",
+      "valor_cancelados_devolvidos": "1804.6500"
+    },
+    {
+      "categoria": "esport",
+      "mes": "2025-11",
+      "itens": 1,
+      "pedidos": 1,
+      "unidades": "1.0000",
+      "valor_bruto": "74.1300",
+      "valor_sem_cancelados_devolvidos": "74.1300",
+      "valor_cancelados_devolvidos": "0.0000"
+    },
+    {
+      "categoria": "esporte",
+      "mes": "2025-11",
+      "itens": 47,
+      "pedidos": 46,
+      "unidades": "58.0000",
+      "valor_bruto": "16735.3900",
+      "valor_sem_cancelados_devolvidos": "16236.9500",
+      "valor_cancelados_devolvidos": "498.4400"
+    },
+    {
+      "categoria": "livro",
+      "mes": "2025-11",
+      "itens": 1,
+      "pedidos": 1,
+      "unidades": "1.0000",
+      "valor_bruto": "87.0500",
+      "valor_sem_cancelados_devolvidos": "87.0500",
+      "valor_cancelados_devolvidos": "0.0000"
+    },
+    {
+      "categoria": "livros",
+      "mes": "2025-11",
+      "itens": 40,
+      "pedidos": 40,
+      "unidades": "51.0000",
+      "valor_bruto": "1965.2800",
+      "valor_sem_cancelados_devolvidos": "1863.5200",
+      "valor_cancelados_devolvidos": "101.7600"
+    },
+    {
+      "categoria": "moda",
+      "mes": "2025-11",
+      "itens": 114,
+      "pedidos": 109,
+      "unidades": "159.0000",
+      "valor_bruto": "21525.9500",
+      "valor_sem_cancelados_devolvidos": "19502.2000",
+      "valor_cancelados_devolvidos": "2023.7500"
+    },
+    {
+      "categoria": "pet",
+      "mes": "2025-11",
+      "itens": 21,
+      "pedidos": 21,
+      "unidades": "24.0000",
+      "valor_bruto": "2203.4800",
+      "valor_sem_cancelados_devolvidos": "1814.1100",
+      "valor_cancelados_devolvidos": "389.3700"
+    },
+    {
+      "categoria": "beleza e saude",
+      "mes": "2025-12",
+      "itens": 1,
+      "pedidos": 1,
+      "unidades": "3.0000",
+      "valor_bruto": "572.1900",
+      "valor_sem_cancelados_devolvidos": "0.0000",
+      "valor_cancelados_devolvidos": "572.1900"
+    },
+    {
+      "categoria": "beleza e saúde",
+      "mes": "2025-12",
+      "itens": 52,
+      "pedidos": 51,
+      "unidades": "74.0000",
+      "valor_bruto": "11450.7300",
+      "valor_sem_cancelados_devolvidos": "10384.0700",
+      "valor_cancelados_devolvidos": "1066.6600"
+    },
+    {
+      "categoria": "brinquedos",
+      "mes": "2025-12",
+      "itens": 18,
+      "pedidos": 18,
+      "unidades": "25.0000",
+      "valor_bruto": "3192.2900",
+      "valor_sem_cancelados_devolvidos": "2830.1600",
+      "valor_cancelados_devolvidos": "362.1300"
+    },
+    {
+      "categoria": "casa e cozinha",
+      "mes": "2025-12",
+      "itens": 103,
+      "pedidos": 100,
+      "unidades": "142.0000",
+      "valor_bruto": "38247.5800",
+      "valor_sem_cancelados_devolvidos": "34052.4200",
+      "valor_cancelados_devolvidos": "4195.1600"
+    },
+    {
+      "categoria": "eletronicos",
+      "mes": "2025-12",
+      "itens": 4,
+      "pedidos": 4,
+      "unidades": "6.0000",
+      "valor_bruto": "2915.5500",
+      "valor_sem_cancelados_devolvidos": "2915.5500",
+      "valor_cancelados_devolvidos": "0.0000"
+    },
+    {
+      "categoria": "eletrônico",
+      "mes": "2025-12",
+      "itens": 5,
+      "pedidos": 5,
+      "unidades": "7.0000",
+      "valor_bruto": "2262.0100",
+      "valor_sem_cancelados_devolvidos": "984.3100",
+      "valor_cancelados_devolvidos": "1277.7000"
+    },
+    {
+      "categoria": "eletrônicos",
+      "mes": "2025-12",
+      "itens": 128,
+      "pedidos": 125,
+      "unidades": "165.0000",
+      "valor_bruto": "75288.3500",
+      "valor_sem_cancelados_devolvidos": "67924.7500",
+      "valor_cancelados_devolvidos": "7363.6000"
+    },
+    {
+      "categoria": "esporte",
+      "mes": "2025-12",
+      "itens": 42,
+      "pedidos": 42,
+      "unidades": "60.0000",
+      "valor_bruto": "19228.1400",
+      "valor_sem_cancelados_devolvidos": "15341.2400",
+      "valor_cancelados_devolvidos": "3886.9000"
+    },
+    {
+      "categoria": "livros",
+      "mes": "2025-12",
+      "itens": 35,
+      "pedidos": 35,
+      "unidades": "48.0000",
+      "valor_bruto": "2983.9200",
+      "valor_sem_cancelados_devolvidos": "2468.0400",
+      "valor_cancelados_devolvidos": "515.8800"
+    },
+    {
+      "categoria": "mod",
+      "mes": "2025-12",
+      "itens": 1,
+      "pedidos": 1,
+      "unidades": "1.0000",
+      "valor_bruto": "113.3700",
+      "valor_sem_cancelados_devolvidos": "113.3700",
+      "valor_cancelados_devolvidos": "0.0000"
+    },
+    {
+      "categoria": "moda",
+      "mes": "2025-12",
+      "itens": 106,
+      "pedidos": 102,
+      "unidades": "160.0000",
+      "valor_bruto": "23880.8700",
+      "valor_sem_cancelados_devolvidos": "22324.5900",
+      "valor_cancelados_devolvidos": "1556.2800"
+    },
+    {
+      "categoria": "pet",
+      "mes": "2025-12",
+      "itens": 13,
+      "pedidos": 13,
+      "unidades": "15.0000",
+      "valor_bruto": "1650.2600",
+      "valor_sem_cancelados_devolvidos": "1406.5900",
+      "valor_cancelados_devolvidos": "243.6700"
+    }
+  ],
+  "estado": [
+    {
+      "estado": "AM",
+      "pedidos": 81,
+      "com_prazo": 76,
+      "atrasados": 32,
+      "media_atraso_dias": "2.6579",
+      "com_nota": 73,
+      "media_nota": "3.6187",
+      "taxa_atraso_pct": 42.1053
+    },
+    {
+      "estado": "CE",
+      "pedidos": 183,
+      "com_prazo": 164,
+      "atrasados": 60,
+      "media_atraso_dias": "1.9207",
+      "com_nota": 165,
+      "media_nota": "3.5576",
+      "taxa_atraso_pct": 36.5854
+    },
+    {
+      "estado": "PE",
+      "pedidos": 226,
+      "com_prazo": 209,
+      "atrasados": 74,
+      "media_atraso_dias": "2.1005",
+      "com_nota": 202,
+      "media_nota": "3.7467",
+      "taxa_atraso_pct": 35.4067
+    },
+    {
+      "estado": "BA",
+      "pedidos": 195,
+      "com_prazo": 175,
+      "atrasados": 61,
+      "media_atraso_dias": "1.8229",
+      "com_nota": 169,
+      "media_nota": "3.6006",
+      "taxa_atraso_pct": 34.8571
+    },
+    {
+      "estado": "PA",
+      "pedidos": 68,
+      "com_prazo": 61,
+      "atrasados": 14,
+      "media_atraso_dias": "1.1311",
+      "com_nota": 60,
+      "media_nota": "3.7722",
+      "taxa_atraso_pct": 22.9508
+    },
+    {
+      "estado": "RJ",
+      "pedidos": 481,
+      "com_prazo": 436,
+      "atrasados": 94,
+      "media_atraso_dias": "1.2706",
+      "com_nota": 428,
+      "media_nota": "3.7714",
+      "taxa_atraso_pct": 21.5596
+    },
+    {
+      "estado": "PR",
+      "pedidos": 267,
+      "com_prazo": 239,
+      "atrasados": 49,
+      "media_atraso_dias": "0.9833",
+      "com_nota": 230,
+      "media_nota": "3.8428",
+      "taxa_atraso_pct": 20.5021
+    },
+    {
+      "estado": "RS",
+      "pedidos": 294,
+      "com_prazo": 275,
+      "atrasados": 54,
+      "media_atraso_dias": "1.0764",
+      "com_nota": 269,
+      "media_nota": "3.7862",
+      "taxa_atraso_pct": 19.6364
+    },
+    {
+      "estado": "SP",
+      "pedidos": 1179,
+      "com_prazo": 1072,
+      "atrasados": 197,
+      "media_atraso_dias": "1.0243",
+      "com_nota": 1048,
+      "media_nota": "3.8705",
+      "taxa_atraso_pct": 18.3769
+    },
+    {
+      "estado": "MG",
+      "pedidos": 443,
+      "com_prazo": 401,
+      "atrasados": 73,
+      "media_atraso_dias": "1.0299",
+      "com_nota": 397,
+      "media_nota": "3.9261",
+      "taxa_atraso_pct": 18.2045
+    },
+    {
+      "estado": "DF",
+      "pedidos": 127,
+      "com_prazo": 121,
+      "atrasados": 21,
+      "media_atraso_dias": "1.1405",
+      "com_nota": 119,
+      "media_nota": "3.9804",
+      "taxa_atraso_pct": 17.3554
+    }
+  ],
+  "transportadora": [
+    {
+      "transportadora": "correios",
+      "pedidos": 1447,
+      "com_prazo": 1315,
+      "atrasados": 341,
+      "media_atraso_dias": "1.5087",
+      "com_nota": 1287,
+      "media_nota": "3.7626",
+      "taxa_atraso_pct": 25.9316
+    },
+    {
+      "transportadora": "jadlog",
+      "pedidos": 711,
+      "com_prazo": 644,
+      "atrasados": 136,
+      "media_atraso_dias": "1.1071",
+      "com_nota": 632,
+      "media_nota": "3.8186",
+      "taxa_atraso_pct": 21.118
+    },
+    {
+      "transportadora": "loggi",
+      "pedidos": 855,
+      "com_prazo": 786,
+      "atrasados": 156,
+      "media_atraso_dias": "1.0382",
+      "com_nota": 765,
+      "media_nota": "3.8179",
+      "taxa_atraso_pct": 19.8473
+    },
+    {
+      "transportadora": "entrega propria",
+      "pedidos": 531,
+      "com_prazo": 484,
+      "atrasados": 96,
+      "media_atraso_dias": "1.1674",
+      "com_nota": 476,
+      "media_nota": "3.9317",
+      "taxa_atraso_pct": 19.8347
+    }
+  ],
+  "centro_distribuicao": [
+    {
+      "centro_distribuicao": "cd-nordeste",
+      "pedidos": 594,
+      "com_prazo": 539,
+      "atrasados": 189,
+      "media_atraso_dias": "1.9295",
+      "com_nota": 528,
+      "media_nota": "3.6503",
+      "taxa_atraso_pct": 35.0649
+    },
+    {
+      "centro_distribuicao": "cd-norte",
+      "pedidos": 146,
+      "com_prazo": 134,
+      "atrasados": 46,
+      "media_atraso_dias": "2.0224",
+      "com_nota": 130,
+      "media_nota": "3.6654",
+      "taxa_atraso_pct": 34.3284
+    },
+    {
+      "centro_distribuicao": "desconhecido",
+      "pedidos": 61,
+      "com_prazo": 54,
+      "atrasados": 12,
+      "media_atraso_dias": "1.1667",
+      "com_nota": 53,
+      "media_nota": "3.8113",
+      "taxa_atraso_pct": 22.2222
+    },
+    {
+      "centro_distribuicao": "-",
+      "pedidos": 15,
+      "com_prazo": 14,
+      "atrasados": 3,
+      "media_atraso_dias": "0.7143",
+      "com_nota": 14,
+      "media_nota": "3.8571",
+      "taxa_atraso_pct": 21.4286
+    },
+    {
+      "centro_distribuicao": "cd-sul",
+      "pedidos": 556,
+      "com_prazo": 509,
+      "atrasados": 102,
+      "media_atraso_dias": "1.0393",
+      "com_nota": 494,
+      "media_nota": "3.8134",
+      "taxa_atraso_pct": 20.0393
+    },
+    {
+      "centro_distribuicao": "cd-sudeste",
+      "pedidos": 2067,
+      "com_prazo": 1879,
+      "atrasados": 362,
+      "media_atraso_dias": "1.0937",
+      "com_nota": 1842,
+      "media_nota": "3.8561",
+      "taxa_atraso_pct": 19.2656
+    },
+    {
+      "centro_distribuicao": "cd-centro-oeste",
+      "pedidos": 126,
+      "com_prazo": 120,
+      "atrasados": 20,
+      "media_atraso_dias": "1.0917",
+      "com_nota": 118,
+      "media_nota": "4.0056",
+      "taxa_atraso_pct": 16.6667
+    }
+  ]
+}
