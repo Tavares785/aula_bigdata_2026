@@ -29,6 +29,21 @@ pip install -r requirements.txt
 pytest -v
 ```
 
+## Como rodar a análise (MercadoFácil, RAs 6325226, 6325149, 6325269)
+
+A análise precisa de Spark 3.3 (a mesma versão do Glue 4.0) e de JDK 11. O
+`pyspark` não está no `requirements.txt` porque o CI só verifica a
+estrutura.
+
+```bash
+pip install pyspark==3.3.4
+# A silver vem do ETL da Aula 12 (Glue ou local):
+python src/analise.py --SILVER_PATH <.../silver/pedidos_itens> --OUTPUT_PATH resultados
+```
+
+A saída da última execução está em `resultados/`. Os resultados estão
+discutidos no `PROGRESS.md`.
+
 ## Como entregar
 
 Uma PR por GRUPO. Veja o
