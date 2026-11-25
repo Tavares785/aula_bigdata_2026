@@ -12,141 +12,89 @@
 
 ## Problema
 
-**Projeto: plataforma de dados para uma rede de lojas de autopeças.**
+**Projeto: por que as entregas da MercadoFácil atrasam e quanto isso custa.**
 
-Uma rede de lojas de autopeças lida todos os dias com milhares de
-vendas no balcão e na loja online, dezenas de milhares de itens em
-estoque espalhados entre o depósito e as lojas, uma base grande de
-clientes e muitos comentários e avaliações. Hoje essas informações
-ficam separadas em sistemas diferentes e as decisões são tomadas "no
-feeling" do gerente. Isso causa três problemas principais:
+A MercadoFácil é um e-commerce brasileiro de médio porte que vende pelo
+app, pelo site e por parceiros de marketplace. Em 2025 a diretoria notou
+três sintomas:
 
-1. **Falta e sobra de estoque:** quando uma peça acaba, o cliente compra
-   no concorrente e a venda é perdida. Ao mesmo tempo, peças de pouca
-   saída ficam meses paradas no depósito, prendendo dinheiro.
-2. **Cliente esquecido:** peças como pastilha de freio, filtro de óleo,
-   correia e bateria têm troca periódica, mas a loja não avisa o cliente
-   quando a próxima troca se aproxima e perde a venda recorrente.
-3. **Reclamações sem análise:** comentários de clientes (loja online,
-   WhatsApp, avaliações) não são lidos de forma organizada, e problemas
-   como "peça errada para o meu carro" ou "entrega atrasada" se repetem.
+1. **Aumento de atrasos nas entregas**, principalmente no Norte/Nordeste e
+   em novembro/dezembro (Black Friday e Natal);
+2. **Avaliações baixas** e comentários negativos concentrados em pedidos
+   atrasados;
+3. **Cancelamentos e devoluções acima da meta**, sem saber quais
+   categorias, canais ou regiões mais pesam.
 
-O problema é relevante porque o setor de reposição automotiva é grande
-no Brasil, a frota é antiga e cada carro usa peças diferentes por marca,
-modelo e ano, o que gera um volume e uma variedade de dados que não cabe
-em uma planilha. A proposta é construir uma **plataforma de dados** que
-receba esses eventos em tempo real, guarde o histórico em um Data Lake,
-aplique Machine Learning e NLP e entregue as respostas para quem decide:
-o gerente (dashboard), o comprador (quanto pedir ao fornecedor) e o
-cliente (mensagem no momento certo).
+Hoje os dados de pedido, cliente, produto, pagamento, logística e
+avaliação chegam juntos num dump bruto e "sujo" (datas em vários formatos,
+valores com `R$`, categorias escritas de formas diferentes, duplicados e
+dados pessoais), e ninguém consegue responder com segurança onde e por que
+a operação falha. O problema é relevante porque cada atraso inesperado
+derruba a nota do cliente e a reputação da loja, e a alta temporada é
+justamente quando a empresa mais vende.
 
-O foco **não** é construir o sistema de cadastro/ERP da loja, e sim a
-camada de dados e de inteligência que fica por cima dele.
+Como time de dados, vamos construir um pipeline de Big Data na AWS que
+transforme esse dump em informação confiável, explique os atrasos (por
+região, transportadora, sazonalidade, chuva e feriados), meça o efeito do
+atraso na nota e nas devoluções e entregue um dashboard e recomendações
+para a diretoria.
 
 ## Objetivos
 
-1. **Pipeline de ingestão em tempo real:** receber vendas, movimentações
-   de estoque e comentários como eventos no Kafka e processá-los com
-   Spark Streaming, atualizando o estoque de cada peça por loja em menos
-   de 1 minuto após a venda.
-2. **Data Lake organizado em camadas** (raw → tratada → analítica) em
-   Parquet particionado por data e loja, com tabelas consultáveis por
-   SQL (Hive / Spark SQL).
-3. **Previsão de demanda:** treinar um modelo no Spark MLlib que preveja
-   a quantidade vendida de cada peça por loja no próximo mês, com meta de
-   **erro percentual médio (MAPE) abaixo de 20%** nas peças de maior
-   giro, e comparar com a média simples dos últimos meses (baseline).
-4. **Alerta de estoque mínimo:** gerar automaticamente um alerta de
-   reposição quando a previsão indicar que uma peça vai acabar antes da
-   próxima entrega do fornecedor.
-5. **Peças compradas juntas:** descobrir combinações frequentes (ex.:
-   pastilha + disco de freio) com o algoritmo FP-Growth do MLlib, para
-   sugerir venda casada no balcão e na loja online.
-6. **Lembrete de troca para o cliente:** identificar clientes cuja troca
-   periódica está próxima (pelo histórico de compras e o intervalo de
-   troca de cada tipo de peça) e gerar a lista de mensagens a enviar.
-7. **Análise dos comentários com NLP:** classificar o sentimento dos
-   comentários e encontrar os assuntos mais citados nas reclamações.
-8. **Dashboard final** no Apache Superset com estoque crítico, previsão
-   × venda real, ranking de peças e lojas, combinações de peças e
-   satisfação dos clientes.
+1. **Pipeline medalhão na AWS (raw → silver → gold)**, criado com
+   Terraform: as 10.000 linhas do dump limpas, tipadas e deduplicadas, com
+   pelo menos 6 regras de qualidade documentadas, quarentena para as linhas
+   inválidas (com o motivo) e dados pessoais protegidos (LGPD).
+2. **Camada gold no Athena** com views que respondam às perguntas da
+   diretoria: KPIs do negócio, nota por faixa de atraso, série diária
+   (Black Friday/Natal), logística por estado e transportadora,
+   cancelamento/devolução por categoria e canal, e o efeito da chuva e dos
+   feriados.
+3. **Medir o custo do atraso:** comparar a nota média de itens entregues no
+   prazo e com 1–3, 4–7 e 8+ dias de atraso.
+4. **Prever o risco de atraso no momento da compra** com Spark MLlib
+   (Regressão Logística × Random Forest), com meta de **AUC ≥ 0,65** e
+   olhando recall e precisão da classe "atrasou", sem vazamento de
+   informação.
+5. **NLP nos comentários** (tokenização, stopwords, sentimento por léxico)
+   para medir quanto as reclamações citam atraso, defeito e atendimento.
+6. **Dashboard interativo no Apache Superset** com pelo menos 6 gráficos e
+   um filtro nativo, e **3 insights com números** que virem recomendações
+   de negócio.
 
 ## Dataset(s) e Fonte
 
-Dados reais de uma loja (vendas, clientes, estoque) são privados e
-protegidos pela LGPD, por isso o projeto vai usar **dados sintéticos
-gerados pelo grupo**, construídos para se parecerem com a realidade e
-**ancorados em fontes públicas reais**:
-
-| Base | Fonte | Volume aproximado |
+| Base | Fonte | Volume |
 |---|---|---|
-| Modelos de veículos (marca, modelo, ano) | **API pública da Tabela FIPE** (real) | ~10 mil versões de veículos |
-| Frota por modelo e município (peso de cada modelo nas vendas) | **Dados abertos da Senatran** (real) | milhões de linhas, filtradas para o estado de SP |
-| Endereços dos clientes (CEP, cidade, bairro) | **API ViaCEP** (real) + Faker | 50 mil clientes |
-| Catálogo de peças e compatibilidade peça ↔ veículo | Sintético (gerado em Python) | 20 mil peças |
-| Vendas (balcão e loja online) | Sintético (gerado em Python) | **~5 milhões de itens vendidos em 3 anos, 10 lojas** |
-| Movimentações de estoque (entradas, saídas, transferências) | Sintético | ~8 milhões de eventos |
-| Comentários e avaliações dos clientes, em português | Sintético a partir de modelos de frase | ~200 mil comentários |
+| `pedidos_mercadofacil.csv` (dump bruto) | Fornecido pelo professor (Aula 12) | 10.000 itens de pedido, 33 colunas, ano de 2025 |
+| `pedidos_mercadofacil_tratado.csv` (base tratada) | Fornecido pelo professor (Aula 14) | 10.000 itens, ~7,2 mil pedidos, 28 colunas, sem dados pessoais |
+| `chuva_diaria` | API pública **Open-Meteo** (histórico de 2025), coletada pelo professor | ~8.400 linhas (cidade × dia), chuva do dia e dos 3 dias |
+| `feriados` | API pública **BrasilAPI** (feriados nacionais de 2025) | 14 feriados |
 
-O gerador vai incluir padrões realistas: sazonalidade (mais baterias no
-inverno, mais itens de ar-condicionado no verão), modelos mais comuns na
-frota vendendo mais peças, intervalo de troca por tipo de peça e ruído
-aleatório. O volume total fica na casa de **alguns GB**, e o gerador
-permite aumentar a escala (mais lojas, mais anos) para testar o
-pipeline com volumes maiores.
+Uma linha do dump é um item de pedido; os dados do pedido e do cliente se
+repetem em cada item. O dump contém dados pessoais fictícios (nome, e-mail e
+CPF), tratados conforme a LGPD antes de seguir para as camadas analíticas.
+O pipeline é escrito para escalar: o mesmo código roda com milhões de
+linhas, bastando aumentar os workers do Glue.
 
 ## Ferramentas de Big Data
 
 | Ferramenta | Uso no projeto | Por que faz sentido |
 |---|---|---|
-| **Apache Kafka** | Tópicos `vendas`, `estoque` e `comentarios`, alimentados por um produtor que simula as lojas | Cada venda é um evento que chega a qualquer hora, de várias lojas ao mesmo tempo. O Kafka desacopla as lojas do processamento e aguenta picos (ex.: sábado de manhã) |
-| **Spark Structured Streaming** | Consome os tópicos, atualiza o saldo de estoque por peça e loja e dispara o alerta de estoque mínimo | O estoque precisa ser atualizado em tempo real para que o alerta chegue antes da peça acabar |
-| **HDFS / S3 (Data Lake)** | Armazena o histórico nas camadas raw, tratada e analítica em Parquet | Milhões de eventos por ano não cabem num banco relacional comum para análise. O Data Lake guarda o dado bruto e permite reprocessar |
-| **Apache Spark (DataFrames / Spark SQL)** | Limpeza, padronização e junção de vendas, peças, veículos e clientes | Processamento distribuído e em memória sobre milhões de linhas |
-| **MongoDB** | Catálogo de peças, cadastro de clientes e comentários | Cada peça tem atributos diferentes (medidas, compatibilidade com vários modelos) e cada comentário é texto livre: o modelo de documentos é mais natural que tabelas fixas |
-| **Hive (Spark SQL com suporte a Hive)** | Tabelas externas sobre o Data Lake para relatórios em SQL | Permite que analistas consultem o histórico com SQL, no estilo Data Warehouse |
-| **Spark MLlib** | Regressão para **previsão de demanda** e **FP-Growth** para peças compradas juntas | Treinar modelos de forma distribuída sobre todo o histórico de vendas de todas as lojas |
-| **NLP** (tokenização, stopwords, stemming, sentimento por léxico) | Sentimento e assuntos dos comentários, aplicados em paralelo com UDFs do Spark | O texto dos clientes é dado não estruturado e precisa ser transformado em indicadores |
-| **Apache Superset** | Dashboard do gerente e do comprador | Transforma os resultados em decisões visuais e acessíveis para quem não é técnico |
-| **Docker / Docker Compose** | Sobe Kafka, Spark, MongoDB e Superset de forma padronizada | Mesmo ambiente na máquina de cada integrante e na faculdade |
-
-**APIs utilizadas:**
-
-- **API da Tabela FIPE** (pública e gratuita): lista real de marcas,
-  modelos e anos, usada para montar a compatibilidade das peças.
-- **ViaCEP** (pública e gratuita): padronização dos endereços dos
-  clientes.
-- **WhatsApp Business Cloud API (Meta)**: canal para os lembretes de
-  troca e avisos de pedido. No projeto, o envio será **simulado**
-  (as mensagens são geradas e gravadas em um tópico Kafka
-  `mensagens_cliente`), deixando a integração real como próximo passo.
-- Integrações futuras citadas na arquitetura: API de consulta de placa
-  (identificar o carro do cliente pela placa), Correios/Melhor Envio
-  (frete) e API do Mercado Livre (vendas em marketplace).
-
-**Arquitetura resumida:**
-
-```
-Lojas / loja online / WhatsApp
-          │  (produtor que simula os eventos)
-          ▼
-       Kafka  ──►  Spark Streaming  ──►  alerta de estoque / mensagens ao cliente
-          │
-          ▼
-Data Lake (raw → tratada → analítica, Parquet)  +  MongoDB (catálogo, clientes, comentários)
-          │
-          ▼
-Spark SQL / Hive  ──►  MLlib (demanda, FP-Growth)  +  NLP (comentários)
-          │
-          ▼
-      Apache Superset (dashboard)
-```
+| **Terraform** (provider AWS 5.31.0) | Cria e destrói toda a infraestrutura | Ambiente reprodutível e sem custo residual no Learner Lab (`apply` sobe, `destroy` apaga) |
+| **Amazon S3** | Data lake com as camadas raw, silver, gold e quarentena | Armazenamento distribuído e barato; o raw nunca é alterado, então dá para reprocessar |
+| **AWS Glue Job (PySpark)** | ETL raw → silver → gold | Spark gerenciado: processamento distribuído sem manter cluster ligado (o EMR Serverless é bloqueado no lab) |
+| **Glue Crawler + Data Catalog** | Registra as tabelas Parquet | Deixa os dados consultáveis por SQL sem cadastro manual |
+| **Amazon Athena** | Views da camada gold | SQL sobre o data lake (estilo Hive), cobrado por consulta |
+| **Spark MLlib** | Modelo de risco de atraso | Treino distribuído sobre todo o histórico |
+| **NLP** (tokenização, stopwords, sentimento) | Análise dos comentários | O texto livre dos clientes vira indicador (sentimento e temas de reclamação) |
+| **Apache Superset** (EC2) | Dashboard interativo conectado ao Athena | Ferramenta de BI open source vista no curso, com filtros nativos |
 
 ## Cronograma
 
 | Aula | Etapa | Entregas |
 |---|---|---|
-| **Aula 11** | Definição e planejamento | Problema, objetivos, arquitetura, escolha das ferramentas e das APIs (esta proposta) |
-| **Aula 12** | Ingestão e pré-processamento | Gerador de dados sintéticos ancorado na FIPE, Senatran e ViaCEP; produtor Kafka; Spark Streaming atualizando o estoque; Data Lake em camadas; carga do MongoDB |
-| **Aula 13** | Análise e construção de modelos | Consultas no Hive / Spark SQL; previsão de demanda no MLlib comparada ao baseline; FP-Growth das peças compradas juntas; NLP dos comentários; regra de lembrete de troca |
-| **Aula 14** | Visualização e conclusão | Dashboard no Superset; demonstração do alerta de estoque e das mensagens simuladas; relatório final; apresentação dos resultados e lições aprendidas |
+| **Aula 11** | Definição e planejamento | Problema, objetivos, dados e ferramentas (esta proposta) |
+| **Aula 12** | Ingestão e pré-processamento | Terraform, Glue Job raw → silver/quarentena → gold, Crawler, consultas no Athena e `REGRAS_SILVER.md` |
+| **Aula 13** | Análise e modelos | Modelo de risco de atraso no MLlib e NLP dos comentários |
+| **Aula 14** | Visualização e conclusão | Views no Athena, dashboard no Superset, relatório final e pitch de 8 minutos |
