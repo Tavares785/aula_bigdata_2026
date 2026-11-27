@@ -1,0 +1,8 @@
+# Copie para terraform.tfvars (que NAO e versionado) e preencha.
+#   cp terraform.tfvars.example terraform.tfvars
+#
+# ARN da LabRole:
+#   aws iam get-role --role-name LabRole --query Role.Arn --output text
+
+lab_role_arn = "arn:aws:iam::123456789012:role/LabRole"
+bucket_name  = "mercadofacil-grupo-SEU-ID"
